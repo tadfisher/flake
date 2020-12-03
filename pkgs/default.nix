@@ -1,8 +1,6 @@
-{ pkgs ? import <nixpkgs> {},
-  super ? import <nixpkgs> {}
-}:
+final: prev:
 
-with pkgs;
+with final;
 
 rec {
   sed-opal-unlocker = callPackage ./tools/security/sed-opal-unlocker { };

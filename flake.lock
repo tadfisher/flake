@@ -1,0 +1,96 @@
+{
+  "nodes": {
+    "emacs-overlay": {
+      "locked": {
+        "lastModified": 1606940781,
+        "narHash": "sha256-RX5RgLGyr4d6hKMIwlFCazjU2YG0GGyaUYXc8uNdV8A=",
+        "owner": "nix-community",
+        "repo": "emacs-overlay",
+        "rev": "80679510b390d6a9592c88a42fd974d9f2e3a226",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "emacs-overlay",
+        "type": "github"
+      }
+    },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1606860459,
+        "narHash": "sha256-Y3PtSmLjVMxky7NbmGg30f7ZKx1oNdPTsksEG37gLKU=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "06543644266edcf845ac912002868246b58d19e6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "nixos-hardware": {
+      "locked": {
+        "lastModified": 1606843035,
+        "narHash": "sha256-KjfBZWyTzLI8/mGgG1zVK4qIsA853HB/8TYkpZdf/ng=",
+        "owner": "NixOS",
+        "repo": "nixos-hardware",
+        "rev": "025c7a2a7efd9edf341879dbd46988d3a65a76dc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixos-hardware",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1606725183,
+        "narHash": "sha256-QIdgDJUnT/Gq8vURmQqy1tTVpI0cWryoD9/auCAkQbE=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "24eb3f87fc610f18de7076aee7c5a84ac5591e3e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nur": {
+      "locked": {
+        "lastModified": 1606945101,
+        "narHash": "sha256-9hJT5hTAX+2actvmJTfpH2ZIJNxNL1pNjNrC7TVGrRw=",
+        "owner": "nix-community",
+        "repo": "NUR",
+        "rev": "f385b66a9bfe91f248cde6c0e467ed9b701e534f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "NUR",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "emacs-overlay": "emacs-overlay",
+        "home-manager": "home-manager",
+        "nixos-hardware": "nixos-hardware",
+        "nixpkgs": "nixpkgs",
+        "nur": "nur"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

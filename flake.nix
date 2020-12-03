@@ -12,22 +12,28 @@
     nur.url = "github:nix-community/NUR";
   };
 
-  outputs = { self, emacs-overlay, home-manager, nixos-hardware, nixpkgs, nur }:
+  outputs = { self, ... }@inputs:
     let
       systems = [ "x86_64-linux" ];
 
-      mkSystemOutput = system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [ self.overlay ];
-            config = { allowUnfree = true; };
-          };
-        in {
-          packages."${system}" = self.overlay pkgs pkgs;
-        };
+      mkOverlays = system: [
+        (final: prev: self.overlay final prev)
+        (final: prev: inputs.nur.overlay final prev)
+        (final: prev: inputs.emacs-overlay.overlay final prev)
+      ];
+
+      mkPackages = system: import inputs.nixpkgs {
+        inherit system;
+        overlays = self.overlays.${system};
+        config = { allowUnfree = true; };
+      };
 
     in {
-      overlay = import ./pkgs;
+      inherit (inputs.nixpkgs) lib;
+      nixosConfigurations = import ./nixos/hosts inputs;
+      nixosModules = import ./nixos/modules inputs;
+      overlay = final: prev: import ./pkgs final prev;
+      overlays = self.lib.genAttrs systems mkOverlays;
+      packages = self.lib.genAttrs systems mkPackages;
     };
 }
