@@ -39,7 +39,7 @@ let
       package = mkOption {
         type = types.nullOr types.package;
         default = null;
-        example = "pkgs.pulseaudio-modules-bt";
+        example = literalExample "pkgs.pulseaudio-modules-bt";
         description = ''
           Package providing this module.
         '';
@@ -71,6 +71,7 @@ let
       finalConfig = mkOption {
         type = types.lines;
         internal = true;
+        readOnly = true;
         description = ''
           Configuration lines to add to <varname>pulseaudio.extraConfig</varname>
           for this module.
@@ -80,25 +81,21 @@ let
 
     config = {
       name = name;
-      finalConfig = toModule name config;
+      finalConfig = toModule name config.arguments;
     };
   };
 
 in {
-  options = {
-    hardware.pulseaudio.modules = mkOption {
-      type = types.attrsOf (types.submodule moduleOpts);
-      default = {};
-    };
+  options.hardware.pulseaudio.modules = mkOption {
+    type = types.attrsOf (types.submodule moduleOpts);
+    default = {};
   };
 
-  config = {
-    hardware.pulseaudio = {
-      extraModules =
-        filter (p: p != null) (catAttrs "package" enabledModules);
+  config.hardware.pulseaudio = {
+    extraModules =
+      filter (p: p != null) (catAttrs "package" enabledModules);
 
-      extraConfig =
-        concatStringsSep "\n" (catAttrs "finalConfig" enabledModules);
-    };
+    extraConfig =
+      concatStringsSep "\n" (catAttrs "finalConfig" enabledModules);
   };
 }

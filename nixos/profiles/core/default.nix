@@ -62,19 +62,15 @@ with lib;
 
   nixpkgs.config.allowUnfree = true;
 
-  programs = {
-    bash.enableCompletion = true;
-  };
+  programs.bash.enableCompletion = true;
 
-  services = {
-    resolved = {
-      enable = true;
-      dnssec = "false";
-      extraConfig = ''
+  services.resolved = {
+    enable = true;
+    dnssec = "false";
+    extraConfig = ''
         MulticastDNS=true
         DNSOverTLS=opportunistic
       '';
-    };
   };
 
   systemd.network.enable = true;

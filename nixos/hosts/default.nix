@@ -1,6 +1,5 @@
 { self
 , emacs-overlay
-, flake-utils
 , home-manager
 , nixos-hardware
 , nixpkgs
@@ -9,25 +8,20 @@
 }@inputs:
 
 let
-  inherit (self) lib packages;
-
   config = hostname: system:
-    lib.nixosSystem {
+    nixpkgs.lib.nixosSystem {
       inherit system;
 
       modules =
         let
-          home = home-manager.nixosModules.home-manager;
-
           global = {
-            networking.hostname = hostname;
+            networking.hostName = hostname;
 
             nix = {
               nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
               registry = {
                 emacs-overlay.flake = inputs.emacs-overlay;
-                flake-utils.flake = inputs.flake-utils;
                 nixos-hardware.flake = inputs.nixos-hardware;
                 nixpkgs.flake = inputs.nixpkgs;
                 nur.flake = inputs.nur;
@@ -35,15 +29,21 @@ let
               };
             };
 
-            system.configurationRevision = lib.mkIf (self ? rev) self.rev;
+            nixpkgs.overlays = [
+              self.overlay
+              emacs-overlay.overlay
+              nur.overlay
+            ];
+
+            system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
           };
 
-          local = import "${toString ./.}/${hostname}";
+          local = import "${toString ./.}/${hostname}" inputs;
 
-          flake = lib.attrValues self.nixosModules;
+          flake = builtins.attrValues self.nixosModules;
 
-        in [
-          home
+        in nixpkgs.lib.flatten [
+          home-manager.nixosModules.home-manager
           global
           local
           flake

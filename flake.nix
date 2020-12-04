@@ -16,24 +16,9 @@
     let
       systems = [ "x86_64-linux" ];
 
-      mkOverlays = system: [
-        (final: prev: self.overlay final prev)
-        (final: prev: inputs.nur.overlay final prev)
-        (final: prev: inputs.emacs-overlay.overlay final prev)
-      ];
-
-      mkPackages = system: import inputs.nixpkgs {
-        inherit system;
-        overlays = self.overlays.${system};
-        config = { allowUnfree = true; };
-      };
-
     in {
-      inherit (inputs.nixpkgs) lib;
       nixosConfigurations = import ./nixos/hosts inputs;
       nixosModules = import ./nixos/modules inputs;
-      overlay = final: prev: import ./pkgs final prev;
-      overlays = self.lib.genAttrs systems mkOverlays;
-      packages = self.lib.genAttrs systems mkPackages;
+      overlay = import ./pkgs;
     };
 }

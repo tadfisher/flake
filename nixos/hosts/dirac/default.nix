@@ -1,10 +1,10 @@
-{ nixos-hardware, ... }@inputs:
+{ self, nixos-hardware, ... }@inputs:
 
-{
+let
   modules = [
-    nixos-hardware.common-cpu-intel-kaby-lake
-    nixos-hardware.common-pc-laptop-ssd
-    nixos-hardware.lenovo-thinkpad-t480s
+    nixos-hardware.nixosModules.common-cpu-intel-kaby-lake
+    nixos-hardware.nixosModules.common-pc-laptop-ssd
+    nixos-hardware.nixosModules.lenovo-thinkpad-t480s
   ];
 
   config = { config, lib, pkgs, ... }: with lib; {
@@ -13,6 +13,7 @@
       ../../profiles/users/tad
       ../../profiles/workstation
       ../../profiles/x86_64
+      ./networks.nix
     ];
 
     boot = {
@@ -55,7 +56,7 @@
 
     hardware.pulseaudio = {
       modules.module-echo-cancel = {
-        package = [ pkgs.pulseaudio-modules-bt ];
+        package = pkgs.pulseaudio-modules-bt;
         arguments = {
           use_master_format = true;
           aec_method = "webrtc";
@@ -84,11 +85,16 @@
     powerManagement = {
       cpuFreqGovernor = "conservative";
       powerUpCommands = ''
-        ${sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme0n1 ${./sedhash}
+        ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme0n1 ${../../../secrets/dirac/sedhash}
       '';
     };
 
     services = {
+      btrfs.autoScrub = {
+        enable = true;
+        fileSystems = [ "/dev/nvme0n1p1" ];
+      };
+
       udev.extraRules = ''
         # Runtime PM for I2C Adapter i2c-0 (SMBus I801 adapter at efa0)
         # Runtime PM for I2C Adapter i2c-1 (i915 gmbus dpc)
@@ -121,4 +127,5 @@
 
     system.stateVersion = "19.09";
   };
-}
+
+in modules ++ [ config ]

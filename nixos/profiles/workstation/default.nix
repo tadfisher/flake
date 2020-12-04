@@ -36,20 +36,20 @@
     scsiLinkPolicy = "med_power_with_dipm";
   };
 
-  networkmanager = {
-    enable = true;
-    extraConfig = ''
-        [connection]
-        connection.mdns=2
-      '';
-    wifi.backend = "iwd";
-  };
-
-  programs = {
-    seahorse.enable = false;
-  };
+  programs.seahorse.enable = false;
 
   services = {
+    fwupd.enable = true;
+
+    gnome3 = {
+      chrome-gnome-shell.enable = true;
+      experimental-features.realtime-scheduling = true;
+    };
+
+    pcscd.enable = true;
+
+    pipewire.enable = true;
+
     resolved = {
       enable = true;
       dnssec = "false";
@@ -70,7 +70,7 @@
       enableCtrlAltBackspace = true;
       libinput.enable = true;
       videoDrivers = [ "modesetting" ];
-      xkbOptions = [ "ctrl:nocaps" ];
+      xkbOptions = "ctrl:nocaps";
     };
   };
 }
