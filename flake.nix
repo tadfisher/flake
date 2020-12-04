@@ -13,8 +13,7 @@
   };
 
   outputs = { self, ... }@inputs:
-    let
-      systems = [ "x86_64-linux" ];
+    let systems = [ "x86_64-linux" ];
 
     in {
       nixosConfigurations = import ./nixos/hosts inputs;

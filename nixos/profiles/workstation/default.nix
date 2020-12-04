@@ -13,7 +13,7 @@
     pulseaudio = {
       enable = true;
       package = pkgs.pulseaudioFull;
-      modules.module-switch-on-connect = {};
+      modules.module-switch-on-connect = { };
     };
   };
 

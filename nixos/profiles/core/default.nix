@@ -6,9 +6,7 @@ with lib;
   boot = {
     cleanTmpDir = true;
     kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [
-      "quiet"
-    ];
+    kernelParams = [ "quiet" ];
     loader = {
       systemd-boot.enable = true;
       timeout = 0;
@@ -68,9 +66,9 @@ with lib;
     enable = true;
     dnssec = "false";
     extraConfig = ''
-        MulticastDNS=true
-        DNSOverTLS=opportunistic
-      '';
+      MulticastDNS=true
+      DNSOverTLS=opportunistic
+    '';
   };
 
   systemd.network.enable = true;

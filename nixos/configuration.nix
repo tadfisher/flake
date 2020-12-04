@@ -8,13 +8,12 @@ let
   hostname = lib.fileContents /etc/hostname;
   host = "${toString ./.}/nixos/hosts/${hostname}/default.nix";
   config = lib.optional (builtins.pathExists host) host;
-in
-{
+in {
   imports = (import ./modules/list.nix) ++ [
     "${
       builtins.fetchTarball
-        "https://github.com/nixos-community/home-manager/archive/master.tar.gz"
-      }/nixos"
+      "https://github.com/nixos-community/home-manager/archive/master.tar.gz"
+    }/nixos"
     /etc/nixos/profiles/core.nix
   ] ++ config;
 

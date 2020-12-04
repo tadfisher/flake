@@ -6,6 +6,7 @@
     home = "/home/tad";
     description = "Tad Fisher";
     uid = 1000;
-    extraGroups = [ "wheel" "networkmanager" "docker" "libvirtd" "video" "adbusers" ];
+    extraGroups =
+      [ "wheel" "networkmanager" "docker" "libvirtd" "video" "adbusers" ];
   };
 }

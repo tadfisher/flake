@@ -35,9 +35,7 @@ let
 
     buildInputs = [ libargon2 ];
 
-    passthru = {
-      inherit sedutil-passhasher;
-    };
+    passthru = { inherit sedutil-passhasher; };
 
     installPhase = ''
       mkdir -p $out/bin
