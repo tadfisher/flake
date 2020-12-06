@@ -7,9 +7,8 @@ case $1 in
         echo "$0 [-c]"
         ;;
     -c)
-        CHECK_ARG=-c
+        CHECK_ARG=--check
         ;;
 esac
 
-find . -name '*.nix' \
-  -exec nix run nixpkgs#nixfmt "--" $CHECK_ARG {} +
+nix run nixpkgs#nixpkgs-fmt -- $CHECK_ARG .

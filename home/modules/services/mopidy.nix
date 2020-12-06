@@ -2,9 +2,7 @@
 
 with pkgs;
 with lib;
-
 let
-
   cfg = config.services.mopidy;
 
   mopidyConf = writeText "mopidy.conf" cfg.configuration;
@@ -23,7 +21,8 @@ let
     '';
   };
 
-in {
+in
+{
 
   meta.maintainers = [ maintainers.tadfisher ];
 

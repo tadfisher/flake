@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-
 let
   cfg = config.programs.gnome-shell;
 
@@ -50,7 +49,8 @@ let
     };
   };
 
-in {
+in
+{
   options.desktops.gnome = {
     enable = mkEnableOption "gnome desktop";
 

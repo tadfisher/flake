@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-
 let secrets = import ../../../secrets;
 
-in {
+in
+{
   environment.etc = {
     "NetworkManager/system-connections/simple-vpn.nmconnection" = {
       mode = "0600";

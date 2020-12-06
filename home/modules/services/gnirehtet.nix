@@ -1,14 +1,14 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-
 let
   cfg = config.services.gnirehtet;
 
   args = "-d '${concatStringsSep "," cfg.dns}' " + "-p '${toString cfg.port}' "
     + "-r '${concatStringsSep "," cfg.routes}'";
 
-in {
+in
+{
   options = {
     services.gnirehtet = {
       enable = mkEnableOption "gnirehtet reverse-tethering daemon";

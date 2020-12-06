@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-
 let
   cfg = config.programs.pass;
 
@@ -61,7 +60,8 @@ let
     };
   };
 
-in {
+in
+{
   options = {
     programs.pass = {
       enable = mkEnableOption "zx2c4 password store";
@@ -133,15 +133,18 @@ in {
 
   config = mkIf cfg.enable {
     assertions = [
-      (let
-        primaries =
-          catAttrs "path" (filter (s: s.primary) (attrValues cfg.stores));
-      in {
-        assertion = cfg.stores == { } || length primaries == 1;
-        message = "pass: Must have exactly one primary store but found "
-          + toString (length primaries) + optionalString (length primaries > 1)
-          (", namely " + concatStringsSep ", " primaries);
-      })
+      (
+        let
+          primaries =
+            catAttrs "path" (filter (s: s.primary) (attrValues cfg.stores));
+        in
+        {
+          assertion = cfg.stores == { } || length primaries == 1;
+          message = "pass: Must have exactly one primary store but found "
+            + toString (length primaries) + optionalString (length primaries > 1)
+            (", namely " + concatStringsSep ", " primaries);
+        }
+      )
     ];
 
     home.packages = [ cfg.package ];
@@ -150,6 +153,6 @@ in {
 
     programs.bash.shellAliases =
       mapAttrs' (path: store: nameValuePair store.alias store.command)
-      (filterAttrs (path: store: store.alias != null) cfg.stores);
+        (filterAttrs (path: store: store.alias != null) cfg.stores);
   };
 }

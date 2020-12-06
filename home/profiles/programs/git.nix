@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-
 let secrets = import ../../../secrets;
 
-in {
+in
+{
   programs.git = {
     enable = true;
     package = pkgs.gitAndTools.gitFull;
@@ -29,11 +29,13 @@ in {
     };
   };
 
-  xdg.configFile."git/cookies".text = let
-    username = secrets.googlesource.username;
-    password = secrets.googlesource.password;
-  in ''
-    android.googlesource.com	FALSE	/	TRUE	2147483647	o	${username}=${password}
-    android-review.googlesource.com	FALSE	/	TRUE	2147483647	o	${username}=${password}
-  '';
+  xdg.configFile."git/cookies".text =
+    let
+      username = secrets.googlesource.username;
+      password = secrets.googlesource.password;
+    in
+    ''
+      android.googlesource.com  FALSE  /  TRUE  2147483647  o  ${username}=${password}
+      android-review.googlesource.com  FALSE  /  TRUE  2147483647  o  ${username}=${password}
+    '';
 }

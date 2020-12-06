@@ -1,5 +1,4 @@
 { stdenv, fetchFromGitHub, runCommand, python3, libargon2 }:
-
 let
   version = "1.0.0";
 
@@ -43,4 +42,5 @@ let
     '';
   };
 
-in sed-opal-unlocker
+in
+sed-opal-unlocker

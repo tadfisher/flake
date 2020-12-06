@@ -1,7 +1,6 @@
 { config, lib, ... }:
 
 with lib;
-
 let
   cfg = config.programs.emacs.init.lsp;
   pkgCfg = config.programs.emacs.init.usePackage;
@@ -77,22 +76,27 @@ let
 
   mkModes = c: map (m: "(${m} . lsp)") c.modes;
 
-  mkUsePackages = let
-    mkDeps =
-      mapAttrsToList (n: v: ''(lsp-dependency '${n} '(:system "${v}"))'');
-  in mapAttrsToList (n: c: {
-    "${c.require}" = {
-      enable = true;
-      defer = true;
-      init = c.init;
-      config = ''
-        ${concatStringsSep "\n" (mkDeps c.executables)}
-        ${c.config}
-      '';
-    };
-  }) cfg.clients;
+  mkUsePackages =
+    let
+      mkDeps =
+        mapAttrsToList (n: v: ''(lsp-dependency '${n} '(:system "${v}"))'');
+    in
+    mapAttrsToList
+      (n: c: {
+        "${c.require}" = {
+          enable = true;
+          defer = true;
+          init = c.init;
+          config = ''
+            ${concatStringsSep "\n" (mkDeps c.executables)}
+            ${c.config}
+          '';
+        };
+      })
+      cfg.clients;
 
-in {
+in
+{
   options = {
     programs.emacs.init.lsp = {
       enable = mkEnableOption "emacs-lsp clients";

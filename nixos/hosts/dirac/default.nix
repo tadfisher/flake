@@ -1,5 +1,4 @@
 { self, nixos-hardware, ... }@inputs:
-
 let
   modules = [
     nixos-hardware.nixosModules.common-cpu-intel-kaby-lake
@@ -124,4 +123,5 @@ let
       system.stateVersion = "19.09";
     };
 
-in modules ++ [ config ]
+in
+modules ++ [ config ]

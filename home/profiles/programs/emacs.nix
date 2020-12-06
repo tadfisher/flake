@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-
 let cfg = config.programs.emacs;
 
-in {
+in
+{
   home.packages = with pkgs; [
     ditaa
     emacs-all-the-icons-fonts
@@ -26,10 +26,12 @@ in {
   programs = {
 
     # TODO enable only in desktop profile
-    bash.initExtra = let vterm = (pkgs.emacsPackagesFor cfg.package).vterm;
-    in ''
-      . ${vterm}/share  /emacs/site-lisp/elpa/${vterm.ename}-${vterm.version}/etc/emacs-vterm-bash.sh
-    '';
+    bash.initExtra =
+      let vterm = (pkgs.emacsPackagesFor cfg.package).vterm;
+      in
+      ''
+        . ${vterm}/share  /emacs/site-lisp/elpa/${vterm.ename}-${vterm.version}/etc/emacs-vterm-bash.sh
+      '';
 
     emacs = {
       package = mkDefault pkgs.emacs-nox;
@@ -417,22 +419,26 @@ in {
             enable = true;
             defer = true;
             after = [ "ansi-color" ];
-            hook = [''
-              (compilation-filter . (lambda ()
-                                      (when (eq major-mode 'compilation-mode)
-                                        (ansi-color-apply-on-region compilation-filter-start (point-max)))))
-            ''];
+            hook = [
+              ''
+                (compilation-filter . (lambda ()
+                                        (when (eq major-mode 'compilation-mode)
+                                          (ansi-color-apply-on-region compilation-filter-start (point-max)))))
+              ''
+            ];
           };
 
           cc-mode = {
             enable = true;
             defer = true;
-            hook = [''
-              (c-mode-common . (lambda ()
-                                 (subword-mode)
+            hook = [
+              ''
+                (c-mode-common . (lambda ()
+                                   (subword-mode)
 
-                                 (c-set-offset 'arglist-intro '++)))
-            ''];
+                                   (c-set-offset 'arglist-intro '++)))
+              ''
+            ];
           };
 
           coffee-mode = {
@@ -506,12 +512,14 @@ in {
             enable = true;
             diminish = [ "ggtags-mode" ];
             command = [ "ggtags-mode" ];
-            hook = [''
-              (c-mode-common-hook
-               . (lambda ()
-                   (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-                     (ggtags-mode 1))))
-            ''];
+            hook = [
+              ''
+                (c-mode-common-hook
+                 . (lambda ()
+                     (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+                       (ggtags-mode 1))))
+              ''
+            ];
           };
 
           groovy-mode = {
@@ -607,21 +615,23 @@ in {
             command = [ "which-key-mode" ];
             diminish = [ "which-key-mode" ];
             defer = 2;
-            config = let
-              descriptions = { "M-SPC p" = "project"; };
-              replacements = optionalString (descriptions != { }) ''
-                (which-key-add-key-based-replacements
-                  ${
-                    concatStringsSep "\n  "
-                    (mapAttrsToList (k: d: ''"${k}" "${d}"'') descriptions)
-                  })
+            config =
+              let
+                descriptions = { "M-SPC p" = "project"; };
+                replacements = optionalString (descriptions != { }) ''
+                  (which-key-add-key-based-replacements
+                    ${
+                      concatStringsSep "\n  "
+                      (mapAttrsToList (k: d: ''"${k}" "${d}"'') descriptions)
+                    })
+                '';
+
+              in
+              ''
+                ${replacements}
+
+                (which-key-mode)
               '';
-
-            in ''
-              ${replacements}
-
-              (which-key-mode)
-            '';
           };
 
           # Enable winner mode. This global minor mode allows you to
@@ -817,13 +827,15 @@ in {
             enable = true;
             package = epkgs: epkgs.auctex;
             mode = [ ''("\\.tex\\'" . latex-mode)'' ];
-            hook = [''
-              (LaTeX-mode
-               . (lambda ()
-                   (turn-on-reftex)       ; Hook up AUCTeX with RefTeX.
-                   (auto-fill-mode)
-                   (define-key LaTeX-mode-map [adiaeresis] "\\\"a")))
-            ''];
+            hook = [
+              ''
+                (LaTeX-mode
+                 . (lambda ()
+                     (turn-on-reftex)       ; Hook up AUCTeX with RefTeX.
+                     (auto-fill-mode)
+                     (define-key LaTeX-mode-map [adiaeresis] "\\\"a")))
+              ''
+            ];
             config = ''
               (setq TeX-PDF-mode t
                     TeX-auto-save t
@@ -924,15 +936,17 @@ in {
               ''("\\.cpphs\\'" . haskell-mode)''
               ''("\\.lhs\\'" . haskell-literate-mode)''
             ];
-            hook = [''
-              (haskell-mode
-               . (lambda ()
-                   (subword-mode +1)
-                   (interactive-haskell-mode +1)
-                   (haskell-doc-mode +1)
-                   (haskell-indentation-mode +1)
-                   (haskell-decl-scan-mode +1)))
-            ''];
+            hook = [
+              ''
+                (haskell-mode
+                 . (lambda ()
+                     (subword-mode +1)
+                     (interactive-haskell-mode +1)
+                     (haskell-doc-mode +1)
+                     (haskell-indentation-mode +1)
+                     (haskell-decl-scan-mode +1)))
+              ''
+            ];
             bindLocal = {
               haskell-mode-map = {
                 "C-c h i" = "haskell-navigate-imports";
@@ -1034,12 +1048,14 @@ in {
               "M-SPC o b" = "org-switchb";
             };
             bindKeyMap = { "M-SPC M-SPC" = "org-mode-map"; };
-            hook = [''
-              (org-mode
-               . (lambda ()
-                   (add-hook 'completion-at-point-functions
-                             'pcomplete-completions-at-point nil t)))
-            ''];
+            hook = [
+              ''
+                (org-mode
+                 . (lambda ()
+                     (add-hook 'completion-at-point-functions
+                               'pcomplete-completions-at-point nil t)))
+              ''
+            ];
             config = ''
               ;; Some general stuff.
               (setq org-reverse-note-order t

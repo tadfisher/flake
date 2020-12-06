@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-
 let
   cfg = config.hardware.pulseaudio;
 
@@ -23,11 +22,12 @@ let
       toConf = v:
         if builtins.isAttrs v then
           concatStringsSep " "
-          (mapAttrsToList (k: v: k + optionalString (v != null) "=${toVal v}")
-            v)
+            (mapAttrsToList (k: v: k + optionalString (v != null) "=${toVal v}")
+              v)
         else
           toVal v;
-    in "load-module ${name}${
+    in
+    "load-module ${name}${
       optionalString (arguments != { }) " ${toConf arguments}"
     }";
 
@@ -93,7 +93,8 @@ let
     };
   };
 
-in {
+in
+{
   options.hardware.pulseaudio.modules = mkOption {
     type = types.attrsOf (types.submodule moduleOpts);
     default = { };

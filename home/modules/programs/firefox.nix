@@ -1,48 +1,54 @@
 { config, pkgs, lib, ... }:
 
 with lib;
-
 let
   cfg = config.programs.firefox;
 
   profilesPath =
     if isDarwin then "${firefoxConfigPath}/Profiles" else firefoxConfigPath;
 
-  desktopFile = let
-    sanitize = name:
-      let
-        good = upperChars ++ lowerChars ++ stringToCharacters "0123456789-";
-        subst = c: if any (x: x == c) good then c else "-";
-      in stringAsChars subst name;
+  desktopFile =
+    let
+      sanitize = name:
+        let
+          good = upperChars ++ lowerChars ++ stringToCharacters "0123456789-";
+          subst = c: if any (x: x == c) good then c else "-";
+        in
+        stringAsChars subst name;
 
-    profileActions = mapAttrsToList (name: profile: {
-      name = "Profile ${name}";
-      key = "profile-${sanitize name}";
-      exec = "firefox -profile '${profilesPath}/${profile.path}'";
-    }) (attrValues cfg.profiles);
+      profileActions = mapAttrsToList
+        (name: profile: {
+          name = "Profile ${name}";
+          key = "profile-${sanitize name}";
+          exec = "firefox -profile '${profilesPath}/${profile.path}'";
+        })
+        (attrValues cfg.profiles);
 
-    actions = [
-      {
-        name = "New Tab";
-        key = "new-tab";
-        exec = "firefox -new-tab %U";
-      }
-      {
-        name = "New Private Window";
-        key = "new-private-window";
-        exec = "firefox -private-window %U";
-      }
-    ] ++ profileActions;
-  in ''
-    ${fileContents "${cfg.package}/share/applications/firefox.desktop"}
-    Actions=${concatMapStrings (a: a.key + ";") (catAttrs "key" actions)}
+      actions = [
+        {
+          name = "New Tab";
+          key = "new-tab";
+          exec = "firefox -new-tab %U";
+        }
+        {
+          name = "New Private Window";
+          key = "new-private-window";
+          exec = "firefox -private-window %U";
+        }
+      ] ++ profileActions;
+    in
+    ''
+          ${fileContents "${cfg.package}/share/applications/firefox.desktop"}
+          Actions=${concatMapStrings (a: a.key + ";") (catAttrs "key" actions)}
 
-    ${concatMapStringsSep "\n" (a: ''
-      [Desktop Action ${a.key}]
-      Name=${a.name}
-      Exec=${a.exec}
-    '') actions}
-  '';
+          ${concatMapStringsSep "\n"
+      (a: ''
+            [Desktop Action ${a.key}]
+            Name=${a.name}
+            Exec=${a.exec}
+          '')
+      actions}
+    '';
 
   commonProfileOpts = { name, config, ... }: {
     options = {
@@ -90,7 +96,8 @@ let
     };
   };
 
-in {
+in
+{
   options.programs.firefox.commonProfileConfig = mkOption {
     type = types.submodule commonProfileOpts;
     default = { };

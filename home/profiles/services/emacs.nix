@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-
 let
   cfg = config.services.emacs;
 
@@ -12,7 +11,8 @@ let
     ${emacs}/bin/emacsclient ${concatStringsSep " " cfg.client.arguments} "$@"
   '';
 
-in {
+in
+{
   home.packages = [ editorScript ];
 
   home.sessionVariables = optionalAttrs cfg.defaultEditor {

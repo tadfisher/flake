@@ -1,33 +1,35 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-
 let
-  simple-vpn = let
-    script = pkgs.writeShellScriptBin "simple-vpn" ''
-      set -e
-      vpn="simple-vpn"
-      nmcli con down "$vpn" &> /dev/null || true
-      ${pkgs.networkmanager}/bin/nmcli --ask con up "$vpn" &> /dev/null
-    '';
-    desktopItem = pkgs.makeDesktopItem {
-      name = "simple-vpn";
-      exec = "${script}/bin/simple-vpn";
-      comment = "Connect to the Simple VPN";
-      desktopName = "Simple VPN";
-      genericName = "Simple VPN";
-      icon = "network-vpn-symbolic.symbolic";
-      categories = "System;Network;";
-      extraEntries = ''
-        Keywords=VPN;
+  simple-vpn =
+    let
+      script = pkgs.writeShellScriptBin "simple-vpn" ''
+        set -e
+        vpn="simple-vpn"
+        nmcli con down "$vpn" &> /dev/null || true
+        ${pkgs.networkmanager}/bin/nmcli --ask con up "$vpn" &> /dev/null
       '';
+      desktopItem = pkgs.makeDesktopItem {
+        name = "simple-vpn";
+        exec = "${script}/bin/simple-vpn";
+        comment = "Connect to the Simple VPN";
+        desktopName = "Simple VPN";
+        genericName = "Simple VPN";
+        icon = "network-vpn-symbolic.symbolic";
+        categories = "System;Network;";
+        extraEntries = ''
+          Keywords=VPN;
+        '';
+      };
+    in
+    pkgs.buildEnv {
+      name = "simple-vpn";
+      paths = [ script desktopItem ];
     };
-  in pkgs.buildEnv {
-    name = "simple-vpn";
-    paths = [ script desktopItem ];
-  };
 
-in {
+in
+{
   accounts.email.accounts."tad@simple.com" = {
     address = "tad@simple.com";
     flavor = "gmail.com";

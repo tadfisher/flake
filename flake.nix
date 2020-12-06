@@ -16,7 +16,8 @@
   outputs = { self, ... }@inputs:
     let systems = [ "x86_64-linux" ];
 
-    in {
+    in
+    {
       hmConfigurations = import ./home/hosts inputs;
       hmModules = import ./home/modules inputs;
       nixosConfigurations = import ./nixos/hosts inputs;
