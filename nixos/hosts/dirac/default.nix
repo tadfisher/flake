@@ -18,9 +18,8 @@ let
       ];
 
       boot = {
-        initrd = {
-          availableKernelModules = [ "nvme" "sd_mod" "usb_storage" "xhci_pci" ];
-        };
+        initrd.availableKernelModules =
+          [ "nvme" "sd_mod" "usb_storage" "xhci_pci" ];
         kernelModules = [ "coretemp" "kvm-intel" ];
         kernelParams = [
           "i915.fastboot=1"

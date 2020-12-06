@@ -7,6 +7,8 @@ let
 
       modules = let
         global = {
+          imports = [ ../profiles/users ];
+
           networking.hostName = hostname;
 
           nix = {

@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "android-nixpkgs": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1607210946,
+        "narHash": "sha256-rB6vSrh+fwRk9d1qmA5D9hsaOABewexTxmK5/eBMbLA=",
+        "type": "git",
+        "url": "file:///home/tad/proj/android-nixpkgs"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:///home/tad/proj/android-nixpkgs"
+      }
+    },
     "emacs-overlay": {
       "locked": {
         "lastModified": 1606940781,
@@ -52,6 +67,22 @@
     },
     "nixpkgs": {
       "locked": {
+        "lastModified": 1606984864,
+        "narHash": "sha256-yTz6tNbjOz7ezTw/r+M9CgYlfXczEtPlLnwkk2D0CUg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "296793637b22bdb4d23b479879eba0a71c132a66",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
         "lastModified": 1606725183,
         "narHash": "sha256-QIdgDJUnT/Gq8vURmQqy1tTVpI0cWryoD9/auCAkQbE=",
         "owner": "NixOS",
@@ -83,10 +114,11 @@
     },
     "root": {
       "inputs": {
+        "android-nixpkgs": "android-nixpkgs",
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "nur": "nur"
       }
     }

@@ -2,7 +2,9 @@
 
 with lib;
 
-{
+let secrets = import ../../../secrets;
+
+in {
   environment.etc = {
     "NetworkManager/system-connections/simple-vpn.nmconnection" = {
       mode = "0600";
@@ -17,7 +19,7 @@ with lib;
         };
 
         vpn = {
-          inherit (import ../../../secrets/simple-vpn) ca cert key ta;
+          inherit (secrets.simple.vpn) ca cert key ta;
           auth = "SHA256";
           cert-pass-flags = 0;
           cipher = "AES-256-CBC";
@@ -62,7 +64,7 @@ with lib;
           key-mgmt = "wpa-eap";
         };
 
-        "802-1x" = with (import ../../../secrets/simple-wifi.nix); {
+        "802-1x" = with (secrets.simple.wifi); {
           eap = "ttls";
           identity = user;
           password = pass;
