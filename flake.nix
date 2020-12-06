@@ -2,7 +2,7 @@
   description = "Tad's Nix configurations";
 
   inputs = {
-    android-nixpkgs.url = "git+file:///home/tad/proj/android-nixpkgs";
+    android-nixpkgs.url = "github:tadfisher/android-nixpkgs/flake";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     home-manager = {
       url = "github:nix-community/home-manager";

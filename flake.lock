@@ -5,14 +5,18 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1607210946,
-        "narHash": "sha256-rB6vSrh+fwRk9d1qmA5D9hsaOABewexTxmK5/eBMbLA=",
-        "type": "git",
-        "url": "file:///home/tad/proj/android-nixpkgs"
+        "lastModified": 1607214902,
+        "narHash": "sha256-m2R/6bQJmgHqFfBCFDQqHH9wPsZkmOdHzgIS1YcQRTw=",
+        "owner": "tadfisher",
+        "repo": "android-nixpkgs",
+        "rev": "04f1507774c40063717e589dde8ef16a29899213",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/tad/proj/android-nixpkgs"
+        "owner": "tadfisher",
+        "ref": "flake",
+        "repo": "android-nixpkgs",
+        "type": "github"
       }
     },
     "emacs-overlay": {
