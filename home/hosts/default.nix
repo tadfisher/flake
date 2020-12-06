@@ -11,16 +11,29 @@ let
     let
       modules = pkgs:
         let
-          local = import "${toString ./.}/${hostname}" inputs;
+          global = {
+            nixpkgs.overlays = [
+              self.overlay
+              emacs-overlay.overlay
+              nur.overlay
+            ];
+          };
+
+          local = ./. + "/${hostname}";
+
           programs = builtins.attrValues self.hmModules.programs;
+
           services = builtins.attrValues self.hmModules.services;
+
         in
-        nixpkgs.lib.flatten [
+        [
           android-nixpkgs.hmModules.android-sdk
-          pkgs.nur.repos.rycee.hmModules.emacs-init
-          programs
-          services
-        ];
+          # pkgs.nur.repos.rycee.hmModules.emacs-init
+          global
+          local
+        ]
+        ++ programs
+        ++ services;
 
       configuration = { pkgs, ... }: { imports = modules pkgs; };
 

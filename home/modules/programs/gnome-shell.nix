@@ -51,8 +51,8 @@ let
 
 in
 {
-  options.desktops.gnome = {
-    enable = mkEnableOption "gnome desktop";
+  options.programs.gnome-shell = {
+    enable = mkEnableOption "gnome-shell";
 
     extensions = {
       packages = mkOption {
@@ -104,7 +104,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable mkMerge [
+  config = mkIf cfg.enable (mkMerge [
     (mkIf (cfg.extensions != { }) {
       dconf.settings."org/gnome/shell".enabled-extensions =
         catAttrs "id" cfg.extensions;
@@ -116,5 +116,5 @@ in
         cfg.theme.name;
       home.packages = optional (cfg.theme.package != null) cfg.theme.package;
     })
-  ];
+  ]);
 }
