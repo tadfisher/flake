@@ -54,39 +54,21 @@ in
   options.programs.gnome-shell = {
     enable = mkEnableOption "gnome-shell";
 
-    extensions = {
-      packages = mkOption {
-        type = types.listOf (types.submodule extensionOpts);
-        default = [ ];
-        example = literalExample ''
-          [
-            { package = pkgs.gnomeExtensions.dash-to-panel; }
-            {
-              id = "user-theme@gnome-shell-extensions.gcampax.github.com";
-              package = pkgs.gnome3.gnome-shell-extensions;
-            }
-          ]
-        '';
-        description = ''
-          List of gnome-shell extensions.
-        '';
-      };
-
-      ids = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        example = literalExample ''
-          [
-            "screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com"
-            "user-theme@gnome-shell-extensions.gcampax.github.com"
-            "windowsNavigator@gnome-shell-extensions.gcampax.github.com"
-            "workspace-indicator@gnome-shell-extensions.gcampax.github.com"
-          ]
-        '';
-        description = ''
-          List of Gnome extensions to enable by ID.
-        '';
-      };
+    extensions = mkOption {
+      type = types.listOf (types.submodule extensionOpts);
+      default = [ ];
+      example = literalExample ''
+        [
+          { package = pkgs.gnomeExtensions.dash-to-panel; }
+          {
+            id = "user-theme@gnome-shell-extensions.gcampax.github.com";
+            package = pkgs.gnome3.gnome-shell-extensions;
+          }
+        ]
+      '';
+      description = ''
+        List of gnome-shell extensions.
+      '';
     };
 
     theme = mkOption {

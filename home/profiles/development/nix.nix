@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  home.pkgs = with pkgs; [
+  home.packages = with pkgs; [
     binutils
     nix-index
     nix-prefetch-github

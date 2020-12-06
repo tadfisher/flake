@@ -3,8 +3,10 @@
 with lib;
 
 {
-  imports =
-    [ ./desktop.nix ./programs/firefox.nix ./programs/gnome-terminal.nix ];
+  imports = [
+    ./desktop.nix
+    ./programs/gnome-terminal.nix
+  ];
 
   dconf.settings = {
     "org/gnome/desktop/background" = {

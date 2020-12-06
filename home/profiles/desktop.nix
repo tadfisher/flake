@@ -3,8 +3,11 @@
 with lib;
 
 {
-  imports =
-    [ ./misc/gnome-paths.nix ./programs/firefox.nix ./services/emacs.nix ];
+  imports = [
+    ./misc/gnome-paths.nix
+    ./programs/firefox.nix
+    ./services/emacs.nix
+  ];
 
   fonts.fontconfig.enable = true;
 

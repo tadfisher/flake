@@ -50,10 +50,6 @@ with lib;
   };
 
   nix = {
-    package = pkgs.nixFlakes;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
     trustedUsers = [ "@wheel" ];
     useSandbox = true;
   };
@@ -72,6 +68,11 @@ with lib;
   };
 
   systemd.network.enable = true;
+
+  users = {
+    mutableUsers = false;
+    users.root.hashedPassword = "$6$cva/GQP1SG8fA5g0$QQyEV5vqZgX4TDYcjCq.XosXgP/QCpCUBmMlAy9GRFbLJMxzpWrpqRGo9Wag65JJoLHPkRQeDgiSM4EEPeNv1/";
+  };
 
   time.timeZone = "America/Los_Angeles";
 }

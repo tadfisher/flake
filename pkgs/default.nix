@@ -1,6 +1,6 @@
-final: prev:
+{ pkgs, ... }:
 
-with final;
+with pkgs;
 
 rec {
   sed-opal-unlocker = callPackage ./tools/security/sed-opal-unlocker { };

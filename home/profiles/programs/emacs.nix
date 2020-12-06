@@ -1,7 +1,8 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-let cfg = config.programs.emacs;
+let
+  cfg = config.programs.emacs;
 
 in
 {

@@ -150,30 +150,19 @@ in
     };
   };
 
-  programs.slack = {
-    enable = true;
-    arguments = [ "--silent" ];
-  };
-
   programs.pass.stores.".local/share/pass/work" = {
     primary = true;
     alias = "pw";
   };
 
-  xdg.configFile."git/config-work".text = ''
-    [user]
-        email = tad@simple.com
-        signingKey = tad@simple.com
+  xdg.configFile."git/config-work".text = generators.toGitINI {
+    user = {
+      email = "tad@simple.com";
+      signingKey = "tad@simple.com";
+    };
 
-    [credential]
-        helper = ${pkgs.pass-git-helper}/bin/pass-git-helper
-
-    [github]
-        host = github.banksimple.com/api
-
-    [github "github.banksimple.com/api"]
-        user = tad
-  '';
+    credential.helper = "${pkgs.pass-git-helper}/bin/pass-git-helper";
+  };
 
   xdg.configFile."pass-git-helper/git-pass-mapping.ini".text =
     generators.toINI { } {

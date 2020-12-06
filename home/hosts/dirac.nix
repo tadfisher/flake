@@ -2,15 +2,15 @@
 
 {
   imports = [
-    ../../profiles/core.nix
-    ../../profiles/gnome.nix
-    ../../profiles/work.nix
-    ../../profiles/development/android.nix
-    ../../profiles/development/go.nix
-    ../../profiles/development/jvm.nix
-    ../../profiles/development/nix.nix
-    ../../profiles/development/python.nix
-    ../../profiles/services/mopidy.nix
+    ../profiles/core.nix
+    ../profiles/gnome.nix
+    ../profiles/work.nix
+    ../profiles/development/android.nix
+    ../profiles/development/go.nix
+    ../profiles/development/jvm.nix
+    ../profiles/development/nix.nix
+    ../profiles/development/python.nix
+    ../profiles/services/mopidy.nix
   ];
 
   accounts.email.accounts."tad@simple.com".primary = true;
