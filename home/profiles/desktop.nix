@@ -42,11 +42,11 @@ with lib;
 
     file = {
       ".Xcompose".text = ''
-        include "${pkgs.dotxcompose}/share/dotXCompose"
-        include "${pkgs.dotxcompose}/share/emoji.compose"
-        include "${pkgs.dotxcompose}/share/modletters.compose"
-        include "${pkgs.dotxcompose}/share/tags.compose"
-        include "${pkgs.dotxcompose}/share/maths.compose"
+        include "${pkgs.xcompose}/share/dotXCompose"
+        include "${pkgs.xcompose}/share/emoji.compose"
+        include "${pkgs.xcompose}/share/modletters.compose"
+        include "${pkgs.xcompose}/share/tags.compose"
+        include "${pkgs.xcompose}/share/maths.compose"
       '';
 
       ".xprofile".text = ''
@@ -99,7 +99,7 @@ with lib;
         "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
       ];
     };
-    emacs.package = pkgs.emacsGccPgtk;
+    emacs.package = pkgs.emacsPgtkGcc;
     firefox.package = pkgs.firefox-wayland;
   };
 }

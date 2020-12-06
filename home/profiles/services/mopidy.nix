@@ -10,7 +10,7 @@ with lib;
       mopidy-mpd
       mopidy-mpris
       mopidy-somafm
-      mopidy-youtube-music
+      mopidy-youtube
     ];
 
     configuration = generators.toINI { } {

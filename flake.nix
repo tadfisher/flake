@@ -25,8 +25,10 @@
       pkgsBySystem = eachSystem (system:
         import inputs.nixpkgs {
           inherit system;
+          config.allowUnfree = true;
           overlays = [
             (self.overlay)
+            (inputs.android-nixpkgs.overlay)
             (inputs.emacs-overlay.overlay)
             (inputs.nur.overlay)
           ];
@@ -40,9 +42,8 @@
             self.nixosModules.hardware.pulseaudio
 
             ({ pkgs, ... }: {
-              networking.hostName = name;
-              nixpkgs.pkgs = pkgsBySystem.${system};
               environment.etc.nixpkgs.source = inputs.nixpkgs;
+              networking.hostName = name;
               nix = {
                 extraOptions = "experimental-features = nix-command flakes";
                 nixPath = [ "nixpkgs=/etc/nixpkgs" ];
@@ -55,6 +56,7 @@
                   };
                 };
               };
+              nixpkgs.pkgs = pkgsBySystem.${system};
               system.configurationRevision = inputs.nixpkgs.lib.mkIf (self ? rev) self.rev;
             })
 

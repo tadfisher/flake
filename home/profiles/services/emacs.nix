@@ -2,22 +2,22 @@
 
 with lib;
 let
-  cfg = config.services.emacs;
-
-  emacs = config.programs.emacs.finalPackage;
-
   editorScript = pkgs.writeScriptBin "emacseditor" ''
     #!${pkgs.runtimeShell}
-    ${emacs}/bin/emacsclient ${concatStringsSep " " cfg.client.arguments} "$@"
+    ${config.programs.emacs.package}/bin/emacsclient ${
+      concatStringsSep " " config.services.emacs.client.arguments
+    } "$@"
   '';
 
 in
 {
-  home.packages = [ editorScript ];
+  home = {
+    packages = [ editorScript ];
 
-  home.sessionVariables = optionalAttrs cfg.defaultEditor {
-    EDITOR = "${editorScript}/bin/emacseditor";
-    VISUAL = "${editorScript}/bin/emacseditor";
+    sessionVariables = {
+      EDITOR = "${editorScript}/bin/emacseditor";
+      VISUAL = "${editorScript}/bin/emacseditor";
+    };
   };
 
   services.emacs = {

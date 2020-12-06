@@ -4,7 +4,7 @@ with lib;
 let
   cfg = config.programs.gnome-shell;
 
-  extensionOpts = {
+  extensionOpts = { config, ... }: {
     options = {
       id = mkOption {
         type = types.nullOr types.str;
@@ -17,7 +17,7 @@ let
       };
 
       package = mkOption {
-        type = types.nullOr types.str;
+        type = types.nullOr types.package;
         default = null;
         example = "pkgs.gnome3.gnome-shell-extensions";
         description = ''
@@ -26,7 +26,7 @@ let
       };
     };
 
-    config = { id = mkDefault package.uuid or null; };
+    config = { id = mkDefault config.package.uuid or null; };
   };
 
   themeOpts = {
