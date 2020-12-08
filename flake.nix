@@ -134,6 +134,7 @@
 
       hmModules = {
         programs = {
+          emacs-init = import ./home/modules/programs/emacs-init.nix;
           emacs-lsp = import ./home/modules/programs/emacs-lsp.nix;
           firefox = import ./home/modules/programs/firefox.nix;
           gnome-shell = import ./home/modules/programs/gnome-shell.nix;
@@ -161,20 +162,24 @@
       nixosModules.hardware.pulseaudio = ./nixos/modules/config/pulseaudio.nix;
 
       overlays = {
-        pkgs = (final: prev: import ./pkgs { pkgs = final; });
-
         # This would be part of `packages' but that doesn’t support nested attrsets
         # (e.g. using `lib.makeScope').
-        emacs = (final: prev: {
+        emacs = final: prev: {
           emacsPackagesFor = emacs: (prev.emacsPackagesFor emacs).overrideScope'
             (efinal: eprev: import ./pkgs/emacs-packages.nix efinal);
-        });
+        };
+
+        pkgs = final: prev: import ./pkgs { pkgs = final; };
+
+        overlay = final: prev: import ./pkgs/overlay.nix final prev;
       };
 
       # There's probably an easier way to merge attributes in `overlays' into a
       # single function.
       overlay = final: prev:
-        (self.overlays.pkgs final prev) // (self.overlays.emacs final prev);
+        (self.overlays.pkgs final prev) //
+        (self.overlays.emacs final prev) //
+        (self.overlays.overlay final prev);
 
       packages = eachSystem (system: import ./pkgs { pkgs = pkgsBySystem.${system}; });
     };

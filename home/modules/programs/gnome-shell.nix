@@ -97,6 +97,12 @@ in
       dconf.settings."org/gnome/shell/extensions/user-theme".name =
         cfg.theme.name;
       home.packages = optional (cfg.theme.package != null) cfg.theme.package;
+      programs.gnome-shell.extensions = [
+        {
+          id = "user-theme@gnome-shell-extensions.gcampax.github.com";
+          package = pkgs.gnome3.gnome-shell-extensions;
+        }
+      ];
     })
   ]);
 }

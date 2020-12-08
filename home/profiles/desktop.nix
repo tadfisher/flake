@@ -39,7 +39,6 @@ with lib;
   };
 
   home = {
-
     file = {
       ".Xcompose".text = ''
         include "${pkgs.xcompose}/share/dotXCompose"
@@ -62,6 +61,8 @@ with lib;
     packages = with pkgs; [
       emacs-all-the-icons-fonts
       gksu
+      gnome3.adwaita-icon-theme
+      gnome3.gnome-themes-extra
       gparted
       jetbrains-mono
       keybase
@@ -101,5 +102,10 @@ with lib;
     };
     emacs.package = pkgs.emacsPgtkGcc;
     firefox.package = pkgs.firefox-wayland;
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "gnome";
   };
 }

@@ -35,6 +35,7 @@ in
       '';
 
     emacs = {
+      enable = true;
       package = mkDefault pkgs.emacs-nox;
 
       # TODO Not sure if still needed.
@@ -395,7 +396,7 @@ in
 
           base16-plata-noir-theme = {
             enable = true;
-            package = epkgs: epkgs.base16-plata-theme;
+            package = "base16-plata-theme";
             after = [ "base16-theme" "pretty-tabs" ];
             config = ''
               (when-let* ((dir (file-name-directory
@@ -555,7 +556,7 @@ in
                                                    "<>" "***" ";;" "/==" ".=" ".-" "__" "=/=" "<-<"
                                                    "<<<" ">>>" "<=<" "<<=" "<==" "<==>" "==>" "=>>"
                                                    ">=>" ">>=" ">>-" ">-" "<~>" "-<" "-<<" "<<" "---"
-                                                   "<-|" "<=|" "\\" "\\/" "|=>" "|->" "<~~" "<~" "~~"
+                                                   "<-|" "<=|" "\\\\" "\\/" "|=>" "|->" "<~~" "<~" "~~"
                                                    "~~>" "~>" "<$>" "<$" "$>" "<+>" "<+" "+>" "<*>"
                                                    "<*" "*>" "</" "</>" "/>" "<->" "..<" "~=" "~-"
                                                    "-~" "~@" "^=" "-|" "_|_" "|-" "||-" "|=" "||="
@@ -825,7 +826,7 @@ in
           # Configure AUCTeX.
           latex = {
             enable = true;
-            package = epkgs: epkgs.auctex;
+            package = "auctex";
             mode = [ ''("\\.tex\\'" . latex-mode)'' ];
             hook = [
               ''
@@ -1223,7 +1224,7 @@ in
 
           ox-moderncv = {
             enable = true;
-            package = epkgs: epkgs.org-cv;
+            package = "org-cv";
             after = [ "ox-publish" ];
             config = ''
               (defun org-moderncv-export-to-pdf

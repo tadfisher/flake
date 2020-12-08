@@ -8,22 +8,26 @@
     ./programs/texlive.nix
   ];
 
-  home.packages = with pkgs; [
-    bash-completion
-    curl
-    dosfstools
-    file
-    gnupg
-    jq
-    lm_sensors
-    ripgrep
-    rw
-    telnet
-    trash-cli
-    tree
-    unrar
-    unzip
-  ];
+  home = {
+    packages = with pkgs; [
+      bash-completion
+      curl
+      dosfstools
+      file
+      gnupg
+      jq
+      lm_sensors
+      ripgrep
+      rw
+      telnet
+      trash-cli
+      tree
+      unrar
+      unzip
+    ];
+
+    stateVersion = "21.03";
+  };
 
   programs = {
     bash = {
@@ -81,6 +85,8 @@
     };
   };
 
+  systemd.user.startServices = true;
+
   xdg.userDirs = {
     enable = true;
     desktop = "$HOME";
@@ -92,6 +98,4 @@
     templates = "$HOME/templates";
     videos = "$HOME/media/video";
   };
-
-  systemd.user.startServices = true;
 }

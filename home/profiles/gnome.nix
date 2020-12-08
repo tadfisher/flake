@@ -26,7 +26,7 @@ with lib;
       document-font-name = "Noto Sans 9.75";
       gtk-im-module = "xim";
       gtk-key-theme = "Emacs";
-      monospace-font-name = "Roboto Mono 9.75";
+      monospace-font-name = "JetBrains Mono Regular 9.75";
       scaling-factor = 1;
     };
 

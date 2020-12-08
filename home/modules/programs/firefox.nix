@@ -2,7 +2,19 @@
 
 with lib;
 let
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+
   cfg = config.programs.firefox;
+
+  mozillaConfigPath =
+    if isDarwin
+    then "Library/Application Support/Mozilla"
+    else ".mozilla";
+
+  firefoxConfigPath =
+    if isDarwin
+    then "Library/Application Support/Firefox"
+    else "${mozillaConfigPath}/firefox";
 
   profilesPath =
     if isDarwin then "${firefoxConfigPath}/Profiles" else firefoxConfigPath;
@@ -22,7 +34,7 @@ let
           key = "profile-${sanitize name}";
           exec = "firefox -profile '${profilesPath}/${profile.path}'";
         })
-        (attrValues cfg.profiles);
+        cfg.profiles;
 
       actions = [
         {
@@ -38,16 +50,16 @@ let
       ] ++ profileActions;
     in
     ''
-          ${fileContents "${cfg.package}/share/applications/firefox.desktop"}
-          Actions=${concatMapStrings (a: a.key + ";") (catAttrs "key" actions)}
+      ${fileContents "${cfg.package}/share/applications/firefox.desktop"}
+      Actions=${concatMapStrings (key: key + ";") (catAttrs "key" actions)}
 
-          ${concatMapStringsSep "\n"
-      (a: ''
-            [Desktop Action ${a.key}]
-            Name=${a.name}
-            Exec=${a.exec}
-          '')
-      actions}
+      ${concatMapStringsSep "\n"
+        (a: ''
+          [Desktop Action ${a.key}]
+          Name=${a.name}
+          Exec=${a.exec}
+        '')
+        actions}
     '';
 
   commonProfileOpts = { name, config, ... }: {

@@ -4,8 +4,8 @@
   home.packages = with pkgs; [
     binutils
     nix-index
-    nix-prefetch-github
-    nix-prefetch-scripts
+    # TODO broken: nix-prefetch-github
+    # TODO broken: nix-prefetch-scripts
     nox
     patchelf
   ];
