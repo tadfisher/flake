@@ -26,16 +26,18 @@ in
 
   programs = {
 
-    # TODO enable only in desktop profile
+    # TODO enable only for bash-in-emacs.
     bash.initExtra =
       let vterm = (pkgs.emacsPackagesFor cfg.package).vterm;
       in
       ''
-        . ${vterm}/share  /emacs/site-lisp/elpa/${vterm.ename}-${vterm.version}/etc/emacs-vterm-bash.sh
+        . ${vterm}/share/emacs/site-lisp/elpa/${vterm.ename}-${vterm.version}/etc/emacs-vterm-bash.sh
       '';
 
     emacs = {
       package = mkDefault pkgs.emacs-nox;
+
+      # TODO Not sure if still needed.
       overrides = self: super: rec {
         seq = cfg.package;
         magit-delta = super.magit-delta.overrideAttrs (attrs: {
@@ -360,7 +362,6 @@ in
           pretty-tabs = {
             enable = true;
             after = [ "tab-bar" "all-the-icons" ];
-            package = epkgs: (pkgs.emacsPackagesCustom epkgs).pretty-tabs;
             extraConfig = ''
               :functions pretty-tabs-mode
             '';
@@ -390,12 +391,11 @@ in
             '';
           };
 
-          base16-theme = { enable = true; };
+          base16-theme.enable = true;
 
           base16-plata-noir-theme = {
             enable = true;
-            package = epkgs:
-              (pkgs.emacsPackagesCustom epkgs).base16-plata-theme;
+            package = epkgs: epkgs.base16-plata-theme;
             after = [ "base16-theme" "pretty-tabs" ];
             config = ''
               (when-let* ((dir (file-name-directory
@@ -544,7 +544,6 @@ in
 
           ligature = {
             enable = true;
-            package = epkgs: (pkgs.emacsPackagesCustom epkgs).ligature;
             config = ''
               (ligature-set-ligatures 'prog-mode '("-->" "//" "/**" "/*" "*/" "<!--" ":=" "->>" "<<-"
                                                    "->" "<-" "<=>" "==" "!=" "<=" ">=" "=:=" "!=="
@@ -1224,7 +1223,7 @@ in
 
           ox-moderncv = {
             enable = true;
-            package = epkgs: (pkgs.emacsPackagesCustom epkgs).org-cv;
+            package = epkgs: epkgs.org-cv;
             after = [ "ox-publish" ];
             config = ''
               (defun org-moderncv-export-to-pdf
@@ -1667,7 +1666,6 @@ in
 
           gnome-shell-mode = {
             enable = true;
-            package = epkgs: (pkgs.emacsPackagesCustom epkgs).gnome-shell-mode;
             command = [ "gnome-shell-mode" ];
             # modeHydra = {
             #   gnome-shell-mode = {

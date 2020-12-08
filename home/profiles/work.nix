@@ -161,7 +161,7 @@ in
       signingKey = "tad@simple.com";
     };
 
-    credential.helper = "${pkgs.pass-git-helper}/bin/pass-git-helper";
+    credential.helper = "${pkgs.gitAndTools.pass-git-helper}/bin/pass-git-helper";
   };
 
   xdg.configFile."pass-git-helper/git-pass-mapping.ini".text =

@@ -160,7 +160,21 @@
 
       nixosModules.hardware.pulseaudio = ./nixos/modules/config/pulseaudio.nix;
 
-      overlay = final: prev: import ./pkgs { pkgs = final; };
+      overlays = {
+        pkgs = (final: prev: import ./pkgs { pkgs = final; });
+
+        # This would be part of `packages' but that doesn’t support nested attrsets
+        # (e.g. using `lib.makeScope').
+        emacs = (final: prev: {
+          emacsPackagesFor = emacs: (prev.emacsPackagesFor emacs).overrideScope'
+            (efinal: eprev: import ./pkgs/emacs-packages.nix efinal);
+        });
+      };
+
+      # There's probably an easier way to merge attributes in `overlays' into a
+      # single function.
+      overlay = final: prev:
+        (self.overlays.pkgs final prev) // (self.overlays.emacs final prev);
 
       packages = eachSystem (system: import ./pkgs { pkgs = pkgsBySystem.${system}; });
     };
