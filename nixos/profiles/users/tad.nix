@@ -6,10 +6,13 @@
     extraGroups = [
       "adbusers"
       "btrfs"
+      "cdrom"
       "docker"
+      "games"
       "libvirtd"
       "media"
       "networkmanager"
+      "vboxusers"
       "video"
       "wheel"
     ];

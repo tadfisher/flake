@@ -8,8 +8,8 @@ in
   imports = [
     ../profiles/core.nix
     ../profiles/users/tad.nix
+    ../profiles/uefi.nix
     ../profiles/workstation.nix
-    ../profiles/x86_64-linux.nix
   ];
 
   boot = {
@@ -201,5 +201,5 @@ in
     };
   };
 
-  system.stateVersion = "19.09";
+  system.stateVersion = "21.03";
 }

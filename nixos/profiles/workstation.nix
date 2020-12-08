@@ -7,13 +7,18 @@
     bluetooth = {
       enable = true;
       package = pkgs.bluezFull;
-      powerOnBoot = false;
+    };
+
+    opengl = {
+      enable = true;
+      driSupport32Bit = true;
     };
 
     pulseaudio = {
       enable = true;
       package = pkgs.pulseaudioFull;
       modules.module-switch-on-connect = { };
+      support32Bit = true;
     };
   };
 
@@ -23,7 +28,10 @@
       [connection]
       connection.mdns=2
     '';
-    wifi.backend = "iwd";
+    wifi = {
+      backend = "iwd";
+      powersave = true;
+    };
   };
 
   nix = {
@@ -39,6 +47,8 @@
   programs.seahorse.enable = false;
 
   services = {
+    avahi.enable = false;
+
     fwupd.enable = true;
 
     gnome3 = {
@@ -50,6 +60,8 @@
 
     pipewire.enable = true;
 
+    printing.enable = true;
+
     resolved = {
       enable = true;
       dnssec = "false";
@@ -59,9 +71,25 @@
       '';
     };
 
+    samba = {
+      enable = true;
+      nsswins = true;
+    };
+
     tlp.enable = false;
 
-    udev.packages = [ pkgs.android-udev-rules ];
+    udev = {
+      # TODO Package these explicitly
+      extraRules = ''
+        ${builtins.readFile ../../data/udev/dualshock3.rules}
+        ${builtins.readFile ../../data/udev/jlink.rules}
+        ${builtins.readFile ../../data/udev/particle.rules}
+      '';
+      packages = with pkgs; [
+        android-udev-rules
+        openocd
+      ];
+    };
 
     xserver = {
       enable = true;

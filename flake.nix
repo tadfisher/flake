@@ -97,7 +97,7 @@
             dataFile."nixpkgs".source = inputs.nixpkgs;
 
             configFile."nix/registry.json".text = builtins.toJSON {
-              verison = 2;
+              version = 2;
               flakes =
                 let
                   toInput = input: {
@@ -155,6 +155,13 @@
             inputs.nixos-hardware.nixosModules.common-cpu-intel-kaby-lake
             inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
             inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
+          ];
+        };
+        tycho = {
+          system = "x86_64-linux";
+          config = ./nixos/hosts/tycho.nix;
+          modules = [
+            inputs.nixos-hardware.nixosModules.common-cpu-amd
           ];
         };
       };
