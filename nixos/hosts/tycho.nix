@@ -82,43 +82,16 @@ with lib;
     xserver.displayManager.gdm.autoSuspend = false;
   };
 
-  systemd = {
-    automounts = [
-      {
-        description = "Automount kepler";
-        where = "/mnt/hosts/kepler";
-        wantedBy = [ "multi-user.target" ];
-      }
-    ];
-
-    mounts = [
-      {
-        description = "NFS share for kepler";
-        what = "kepler.local:/srv/";
-        where = "/mnt/hosts/kepler";
-        type = "nfs";
-        options = "noatime,noauto";
-        mountConfig = {
-          ForceUnmount = true;
-          TimeoutSec = "30";
-        };
-        after = [ "nss-lookup.target" ];
-        wants = [ "nss-lookup.target" ];
-        wantedBy = [ "multi-user.target" ];
-      }
-    ];
-
-    network.networks."40-enp4s0" = {
-      name = "enp4s0";
-      DHCP = "ipv4";
-      networkConfig = {
-        DNSSEC = "allow-downgrade";
-        EmitLLDP = "nearest-bridge";
-        LLMNR = true;
-        MulticastDNS = true;
-      };
-      dhcpConfig.UseDomains = true;
+  systemd.network.networks."40-enp4s0" = {
+    name = "enp4s0";
+    DHCP = "ipv4";
+    networkConfig = {
+      DNSSEC = "allow-downgrade";
+      EmitLLDP = "nearest-bridge";
+      LLMNR = true;
+      MulticastDNS = true;
     };
+    dhcpConfig.UseDomains = true;
   };
 
   users.groups = {
