@@ -108,8 +108,8 @@ with lib;
       }
     ];
 
-    network.networks = {
-      name = "40-enp4s0";
+    network.networks."40-enp4s0" = {
+      name = "enp4s0";
       DHCP = "ipv4";
       networkConfig = {
         DNSSEC = "allow-downgrade";
