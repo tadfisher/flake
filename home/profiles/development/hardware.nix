@@ -3,7 +3,7 @@
 {
   home.packages = with pkgs; [
     acpica-tools
-    binutils-unwrapped
+    binutils
     dmidecode
     eagle
     fwts
