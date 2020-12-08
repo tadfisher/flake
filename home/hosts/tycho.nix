@@ -1,0 +1,27 @@
+{ config, lib, pkgs, ... }:
+
+{
+  imports = [
+    ../profiles/core.nix
+    ../profiles/games.nix
+    ../profiles/gnome.nix
+    ../profiles/development/android.nix
+    ../profiles/development/hardware.nix
+    ../profiles/development/go.nix
+    ../profiles/development/jvm.nix
+    ../profiles/development/nix.nix
+    ../profiles/development/python.nix
+    ../profiles/services/mopidy.nix
+  ];
+
+  accounts.email.accounts."tadfisher@gmail.com".primary = true;
+
+  home.packages = with pkgs; [
+    brasero
+    celestia
+    inkscape
+    transmission-remote-gtk
+  ];
+
+  programs.pass.stores.".local/share/pass/personal".primary = true;
+}
