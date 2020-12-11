@@ -49,7 +49,11 @@ in
     userName = "tad@simple.com";
   };
 
-  home.packages = with pkgs; [ simple-vpn zoom-us ];
+  home.packages = with pkgs; [
+    slack
+    simple-vpn
+    zoom-us
+  ];
 
   programs.emacs.init.usePackage = {
     forge = {

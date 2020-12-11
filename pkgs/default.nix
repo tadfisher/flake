@@ -3,7 +3,7 @@
 with pkgs;
 
 {
-  sed-opal-unlocker = callPackage ./tools/security/sed-opal-unlocker { };
+  sed-opal-unlocker = callPackage ./sed-opal-unlocker { };
 
-  xcompose = callPackage ./data/misc/xcompose { };
+  xcompose = callPackage ./xcompose { };
 }

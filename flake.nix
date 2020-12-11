@@ -130,10 +130,6 @@
           system = "x86_64-linux";
           config = ./home/hosts/dirac.nix;
         };
-        tycho = {
-          system = "x86_64-linux";
-          config = ./home/hosts/tycho.nix;
-        };
       };
 
       hmModules = {
@@ -177,7 +173,7 @@
         # (e.g. using `lib.makeScope').
         emacs = final: prev: {
           emacsPackagesFor = emacs: (prev.emacsPackagesFor emacs).overrideScope'
-            (efinal: eprev: import ./pkgs/emacs-packages.nix efinal);
+            (efinal: eprev: import ./pkgs/emacs efinal);
         };
 
         pkgs = final: prev: import ./pkgs { pkgs = final; };
