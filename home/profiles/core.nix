@@ -85,7 +85,7 @@
     };
   };
 
-  systemd.user.startServices = true;
+  systemd.user.startServices = "sd-switch";
 
   xdg.userDirs = {
     enable = true;

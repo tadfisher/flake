@@ -130,6 +130,10 @@
           system = "x86_64-linux";
           config = ./home/hosts/dirac.nix;
         };
+        tycho = {
+          system = "x86_64-linux";
+          config = ./home/hosts/tycho.nix;
+        };
       };
 
       hmModules = {

@@ -10,20 +10,18 @@ with lib;
   ];
 
   boot = {
-    initrd = {
-      availableKernelModules = [
-        "ahci"
-        "nvme"
-        "sd_mod"
-        "usbhid"
-        "usb_storage"
-        "xhci_pci"
-      ];
-      kernelModules = [
-        "kvm-amd"
-        "lm92"
-      ];
-    };
+    initrd.availableKernelModules = [
+      "ahci"
+      "nvme"
+      "sd_mod"
+      "usbhid"
+      "usb_storage"
+      "xhci_pci"
+    ];
+    kernelModules = [
+      "kvm-amd"
+      "lm92"
+    ];
     kernelParams = [
       "mitigations=off"
     ];
