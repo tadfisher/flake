@@ -1,29 +1,29 @@
 { stdenv
 , fetchFromGitHub
+, SDL
+, SDL_image
 , autoreconfHook
-, pkgconfig
-, coreutils
 , bluez
+, coreutils
 , gnugrep
 , libGL
-, libudev
 , libX11
 , libXcomposite
 , libXdamage
-, libXfixes
 , libXext
+, libXfixes
 , libXpm
 , libXrender
 , libXt
 , libXxf86vm
+, libudev
 , motif
-, SDL
-, SDL_image
+, pkgconfig
+, pulseaudioFull
 , steam
 , steamos-modeswitch-inhibitor
 , steamos-modeswitch-inhibitor-i686 ? null
 , systemd
-, pulseaudio
 , xrandr
 , xset
 }:
@@ -64,7 +64,7 @@ stdenv.mkDerivation rec {
     steam
     steamos-modeswitch-inhibitor
     systemd
-    pulseaudio
+    pulseaudioFull
     xrandr
     xset
   ] ++ stdenv.lib.optional (steamos-modeswitch-inhibitor-i686 != null) [
@@ -93,7 +93,7 @@ stdenv.mkDerivation rec {
 
   postFixup = ''
     bluez=${bluez} \
-    pulseaudio=${pulseaudio} \
+    pulseaudio=${pulseaudioFull} \
     steam=${steam} \
     systemd=${systemd} \
     xset=${xset} \
