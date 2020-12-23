@@ -1,7 +1,7 @@
 { inputs, name, ... }:
 
 {
-  users.extraUsers.tad = {
+  users.users.tad = {
     description = "Tad Fisher";
     extraGroups = [
       "adbusers"

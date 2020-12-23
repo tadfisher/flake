@@ -81,7 +81,6 @@
     udev = {
       # TODO Package these explicitly
       extraRules = ''
-        ${builtins.readFile ../../data/udev/dualshock3.rules}
         ${builtins.readFile ../../data/udev/jlink.rules}
         ${builtins.readFile ../../data/udev/particle.rules}
       '';

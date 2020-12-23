@@ -4,6 +4,7 @@ with lib;
 {
   imports = [
     ../profiles/core.nix
+    ../profiles/games.nix
     ../profiles/users/tad.nix
     ../profiles/uefi.nix
     ../profiles/workstation.nix
@@ -58,8 +59,6 @@ with lib;
       libvdpau-va-gl
       vaapiVdpau
     ];
-
-    steam-hardware.enable = true;
   };
 
   nix = {
