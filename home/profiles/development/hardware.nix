@@ -6,6 +6,7 @@
     binutils
     dmidecode
     eagle
+    freecad
     fwts
     horizon-eda
     kicad
