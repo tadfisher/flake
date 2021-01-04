@@ -50,7 +50,7 @@ with lib;
       type = types.lines;
       default = "";
       description = ''
-        Commands called at the end of the interface setup.
+        Commands called at the start of the interface setup.
       '';
     };
 
@@ -59,6 +59,22 @@ with lib;
       default = "";
       description = ''
         Commands called at the end of the interface setup.
+      '';
+    };
+
+    preDown = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Commands called before the interface is taken down.
+      '';
+    };
+
+    postDown = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Commands called after the interface is taken down.
       '';
     };
 
@@ -73,20 +89,10 @@ with lib;
         '';
       };
     };
-
-    ipEnvFile = mkOption {
-      type = types.path;
-      internal = true;
-      description = ''
-        Path to a file containing the environment entry <varname>IP</varname>.
-      '';
-    };
   };
 
   config = mkIf cfg.enable {
     boot.kernelModules = [ "wireguard" ];
-
-    services.pia-vpn.ipEnvFile = "/run/${config.systemd.services.pia-vpn.serviceConfig.RuntimeDirectory}/ip.env";
 
     systemd.network.enable = true;
 
@@ -111,7 +117,6 @@ with lib;
         EnvironmentFile = cfg.environmentFile;
 
         CacheDirectory = "pia-vpn";
-        RuntimeDirectory = "pia-vpn";
         StateDirectory = "pia-vpn";
       };
 
@@ -180,12 +185,11 @@ with lib;
         fi
 
         echo Creating network interface ${cfg.interface}.
-        echo "$json" > $RUNTIME_DIRECTORY/wireguard.json
+        echo "$json" > $STATE_DIRECTORY/wireguard.json
 
         gateway="$(echo "$json" | jq -r '.server_ip')"
         servervip="$(echo "$json" | jq -r '.server_vip')"
         peerip=$(echo "$json" | jq -r '.peer_ip')
-        echo "IP=$peerip" > $RUNTIME_DIRECTORY/ip.env
 
         mkdir -p /run/systemd/network/
         touch /run/systemd/network/60-${cfg.interface}.{netdev,network}
@@ -225,21 +229,31 @@ with lib;
         EOF
 
         echo Bringing up network interface ${cfg.interface}.
+
+        ${cfg.preUp}
+
         networkctl reload
         networkctl up ${cfg.interface}
 
         ${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online -i ${cfg.interface}
 
         ${pkgs.iproute}/bin/ip route add default dev ${cfg.interface} table 42
+
+        ${cfg.postUp}
       '';
 
       preStop = ''
         echo Removing network interface ${cfg.interface}.
+
+        ${cfg.preDown}
+
         rm /run/systemd/network/60-${cfg.interface}.{netdev,network} || true
 
         echo Bringing down network interface ${cfg.interface}.
         networkctl down ${cfg.interface}
         networkctl reload
+
+        ${cfg.postDown}
       '';
     };
 
@@ -254,7 +268,7 @@ with lib;
         Type = "notify";
         Restart = "always";
         CacheDirectory = "pia-vpn";
-        RuntimeDirectory = "pia-vpn";
+        StateDirectory = "pia-vpn";
       };
 
       script = ''
@@ -264,11 +278,11 @@ with lib;
         fi
         wg_hostname="$(cat $CACHE_DIRECTORY/region.json | jq -r '.servers.wg[0].cn')"
 
-        if [ ! -f $RUNTIME_DIRECTORY/wireguard.json ]; then
+        if [ ! -f $STATE_DIRECTORY/wireguard.json ]; then
           >&2 echo "Connection information not found; is pia-vpn.service running?"
           exit 1
         fi
-        gateway="$(cat $RUNTIME_DIRECTORY/wireguard.json | jq -r '.server_ip')"
+        gateway="$(cat $STATE_DIRECTORY/wireguard.json | jq -r '.server_ip')"
 
         echo Enabling port forwarding...
         pfconfig=

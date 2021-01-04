@@ -2,9 +2,9 @@
 
 with lib;
 let
-  piaIpEnvFile = config.services.pia-vpn.ipEnvFile;
+  piaInterface = config.services.pia-vpn.interface;
 
-  processTorrent = pkgs.writeScript "processTorrent" ''
+  processTorrent = pkgs.writeScript "process-torrent" ''
     #!${pkgs.stdenv.shell}
     cd "$TR_TORRENT_DIR"
     if [ -d "$TR_TORRENT_NAME" ]; then
@@ -13,6 +13,15 @@ let
         pushd $dir; ${pkgs.unrar}/bin/unrar x *.rar; popd
       done
     in
+  '';
+
+  startTransmission = pkgs.writeScript "start-transmission" ''
+    #!${pkgs.stdenv.shell}
+    IP=$(${pkgs.iproute2}/bin/ip -j addr show dev ${piaInterface}
+         | ${pkgs.jq}/bin/jq -r '.[0].addr_info | map(select(.family == "inet"))[0].local')
+    ${pkgs.transmission}/bin/transmission-daemon -f \
+      -g "${config.services.transmission.home}/.config/transmission-daemon" \
+      --bind-address-ipv4 $IP
   '';
 
 in
@@ -83,17 +92,9 @@ in
     bindsTo = [ "pia-vpn.service" ];
     requires = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      BindReadOnlyPaths = [ piaIpEnvFile ];
-      EnvironmentFile = [ piaIpEnvFile ];
-      ExecStart = mkForce ''
-        ${pkgs.transmission}/bin/transmission-daemon -f \
-          -g "${config.services.transmission.home}/.config/transmission-daemon" \
-          --bind-address-ipv4 $IP \
-          --log-debug --logfile $LOGS_DIRECTORY/daemon.log
-      '';
-      LogsDirectory = [ "transmission" ];
-    };
+    serviceConfig.ExecStart = mkForce ''
+      ${startTransmission}
+    '';
   };
 
   users.users.transmission.extraGroups = [ "media" ];
