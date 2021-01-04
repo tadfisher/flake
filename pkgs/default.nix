@@ -31,13 +31,6 @@ with pkgs;
 
   steamos-modeswitch-inhibitor-i686 = pkgsi686Linux.callPackage ./steamos-modeswitch-inhibitor { };
 
-  unifi-beta = callPackage ./unifi-beta { };
-
-  # Testing.
-  waffle-test = enableDebugging (waffle.overrideAttrs (attrs: {
-    dontStrip = true;
-  }));
-
   xcompose = callPackage ./xcompose { };
 
   zephyr-toolchain = callPackage ./zephyr-toolchain { };

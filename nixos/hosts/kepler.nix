@@ -111,19 +111,13 @@ with lib;
     };
 
     iperf3.enable = true;
-    sonarr.enable = true;
-    radarr.enable = true;
-    jackett.enable = true;
 
     transmission.settings = {
       download-dir = "/srv/media/.incoming";
       watch-dir = "/srv/media/.incoming/";
     };
 
-    unifi = {
-      enable = true;
-      unifiPackage = pkgs.unifi-beta;
-    };
+    unifi.enable = true;
   };
 
   systemd.network.networks = {
