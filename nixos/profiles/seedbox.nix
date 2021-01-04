@@ -17,8 +17,7 @@ let
 
   startTransmission = pkgs.writeScript "start-transmission" ''
     #!${pkgs.stdenv.shell}
-    IP=$(${pkgs.iproute2}/bin/ip -j addr show dev ${piaInterface}
-         | ${pkgs.jq}/bin/jq -r '.[0].addr_info | map(select(.family == "inet"))[0].local')
+    IP=$(${pkgs.iproute2}/bin/ip -j addr show dev ${piaInterface} | ${pkgs.jq}/bin/jq -r '.[0].addr_info | map(select(.family == "inet"))[0].local')
     ${pkgs.transmission}/bin/transmission-daemon -f \
       -g "${config.services.transmission.home}/.config/transmission-daemon" \
       --bind-address-ipv4 $IP
