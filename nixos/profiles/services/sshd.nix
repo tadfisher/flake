@@ -13,5 +13,8 @@ with lib;
     passwordAuthentication = false;
     permitRootLogin = "no";
     startWhenNeeded = true;
+    extraConfig = ''
+      StreamLocalBindUnlink yes
+    '';
   };
 }

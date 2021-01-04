@@ -64,8 +64,16 @@
     };
     ssh = {
       enable = true;
+      compression = true;
       controlMaster = "auto";
       controlPersist = "10m";
+      matchBlocks."kepler" = {
+        hostname = "kepler.lan";
+        user = "tad";
+        extraOptions = {
+          RemoteForward = "/run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra";
+        };
+      };
     };
   };
 
