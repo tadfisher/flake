@@ -3,6 +3,22 @@
 {
   boot.plymouth.enable = true;
 
+  environment.systemPackages = with pkgs; [
+    gnome3.adwaita-icon-theme
+    gnome3.gnome-themes-extra
+    paper-icon-theme
+    plata-theme
+  ];
+
+  fonts.fonts = with pkgs; [
+    jetbrains-mono
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-emoji
+    roboto
+    roboto-mono
+  ];
+
   hardware = {
     bluetooth = {
       enable = true;
@@ -48,6 +64,8 @@
 
   services = {
     avahi.enable = false;
+
+    dbus.packages = [ pkgs.gcr ];
 
     fwupd.enable = true;
 

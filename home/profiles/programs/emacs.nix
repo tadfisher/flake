@@ -1222,27 +1222,6 @@ in
             command = [ "org-tree-slide-mode" ];
           };
 
-          ox-moderncv = {
-            enable = true;
-            package = "org-cv";
-            after = [ "ox-publish" ];
-            config = ''
-              (defun org-moderncv-export-to-pdf
-                  (&optional async subtreep visible-only body-only ext-plist)
-                "Export current buffer as a moderncv CV (PDF)."
-                (interactive)
-                (let ((file (org-export-output-file-name ".tex" subtreep)))
-                  (org-export-to-file 'moderncv file
-                    async subtreep visible-only body-only ext-plist
-                    (lambda (file) (org-latex-compile file)))))
-
-              (let ((backend (org-export-get-backend 'moderncv)))
-                (setf (org-export-backend-menu backend)
-                      '(?l 1
-                           ((?C "As PDF file (moderncv)" org-moderncv-export-to-pdf)))))
-            '';
-          };
-
           # Set up yasnippet. Defer it for a while since I don't generally
           # need it immediately.
           yasnippet = {

@@ -40,6 +40,7 @@
           inherit system;
           modules = modules ++ [
             self.nixosModules.hardware.pulseaudio
+            self.nixosModules.services.pia-vpn
 
             ({ pkgs, ... }: {
               environment.etc.nixpkgs.source = inputs.nixpkgs;
@@ -161,6 +162,13 @@
             inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
           ];
         };
+        kepler = {
+          system = "x86_64-linux";
+          config = ./nixos/hosts/kepler.nix;
+          modules = [
+            inputs.nixos-hardware.nixosModules.common-cpu-intel
+          ];
+        };
         tycho = {
           system = "x86_64-linux";
           config = ./nixos/hosts/tycho.nix;
@@ -170,7 +178,10 @@
         };
       };
 
-      nixosModules.hardware.pulseaudio = ./nixos/modules/config/pulseaudio.nix;
+      nixosModules = {
+        hardware.pulseaudio = ./nixos/modules/pulseaudio.nix;
+        services.pia-vpn = ./nixos/modules/pia-vpn.nix;
+      };
 
       overlays = {
         # This would be part of `packages' but that doesn’t support nested attrsets

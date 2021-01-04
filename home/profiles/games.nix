@@ -6,6 +6,7 @@
     enyo-doom
     gzdoom
     protontricks
+    retroarch
     steam
     steam-run
     stockfish

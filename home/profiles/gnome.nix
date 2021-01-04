@@ -190,10 +190,6 @@ with lib;
     platformTheme = "gnome";
   };
 
-  services.gpg-agent.extraConfig = ''
-    pinentry-program ${pkgs.pinentry_gnome}/bin/pinentry-gnome3
-  '';
-
   # Disable gnome-keyring ssh-agent
   xdg.configFile = {
     "autostart/gnome-keyring-ssh.desktop".text = ''
@@ -201,11 +197,5 @@ with lib;
       "${pkgs.gnome3.gnome-keyring}/etc/xdg/autostart/gnome-keyring-ssh.desktop"}
       Hidden=true
     '';
-
-    "chromium/native-messaging-hosts/org.gnome.chrome_gnome_shell.json".source =
-      "${pkgs.chrome-gnome-shell}/etc/chromium/native-messaging-hosts/org.gnome.chrome_gnome_shell.json";
-
-    # "chromium/native-messaging-hosts/org.gnome.shell.extensions.gsconnect.json".source =
-    #   "${pkgs.gnomeExtensions.gsconnect}/etc/chromium/native-messaging-hosts/org.gnome.shell.extensions.gsconnect.json";
   };
 }

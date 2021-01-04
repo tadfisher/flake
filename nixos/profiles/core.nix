@@ -7,10 +7,6 @@ with lib;
     cleanTmpDir = true;
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [ "quiet" ];
-    loader = {
-      systemd-boot.enable = true;
-      timeout = 0;
-    };
     supportedFilesystems = [ "exfat" ];
   };
 
@@ -66,6 +62,14 @@ with lib;
   nixpkgs.config.allowUnfree = true;
 
   programs.bash.enableCompletion = true;
+
+  security = {
+    pam = {
+      enableSSHAgentAuth = true;
+      services.ssh.sshAgentAuth = true;
+    };
+    sudo.wheelNeedsPassword = false;
+  };
 
   services.resolved = {
     enable = true;

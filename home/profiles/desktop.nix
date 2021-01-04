@@ -66,6 +66,7 @@ with lib;
       gparted
       jetbrains-mono
       keybase
+      libreoffice
       material-icons
       noto-fonts
       noto-fonts-cjk
@@ -108,4 +109,6 @@ with lib;
     enable = true;
     platformTheme = "gnome";
   };
+
+  services.gpg-agent.pinentryFlavor = "gnome3";
 }

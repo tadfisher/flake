@@ -28,6 +28,8 @@ with lib;
     ];
   };
 
+  environment.enableDebugInfo = true;
+
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-uuid/4584fda1-e195-414e-9557-12a749848132";

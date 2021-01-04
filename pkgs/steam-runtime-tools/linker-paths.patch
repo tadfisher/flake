@@ -1,0 +1,24 @@
+diff --git a/steam-runtime-tools/architecture.c b/steam-runtime-tools/architecture.c
+index e4a0029..0468af6 100644
+--- a/steam-runtime-tools/architecture.c
++++ b/steam-runtime-tools/architecture.c
+@@ -50,17 +50,12 @@ static const SrtKnownArchitecture known_architectures[] =
+ {
+     {
+       .multiarch_tuple = SRT_ABI_X86_64,
+-      .interoperable_runtime_linker = "/lib64/ld-linux-x86-64.so.2",
++      .interoperable_runtime_linker = "@linker64@",
+     },
+ 
+     {
+       .multiarch_tuple = SRT_ABI_I386,
+-      .interoperable_runtime_linker = "/lib/ld-linux.so.2",
+-    },
+-
+-    {
+-      .multiarch_tuple = "x86_64-linux-gnux32",
+-      .interoperable_runtime_linker = "/libx32/ld-linux-x32.so.2",
++      .interoperable_runtime_linker = "@linker32@",
+     },
+ 
+     { NULL }
