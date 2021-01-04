@@ -238,7 +238,12 @@ in
             metals = {
               modes = [ "scala-mode" ];
               config = ''
-                (setq lsp-metals-server-command '("${pkgs.metals}/bin/metals-emacs"))
+                (setq lsp-metals-server-command "${pkgs.metals}/bin/metals-emacs"
+                      lsp-metals-java-home "${pkgs.jdk11.home}"
+                      lsp-metals-sbt-script "${pkgs.sbt}/bin/sbt"
+                      lsp-metals-gradle-script "${pkgs.gradle}/bin/gradle"
+                      lsp-metals-maven-script "${pkgs.maven}/bin/mvn"
+                      lsp-metals-mill-script "${pkgs.mill}/bin/mill")
               '';
             };
             rust = {
@@ -252,8 +257,7 @@ in
           };
           init = ''
             (setq lsp-eldoc-render-all nil
-                  lsp-keymap-prefix "M-SPC l"
-                  lsp-prefer-capf t)
+                  lsp-keymap-prefix "M-SPC l")
           '';
         };
 
@@ -886,9 +890,14 @@ in
             after = [ "mpdel" ];
           };
 
+          lsp-modeline = {
+            enable = true;
+            package = "lsp-mode";
+          };
+
           lsp-ui = {
             enable = true;
-            command = [ "lsp-ui-mode" ];
+            package = "lsp-mode";
           };
 
           lsp-ivy = {
@@ -901,14 +910,17 @@ in
             command = [ "lsp-treemacs-errors-list" ];
           };
 
+          posframe = {
+            enable = true;
+          };
+
           dap-mode = {
             enable = true;
-            after = [ "lsp-mode" ];
-            command = [ "dap-mode" "dap-ui-mode" ];
-            config = ''
-              (dap-mode t)
-              (dap-ui-mode t)
-            '';
+            hook = [
+              "(lsp-mode . dap-mode)"
+              "(lsp-mode . dap-ui-mode)"
+              "(dap-stopped . (lambda (arg) (call-interactively #'dap-hydra)))"
+            ];
           };
 
           #  Setup RefTeX.
