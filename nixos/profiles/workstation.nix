@@ -80,15 +80,6 @@
 
     printing.enable = true;
 
-    resolved = {
-      enable = true;
-      dnssec = "false";
-      extraConfig = ''
-        MulticastDNS=true
-        DNSOverTLS=opportunistic
-      '';
-    };
-
     samba = {
       enable = true;
       nsswins = true;

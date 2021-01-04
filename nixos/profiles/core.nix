@@ -73,7 +73,6 @@ with lib;
 
   services.resolved = {
     enable = true;
-    dnssec = "allow-downgrade";
     extraConfig = ''
       MulticastDNS=true
       DNSOverTLS=opportunistic
