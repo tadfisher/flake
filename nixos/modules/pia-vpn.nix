@@ -245,6 +245,7 @@ with lib;
 
     systemd.services.pia-vpn-portforward = mkIf cfg.portForward.enable {
       description = "Configure port-forwarding for PIA connection ${cfg.interface}";
+      path = with pkgs; [ curl jq ];
       after = [ "pia-vpn.service" ];
       bindsTo = [ "pia-vpn.service" ];
       wantedBy = [ "pia-vpn.service" ];
