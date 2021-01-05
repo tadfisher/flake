@@ -1,3 +1,5 @@
+{ pkgs, ... }:
+
 {
   android-sdk = {
     enable = true;
@@ -12,5 +14,15 @@
         sources.android-30
         system-images.android-30.google-apis-playstore.x86
       ];
+  };
+
+  home = {
+    file.".gradle/gradle.properties".text = ''
+      org.gradle.jvmargs=-Xmx2048M -Dkotlin.daemon.jvm.options\="-Xmx2048M"
+    '';
+
+    packages = with pkgs; [
+      androidStudioPackages.canary
+    ];
   };
 }
