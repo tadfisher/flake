@@ -155,7 +155,7 @@ with lib;
         meta_hostname="$(echo $region | jq -r '.servers.meta[0].cn')"
         wg_ip="$(echo $region | jq -r '.servers.wg[0].ip')"
         wg_hostname="$(echo $region | jq -r '.servers.wg[0].cn')"
-        echo "$region" > $CACHE_DIRECTORY/region.json
+        echo "$region" > $STATE_DIRECTORY/region.json
 
         echo Generating token...
         tokenResponse="$(curl -s -u "$PIA_USER:$PIA_PASS" \
@@ -166,6 +166,7 @@ with lib;
           >&2 echo "Failed to generate token. Stopping."
           exit 1
         fi
+        echo "$tokenResponse" > $STATE_DIRECTORY/token.json
         token="$(echo "$tokenResponse" | jq -r '.token')"
 
         echo Connecting to the PIA WireGuard API on $wg_ip...
