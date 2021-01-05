@@ -9,15 +9,14 @@ let
   cfgEmail = config.accounts.email;
 
   sendmail = pkgs.writeShellScript "lieer-sendmail" ''
-    declare -a args
-    args=()
+    args=
     for arg in "$@"; do
         case "$arg" in
             -o*) continue ;;
-            *) args+="$arg" ;;
+            *) args="$args $arg" ;;
         esac
     done
-    ${pkgs.lieer}/bin/gmi send "''${args[@]}"
+    ${pkgs.lieer}/bin/gmi send ''${args[@]}
   '';
 
   notmuchAccounts = filter (a: a.notmuch.enable) (attrValues cfgEmail.accounts);
