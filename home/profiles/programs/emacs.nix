@@ -897,7 +897,7 @@ in
 
           lsp-ui = {
             enable = true;
-            package = "lsp-mode";
+            command = [ "lsp-ui-mode" ];
           };
 
           lsp-ivy = {
@@ -917,10 +917,16 @@ in
           dap-mode = {
             enable = true;
             hook = [
-              "(lsp-mode . dap-mode)"
-              "(lsp-mode . dap-ui-mode)"
               "(dap-stopped . (lambda (arg) (call-interactively #'dap-hydra)))"
             ];
+          };
+
+          dap-lldb = {
+            enable = true;
+            package = "dap-mode";
+            config = ''
+              (setq dap-lldb-debug-program "${pkgs.vscode-extensions.llvm-org.lldb-vscode}/bin/lldb-vscode")
+            '';
           };
 
           #  Setup RefTeX.
