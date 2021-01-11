@@ -1,4 +1,8 @@
-{ stdenv, fetchFromGitHub, trivialBuild }:
+{ lib
+, stdenv
+, fetchFromGitHub
+, trivialBuild
+}:
 
 trivialBuild {
   pname = "ligature";
@@ -11,7 +15,7 @@ trivialBuild {
     sha256 = "sha256-cFaXfL7qy1ocjTsQdWxciojTKNTjc6jVUkdvIN2AiKg";
   };
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Typographic ligatures in Emacs";
     homepage = "https://github.com/mickeynp/ligature.el";
     license = licenses.gpl3;

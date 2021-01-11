@@ -1,4 +1,5 @@
-{ stdenv
+{ lib
+, stdenv
 , fetchurl
 , autoreconfHook
 , pkgconfig
@@ -21,7 +22,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ libX11 libXrandr libXrender libXxf86vm ];
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "SteamOS mode switch inhibitor";
     longDescription = ''
       Shared library which fakes any mode switch attempts to prevent full-screen

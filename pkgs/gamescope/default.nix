@@ -1,4 +1,5 @@
-{ stdenv
+{ lib
+, stdenv
 , fetchFromGitHub
 , cmake
 , glslang
@@ -67,7 +68,7 @@ stdenv.mkDerivation rec {
 
   dontUseCmakeConfigure = true;
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "SteamOS session compositing window manager";
     homepage = "https://github.com/Plagman/gamescope";
     license = licenses.bsd2;

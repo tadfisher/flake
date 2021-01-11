@@ -1,4 +1,5 @@
-{ stdenv
+{ lib
+, stdenv
 , buildPythonPackage
 , fetchPypi
 , docopt
@@ -15,7 +16,7 @@ buildPythonPackage rec {
 
   propagatedBuildInputs = [ docopt ];
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "An IPS patching application with api, cli, and WinForms interfaces";
     homepage = "https://pypi.org/project/python-ips/";
     license = licenses.mit;

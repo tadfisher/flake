@@ -1,4 +1,5 @@
-{ stdenv
+{ lib
+, stdenv
 , fetchFromGitLab
 , autoreconfHook
 , autoconf-archive
@@ -77,7 +78,7 @@ stdenv.mkDerivation rec {
     gtkdocize
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Segregated dynamic linking library";
     homepage = "https://gitlab.collabora.com/vivek/libcapsule";
     platforms = [ "x86_64-linux" "i686-linux" ];

@@ -1,4 +1,12 @@
-{ stdenv, fetchurl, coreutils, libarchive, python3, file, which }:
+{ lib
+, stdenv
+, fetchurl
+, coreutils
+, libarchive
+, python3
+, file
+, which
+}:
 
 stdenv.mkDerivation rec {
   pname = "zephyr-toolchain";
@@ -26,7 +34,7 @@ stdenv.mkDerivation rec {
     ./setup.sh -d $out -y -norc
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Zephyr embedded RTOS toolchain";
     homepage = "https://www.zephyrproject.org/";
     license = licenses.asl20;

@@ -1,4 +1,10 @@
-{ stdenv, fetchFromGitHub, runCommand, python3, libargon2 }:
+{ lib
+, stdenv
+, fetchFromGitHub
+, runCommand
+, python3
+, libargon2
+}:
 let
   version = "1.0.0";
 
@@ -9,7 +15,7 @@ let
     sha256 = "0gr94jlw8d01a1bz2x6jhwim2hh4rijlj94x2fqxxhk22lbk61n2";
   };
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     homepage = "https://github.com/dex6/sed-opal-unlocker";
     license = licenses.asl20;
     maintainers = [ maintainers.tadfisher ];

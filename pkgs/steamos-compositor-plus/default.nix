@@ -1,4 +1,5 @@
-{ stdenv
+{ lib
+, stdenv
 , fetchFromGitHub
 , SDL
 , SDL_image
@@ -67,7 +68,7 @@ stdenv.mkDerivation rec {
     pulseaudioFull
     xrandr
     xset
-  ] ++ stdenv.lib.optional (steamos-modeswitch-inhibitor-i686 != null) [
+  ] ++ lib.optional (steamos-modeswitch-inhibitor-i686 != null) [
     steamos-modeswitch-inhibitor-i686
   ];
 
@@ -86,9 +87,9 @@ stdenv.mkDerivation rec {
     chmod +x $out/bin/*
   '';
 
-  modeswitchLibs = stdenv.lib.makeLibraryPath (
+  modeswitchLibs = lib.makeLibraryPath (
     [ steamos-modeswitch-inhibitor ]
-    ++ stdenv.lib.optional (steamos-modeswitch-inhibitor-i686 != null) steamos-modeswitch-inhibitor-i686
+    ++ lib.optional (steamos-modeswitch-inhibitor-i686 != null) steamos-modeswitch-inhibitor-i686
   );
 
   postFixup = ''
@@ -114,7 +115,7 @@ stdenv.mkDerivation rec {
     providedSessions = [ "steamos" ];
   };
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "SteamOS compositing and window manager (gamer-os fork)";
     homepage = "https://github.com/gamer-os/steamos-compositor-plus";
     maintainers = with maintainers; [ tadfisher ];

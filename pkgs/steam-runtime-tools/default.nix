@@ -1,4 +1,5 @@
-{ stdenv
+{ lib
+, stdenv
 , fetchurl
 , meson
 , ninja
@@ -90,7 +91,7 @@ stdenv.mkDerivation rec {
     ln -s ${waffle}/bin/wflinfo $libexecdir/${hostPrefix}-wflinfo
     ln -s ${vulkan-tools}/bin/vulkaninfo $libexecdir/${hostPrefix}-vulkaninfo
 
-    ${stdenv.lib.optionalString (steam-runtime-tools-i686 != null) ''
+    ${lib.optionalString (steam-runtime-tools-i686 != null) ''
     ln -s ${steam-runtime-tools-i686}/libexec/steam-runtime-tools-0/${steam-runtime-tools-i686.hostPrefix}-* $libexecdir/
     ''}
   '';
@@ -99,7 +100,7 @@ stdenv.mkDerivation rec {
     inherit hostPrefix;
   };
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Steam Runtime integration for the Steam client";
     homepage = "https://gitlab.steamos.cloud/steamrt/steam-runtime-tools";
     platforms = [ "x86_64-linux" ];

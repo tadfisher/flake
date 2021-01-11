@@ -4,7 +4,7 @@
   inputs = {
     android-nixpkgs = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:tadfisher/android-nixpkgs/flake";
+      url = "github:tadfisher/android-nixpkgs";
     };
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     home-manager = {
@@ -80,7 +80,7 @@
         in
         inputs.nixpkgs.lib.nameValuePair name ({ config, lib, pkgs, ... }: {
           imports = [
-            inputs.android-nixpkgs.hmModules.android-sdk
+            inputs.android-nixpkgs.hmModule
             pkgsBySystem.${system}.nur.repos.rycee.hmModules.emacs-init
             self.hmModules.programs.emacs-lsp
             self.hmModules.programs.firefox

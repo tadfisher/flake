@@ -1,4 +1,8 @@
-{ stdenv, fetchFromGitHub, perl }:
+{ lib
+, stdenv
+, fetchFromGitHub
+, perl
+}:
 let
   composeFiles = [
     "emoji"
@@ -35,7 +39,7 @@ stdenv.mkDerivation {
     done
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Shared .XCompose keybindings";
     homepage = "https://github.com/kragen/xcompose";
     platforms = platforms.all;

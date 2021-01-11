@@ -9,11 +9,9 @@
       },
       "locked": {
         "lastModified": 1610327195,
-        "narHash": "sha256-o2UvC1CQR/WfbWoPnHlk4vjNCIEzWfZGqwcz0cWrpgY=",
-        "owner": "tadfisher",
-        "repo": "android-nixpkgs",
-        "rev": "2103a12565f4061024c81aaf1ed833f5341d4249",
-        "type": "github"
+        "narHash": "sha256-4e/lGbdUcLK+g+iKKpMWA2TwpEdsyy/5H+VuX1Ln8qo=",
+        "type": "git",
+        "url": "file:///home/tad/proj/android-nixpkgs"
       },
       "original": {
         "owner": "tadfisher",

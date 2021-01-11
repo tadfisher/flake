@@ -1,4 +1,10 @@
-{ stdenv, trivialBuild, fetchFromGitLab, org, ox-hugo }:
+{ lib
+, stdenv
+, trivialBuild
+, fetchFromGitLab
+, org
+, ox-hugo
+}:
 
 trivialBuild {
   pname = "org-CV";
@@ -13,7 +19,7 @@ trivialBuild {
 
   packageRequires = [ org ox-hugo ];
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Collection of export backends for orgmode to generate a CV";
     homepage = "https://gitlab.com/Titan-C/org-cv";
     license = licenses.gpl3;
