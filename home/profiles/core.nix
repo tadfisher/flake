@@ -9,6 +9,11 @@
   ];
 
   home = {
+    # Conflicts with pcscd
+    file.".gnupg/scdaemon.conf".text = ''
+      disable-ccid
+    '';
+
     packages = with pkgs; [
       bash-completion
       curl
@@ -51,6 +56,7 @@
       };
     };
     git.enable = true;
+    gpg.enable = true;
     home-manager.enable = true;
     mercurial = {
       enable = true;

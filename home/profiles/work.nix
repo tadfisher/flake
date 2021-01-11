@@ -33,6 +33,7 @@ in
   accounts.email.accounts."tad@simple.com" = {
     address = "tad@simple.com";
     flavor = "gmail.com";
+    folders.drafts = "drafts";
     gpg = {
       key = "tad@simple.com";
       signByDefault = true;

@@ -157,7 +157,6 @@ with lib;
   home.packages = with pkgs; [
     chrome-gnome-shell
     gnome3.dconf-editor
-    gnome3.gnome-boxes
     gnome3.gnome-tweaks
     roboto
     virtmanager
