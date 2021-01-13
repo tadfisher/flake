@@ -101,7 +101,10 @@ with lib;
         "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
       ];
     };
-    emacs.package = pkgs.emacsPgtkGcc;
+    # TODO Use native-comp when this is resolved:
+    # https://github.com/nix-community/emacs-overlay/issues/74#issuecomment-758160258
+    # emacs.package = pkgs.emacsPgtkGcc;
+    emacs.package = pkgs.emacsPgtk;
     firefox.package = pkgs.firefox-wayland;
   };
 
