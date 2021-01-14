@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
 ./pkgs/plex-plexpass/update.sh
-./pkgs/unifi-beta/update.sh
