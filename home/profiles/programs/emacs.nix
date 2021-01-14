@@ -692,6 +692,17 @@ in
 
           ivy-hydra = { enable = true; };
 
+          ivy-posframe = {
+            enable = true;
+            after = [ "ivy" "posframe" ];
+            config = ''
+              (setq ivy-posframe-border-width 1
+                    ivy-posframe-display-functions-alist '((swiper . ivy-display-function-fallback)
+                                                           (t . ivy-posframe-display-at-frame-center)))
+              (ivy-posframe-mode)
+            '';
+          };
+
           ivy-prescient = {
             enable = false;
             after = [ "ivy" ];
