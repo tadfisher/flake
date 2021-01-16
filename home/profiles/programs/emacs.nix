@@ -741,8 +741,11 @@ in
           counsel = {
             enable = true;
             bind = {
+              "C-x d" = "counsel-dired";
               "C-x C-f" = "counsel-find-file";
               "C-x C-r" = "counsel-recentf";
+              "M-SPC f d" = "counsel-dired";
+              "M-SPC f f" = "counsel-find-file";
               "M-SPC h F" = "counsel-describe-face";
               "M-SPC h f" = "counsel-describe-function";
               "M-SPC h s" = "counsel-describe-symbol";
@@ -926,14 +929,16 @@ in
           };
 
           dap-mode = {
-            enable = true;
+            # FIXME fails with (void-function "dap-ui-mode")
+            enable = false;
             hook = [
               "(dap-stopped . (lambda (arg) (call-interactively #'dap-hydra)))"
             ];
           };
 
           dap-lldb = {
-            enable = true;
+            # FIXME fails with (void-function "dap-ui-mode")
+            enable = false;
             package = "dap-mode";
             config = ''
               (setq dap-lldb-debug-program "${pkgs.vscode-extensions.llvm-org.lldb-vscode}/bin/lldb-vscode")
