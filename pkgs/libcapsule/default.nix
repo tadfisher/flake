@@ -11,7 +11,7 @@
 , elfutils
 , gtk-doc
 , perlPackages
-, pkgconfig
+, pkg-config
 , glib
 , libxml2
 , libxslt
@@ -48,7 +48,7 @@ stdenv.mkDerivation rec {
     gtk-doc
     perlPackages.perl
     perlPackages.IPCRun
-    pkgconfig
+    pkg-config
     glib
     libxml2
     libxslt
@@ -58,7 +58,7 @@ stdenv.mkDerivation rec {
   buildInputs = [
     autoconf
     gnused
-    pkgconfig
+    pkg-config
     utillinux
   ];
 

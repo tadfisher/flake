@@ -6,7 +6,7 @@
 , meson
 , ninja
 , pixman
-, pkgconfig
+, pkg-config
 , vulkan-headers
 , wayland-protocols
 , libcap
@@ -39,7 +39,7 @@ stdenv.mkDerivation rec {
     meson
     ninja
     pixman
-    pkgconfig
+    pkg-config
     vulkan-headers
     wayland-protocols
   ];

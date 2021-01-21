@@ -16,7 +16,7 @@
 , libudev
 , libva
 , pandoc
-, pkgconfig
+, pkg-config
 , python3
 , libvdpau
 , vulkan-headers
@@ -56,7 +56,7 @@ stdenv.mkDerivation rec {
     libGL
     libudev
     libva
-    pkgconfig
+    pkg-config
     python3
     vulkan-headers
     xorg.libX11

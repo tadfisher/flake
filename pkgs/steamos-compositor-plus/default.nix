@@ -19,7 +19,7 @@
 , libXxf86vm
 , libudev
 , motif
-, pkgconfig
+, pkg-config
 , pulseaudioFull
 , steam
 , steamos-modeswitch-inhibitor
@@ -42,7 +42,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     autoreconfHook
-    pkgconfig
+    pkg-config
   ];
 
   buildInputs = [

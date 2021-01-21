@@ -2,7 +2,7 @@
 , stdenv
 , fetchurl
 , autoreconfHook
-, pkgconfig
+, pkg-config
 , libX11
 , libXrandr
 , libXrender
@@ -18,7 +18,7 @@ stdenv.mkDerivation rec {
     sha256 = "1lskfb4l87s3naz2gmc22q0xzvlhblywf5z8lsiqnkrrxnpbbwj7";
   };
 
-  nativeBuildInputs = [ autoreconfHook pkgconfig ];
+  nativeBuildInputs = [ autoreconfHook pkg-config ];
 
   buildInputs = [ libX11 libXrandr libXrender libXxf86vm ];
 
