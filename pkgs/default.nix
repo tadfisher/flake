@@ -3,6 +3,8 @@
 with pkgs;
 
 {
+  dart-sass = callPackage ./dart-sass { };
+
   gamescope = callPackage ./gamescope { };
 
   libcapsule = callPackage ./libcapsule { };

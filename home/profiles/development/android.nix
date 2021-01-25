@@ -23,6 +23,7 @@
     '';
 
     packages = with pkgs; [
+      androidStudioPackages.beta
       androidStudioPackages.canary
     ];
   };

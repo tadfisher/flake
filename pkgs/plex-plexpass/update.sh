@@ -1,28 +1,33 @@
-#!/usr/bin/env nix-shell
-#! nix-shell -i bash -p coreutils curl git gnused jq nixFlakes
+#!/usr/bin/env bash
 
 shopt -s extglob
 set -eu -o pipefail
 
 root="$(git rev-parse --show-toplevel)"
-path="$(dirname "$0")"
+path="$(realpath "$(dirname "$0")")"
 
-pushd "$root" > /dev/null
-
-oldSource="$(nix eval --raw .#plexRaw-plexpass.src.urls --apply builtins.head)"
-oldVersion="$(nix eval --raw .#plexRaw-plexpass.version)"
-oldHash="$(nix eval --raw .#plexRaw-plexpass.src.drvAttrs.outputHash)"
+declare -A platforms=(
+    [linux-x86_64]=x86_64-linux
+    [linux-aarch64]=aarch64-linux
+)
 
 token=$(cat "$root/secrets/kepler/plex-token")
 manifest=$(curl -s "https://plex.tv/api/downloads/5.json?channel=plexpass" -H "X-Plex-Token: ${token}")
 version=$(echo "$manifest" | jq -r '.computer.Linux.version | split("-") | .[0]')
-sed -i "$path/raw.nix" -re "s|\"$oldVersion\"|\"$version\"|"
 
-for arch in "linux-x86_64" "linux-aarch64"; do
-  source="$(echo "$manifest" | jq --arg arch "$arch" -r '.computer.Linux.releases[] | select(.distro == "debian" and .build == $arch) .url')"
-  hash="$(nix-prefetch-url --type sha256 "$source" 2>&1 | tail -1)"
-  sed -i "$path/raw.nix" -re "s|\"$oldSource\"|\"$source\"|"
-  sed -i "$path/raw.nix" -re "s|\"$oldHash\"|\"$hash\"|"
+tmp="$path/sources.tmp.json"
+echo '' > $tmp
+
+for arch in "${!platforms[@]}"; do
+  url="$(echo "$manifest" | jq --arg arch "$arch" -r '.computer.Linux.releases[] | select(.distro == "debian" and .build == $arch) .url')"
+  hash="$(nix-prefetch-url "$url")"
+  nixPlatform=${platforms[$arch]}
+  jq --arg version $version \
+     --arg platform $nixPlatform \
+     --arg url "$url" \
+     --arg hash $hash \
+     -n '$ARGS.named' >> $tmp
 done
 
-popd > /dev/null
+jq -s '.' $tmp > "$path/sources.json"
+rm $tmp

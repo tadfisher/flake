@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
+./pkgs/dart-sass/update.sh
 ./pkgs/plex-plexpass/update.sh

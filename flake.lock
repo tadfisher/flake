@@ -8,11 +8,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1611261471,
-        "narHash": "sha256-oxthz7mOgrsvBxmo17C5H/mkNHE1IO2pFiotyelz5L8=",
+        "lastModified": 1611520695,
+        "narHash": "sha256-d19tDYxuBRmJfKLXDSqxr0qyNhOIMbBo7zs2KzSvGZI=",
         "owner": "tadfisher",
         "repo": "android-nixpkgs",
-        "rev": "a18d80133d30f5a01422e74810ba5b876275dae9",
+        "rev": "f4a113e1613c5d4d20ea5b7513429f452c21f0c3",
         "type": "github"
       },
       "original": {
@@ -23,16 +23,32 @@
     },
     "emacs-overlay": {
       "locked": {
-        "lastModified": 1611245586,
-        "narHash": "sha256-0r9rJyivMIxn303zAmoh5nX3vkE3lznhPAoPJl9u9G4=",
+        "lastModified": 1611562389,
+        "narHash": "sha256-G7amvMQZWb4IAleZZgFjePdpPaXJ991idgwTOTcEqd4=",
         "owner": "nix-community",
         "repo": "emacs-overlay",
-        "rev": "a2d42ca78eefa726690d31fb304e347b82201feb",
+        "rev": "9fc41bfa86a86f8a8a36d8bdb4a8635b15ad5d9c",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
         "repo": "emacs-overlay",
+        "type": "github"
+      }
+    },
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1606424373,
+        "narHash": "sha256-oq8d4//CJOrVj+EcOaSXvMebvuTkmBJuT5tzlfewUnQ=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "99f1c2157fba4bfe6211a321fd0ee43199025dbf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
         "type": "github"
       }
     },
@@ -51,6 +67,36 @@
         "type": "github"
       }
     },
+    "flake-utils_2": {
+      "locked": {
+        "lastModified": 1610051610,
+        "narHash": "sha256-U9rPz/usA1/Aohhk7Cmc2gBrEEKRzcW4nwPWMPwja4Y=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "3982c9903e93927c2164caa727cd3f6a0e6d14cc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_3": {
+      "locked": {
+        "lastModified": 1605370193,
+        "narHash": "sha256-YyMTf3URDL/otKdKgtoMChu4vfVL3vCMkRqpGifhUn0=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "5021eac20303a61fafe17224c087f5519baed54d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -58,11 +104,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1611257703,
-        "narHash": "sha256-EF2wMnSMOWCDFNkUY+D+2i7wOVWk5qPBdvOA/qdGqYs=",
+        "lastModified": 1611422785,
+        "narHash": "sha256-6XylW5uQ/Hr2BkmOFzLdBxE8qSQNtoWL60LcpCl3Qcw=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "b0c87272867ca97f950af2d62fbf3d6cfe4da112",
+        "rev": "c137866bd7d2a9c2010b618252694f395453cf59",
         "type": "github"
       },
       "original": {
@@ -71,13 +117,57 @@
         "type": "github"
       }
     },
+    "nix-dart": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "pub2nix": "pub2nix"
+      },
+      "locked": {
+        "lastModified": 1611600915,
+        "narHash": "sha256-vj+v/LjSTjqnO/QK9qnypTTYD0ekY12Xwmp4YHwnTCE=",
+        "owner": "tadfisher",
+        "repo": "nix-dart",
+        "rev": "a12ed81dc8e25dafaa8dc4242c10cdb22e215077",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tadfisher",
+        "repo": "nix-dart",
+        "type": "github"
+      }
+    },
+    "nix-prefetch-github": {
+      "inputs": {
+        "flake-compat": "flake-compat",
+        "flake-utils": "flake-utils_3",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1611356279,
+        "narHash": "sha256-rA+WnTLSduaE5dWpS0r2rhKaJAL8LfNB965iGkGf8z4=",
+        "owner": "seppeljordan",
+        "repo": "nix-prefetch-github",
+        "rev": "f200182daf8b0c6281d89a05c557d204543ea45a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "seppeljordan",
+        "repo": "nix-prefetch-github",
+        "type": "github"
+      }
+    },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1610430373,
-        "narHash": "sha256-2sTBiGl0z0B3VD2qMHIJtOGxOuftR0iiBSv30AhVWIw=",
+        "lastModified": 1611383797,
+        "narHash": "sha256-FIpG2f4+d9UsXCogBTswoPjD/aWZ3dvV5TZjqlL4gyM=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "874830945a65ad1134aff3a5aea0cdd2e1d914ab",
+        "rev": "a0d8383c422f85f37fccee5af74b1cb4b52287d9",
         "type": "github"
       },
       "original": {
@@ -104,11 +194,11 @@
     },
     "nur": {
       "locked": {
-        "lastModified": 1611258357,
-        "narHash": "sha256-iCA/vkVfvKM+OA77RyFPqNqgWTpthmhqOLFGVlez3+M=",
+        "lastModified": 1611598641,
+        "narHash": "sha256-908V/aPaL8YmKMYYU3pmKE4US8L98w4yZ4V2Kq1cl6A=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "f28bccbb57a17d135323f4a178f30746ca4249be",
+        "rev": "d900f5639b3e6ad8aab853cfddd1a95ad84a7b61",
         "type": "github"
       },
       "original": {
@@ -117,11 +207,29 @@
         "type": "github"
       }
     },
+    "pub2nix": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1594192744,
+        "narHash": "sha256-pDvcXSG1Mh2BpwkqAcNDJzcupV3pIAAtZJLfkiHMAz4=",
+        "owner": "paulyoung",
+        "repo": "pub2nix",
+        "rev": "0c7ecca590fcd1616db8c6468f799ffef36c85e9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "paulyoung",
+        "repo": "pub2nix",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "android-nixpkgs": "android-nixpkgs",
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager",
+        "nix-dart": "nix-dart",
+        "nix-prefetch-github": "nix-prefetch-github",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nur": "nur"

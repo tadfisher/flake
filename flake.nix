@@ -11,6 +11,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
     };
+    nix-dart = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:tadfisher/nix-dart";
+    };
+    nix-prefetch-github = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:seppeljordan/nix-prefetch-github";
+    };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
@@ -191,18 +199,25 @@
             (efinal: eprev: import ./pkgs/emacs efinal);
         };
 
-        pkgs = final: prev: import ./pkgs { pkgs = final; };
+        dart = final: prev: inputs.nix-dart.overlay final prev;
 
         overlay = final: prev: import ./pkgs/overlay.nix final prev;
+
+        pkgs = final: prev: import ./pkgs { pkgs = final; };
       };
 
       # There's probably an easier way to merge attributes in `overlays' into a
       # single function.
       overlay = final: prev:
+        (self.overlays.dart final prev) //
         (self.overlays.pkgs final prev) //
         (self.overlays.emacs final prev) //
         (self.overlays.overlay final prev);
 
-      packages = eachSystem (system: import ./pkgs { pkgs = pkgsBySystem.${system}; });
+      packages = eachSystem (system:
+        import ./pkgs { pkgs = pkgsBySystem.${system}; } //
+        inputs.nix-dart.packages.${system} //
+        { nix-prefetch-github = inputs.nix-prefetch-github.defaultPackage.${system}; }
+      );
     };
 }
