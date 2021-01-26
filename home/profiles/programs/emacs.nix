@@ -224,6 +224,12 @@ in
                 (setq lsp-gopls-server-path "${pkgs.gotools}/bin/gopls")
               '';
             };
+            haskell = {
+              modes = [ "haskell-mode" ];
+              config = ''
+                (setq lsp-haskell-server-path "${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper")
+              '';
+            };
             html = {
               modes = [ "html-mode" "sgml-mode" "mhtml-mode" "web-mode" ];
               executables.html-language-server =
@@ -423,6 +429,7 @@ in
           # From https://github.com/mlb-/emacs.d/blob/a818e80f7790dffa4f6a775987c88691c4113d11/init.el#L472-L482
           compile = {
             enable = true;
+            package = ""; # built-in
             defer = true;
             after = [ "ansi-color" ];
             hook = [
@@ -431,7 +438,19 @@ in
                                         (when (eq major-mode 'compilation-mode)
                                           (ansi-color-apply-on-region compilation-filter-start (point-max)))))
               ''
+              ''
+                (compilation-start . (lambda (process)
+                                       (bury-buffer)
+                                       (delete-windows-on (get-buffer-create "*compilation*"))))
+              ''
             ];
+            config = ''
+              (add-hook 'compilation-finish-functions
+                        (lambda (buf status)
+                          (when (not (and (equal status "finished\n")
+                                          (zerop compilation-num-errors-found)))
+                            (display-buffer buf '(nil (allow-no-window . t))))))
+            '';
           };
 
           cc-mode = {
@@ -917,22 +936,22 @@ in
             enable = true;
           };
 
-          dap-mode = {
-            # FIXME fails with (void-function "dap-ui-mode")
-            enable = false;
-            hook = [
-              "(dap-stopped . (lambda (arg) (call-interactively #'dap-hydra)))"
-            ];
-          };
+          # dap-mode = {
+          #   # FIXME fails with (void-function "dap-ui-mode")
+          #   enable = false;
+          #   hook = [
+          #     "(dap-stopped . (lambda (arg) (call-interactively #'dap-hydra)))"
+          #   ];
+          # };
 
-          dap-lldb = {
-            # FIXME fails with (void-function "dap-ui-mode")
-            enable = false;
-            package = "dap-mode";
-            config = ''
-              (setq dap-lldb-debug-program "${pkgs.vscode-extensions.llvm-org.lldb-vscode}/bin/lldb-vscode")
-            '';
-          };
+          # dap-lldb = {
+          #   # FIXME fails with (void-function "dap-ui-mode")
+          #   enable = false;
+          #   package = "dap-mode";
+          #   config = ''
+          #     (setq dap-lldb-debug-program "${pkgs.vscode-extensions.llvm-org.lldb-vscode}/bin/lldb-vscode")
+          #   '';
+          # };
 
           #  Setup RefTeX.
           reftex = {
