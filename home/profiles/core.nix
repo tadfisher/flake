@@ -103,13 +103,13 @@
 
   xdg.userDirs = {
     enable = true;
-    desktop = "$HOME";
-    documents = "$HOME/doc";
-    download = "$HOME/download";
-    music = "$HOME/media/music";
-    pictures = "$HOME/media/image";
-    publicShare = "$HOME/public";
-    templates = "$HOME/templates";
-    videos = "$HOME/media/video";
+    desktop = "${config.home.homeDirectory}";
+    documents = "${config.home.homeDirectory}/doc";
+    download = "${config.home.homeDirectory}/download";
+    music = "${config.home.homeDirectory}/media/music";
+    pictures = "${config.home.homeDirectory}/media/image";
+    publicShare = "${config.home.homeDirectory}/public";
+    templates = "${config.home.homeDirectory}/templates";
+    videos = "${config.home.homeDirectory}/media/video";
   };
 }

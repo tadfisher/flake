@@ -279,17 +279,6 @@ in
             mode = [ ''"\\.txt\\'"'' ''"\\.adoc\\'"'' ];
           };
 
-          ansi-color = {
-            enable = true;
-            command = [ "ansi-color-apply-on-region" ];
-          };
-
-          autorevert = {
-            enable = true;
-            diminish = [ "auto-revert-mode" ];
-            command = [ "auto-revert-mode" ];
-          };
-
           all-the-icons = {
             enable = true;
             defer = true;
@@ -309,6 +298,17 @@ in
                            (notmuch-tree-mode           all-the-icons-material   "mail" :v-adjust 0.0 :face all-the-icons-red)))
                 (add-to-list 'all-the-icons-mode-icon-alist entry))
             '';
+          };
+
+          ansi-color = {
+            enable = true;
+            command = [ "ansi-color-apply-on-region" ];
+          };
+
+          autorevert = {
+            enable = true;
+            diminish = [ "auto-revert-mode" ];
+            command = [ "auto-revert-mode" ];
           };
 
           arc-mode = {
@@ -337,6 +337,27 @@ in
                 :predicate `((not ,@tad/read-only-modes) t))
 
               (tad/global-display-fill-column-indicator-mode)
+            '';
+          };
+
+          image-dired = {
+            enable = true;
+            package = "";
+            defer = true;
+            config = ''
+              (setq image-dired-thumbnail-storage 'standard-large
+                    image-dired-cmd-create-thumbnail-program "${pkgs.imagemagick}/bin/convert"
+                    image-dired-cmd-create-temp-image-program "${pkgs.imagemagick}/bin/convert"
+                    image-dired-cmd-pngnq-program "${pkgs.pngnq}/bin/pngnq"
+                    image-dired-cmd-pngcrush-program "${pkgs.pngcrush}/bin/pngcrush"
+                    image-dired-cmd-optipng-program "${pkgs.optipng}/bin/optipng"
+                    image-dired-cmd-rotate-thumbnail-program "${pkgs.imagemagick}/bin/mogrify"
+                    image-dired-cmd-rotate-original-program "${pkgs.mozjpeg}/bin/jpegtran"
+                    image-dired-cmd-write-exif-data-program "${pkgs.exiftool}/bin/exiftool"
+                    image-dired-cmd-read-exif-data-program "${pkgs.exiftool}/bin/exiftool"
+                    image-dired-thumb-relief 0
+                    image-dired-external-viewer "${pkgs.xdg_utils}/bin/xdg-open"
+                    image-dired-main-image-directory "${config.xdg.userDirs.pictures}/")
             '';
           };
 
@@ -754,6 +775,7 @@ in
               "C-x C-r" = "counsel-recentf";
               "M-SPC f d" = "counsel-dired";
               "M-SPC f f" = "counsel-find-file";
+              "M-SPC f l" = "counsel-find-library";
               "M-SPC h F" = "counsel-describe-face";
               "M-SPC h f" = "counsel-describe-function";
               "M-SPC h s" = "counsel-describe-symbol";
