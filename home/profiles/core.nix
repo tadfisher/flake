@@ -14,6 +14,8 @@
       disable-ccid
     '';
 
+    homeDirectory = "/home/tad";
+
     packages = with pkgs; [
       bash-completion
       curl

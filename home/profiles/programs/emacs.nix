@@ -190,7 +190,8 @@ in
         '';
 
         lsp = {
-          enable = true;
+          # Trying out eglot instead
+          enable = false;
           clients = {
             bash = {
               modes = [ "sh-mode" ];
@@ -328,6 +329,10 @@ in
             '';
           };
 
+          counsel-flymake = {
+            enable = true;
+          };
+
           display-fill-column-indicator = {
             enable = true;
             package = ""; # built-in
@@ -338,6 +343,12 @@ in
 
               (tad/global-display-fill-column-indicator-mode)
             '';
+          };
+
+          flymake = {
+            enable = true;
+            package = "";
+            hook = [ "(prog-mode . flymake-mode)" ];
           };
 
           image-dired = {
@@ -407,6 +418,12 @@ in
             '';
           };
 
+          prog-mode = {
+            enable = true;
+            package = "";
+            defer = true;
+          };
+
           tab-bar = {
             enable = true;
             after = [ "all-the-icons" ];
@@ -421,6 +438,19 @@ in
                     tab-bar-new-button
                     (all-the-icons-material "add" :face 'tab-bar))
             '';
+          };
+
+          xref = {
+            enable = true;
+            package = "";
+            after = [ "prog-mode" ];
+            bindLocal = {
+              prog-mode-map = {
+                "M-SPC g a" = "xref-find-apropos";
+                "M-SPC g d" = "xref-find-definitions";
+                "M-SPC g r" = "xref-find-references";
+              };
+            };
           };
 
           base16-theme.enable = true;
@@ -445,6 +475,14 @@ in
                                     (load-theme 'base16-plata-noir t)))))
                   (load-theme 'base16-plata-noir t)))
             '';
+          };
+
+          bindings = {
+            enable = true;
+            package = "";
+            bind = {
+              "M-SPC g g" = "goto-line";
+            };
           };
 
           # From https://github.com/mlb-/emacs.d/blob/a818e80f7790dffa4f6a775987c88691c4113d11/init.el#L472-L482
@@ -589,22 +627,22 @@ in
 
           ligature = {
             enable = true;
+            # Specific to JetBrains Mono font
+            # See https://www.jetbrains.com/lp/mono/#key-features
             config = ''
-              (ligature-set-ligatures 'prog-mode '("-->" "//" "/**" "/*" "*/" "<!--" ":=" "->>" "<<-"
-                                                   "->" "<-" "<=>" "==" "!=" "<=" ">=" "=:=" "!=="
-                                                   "&&" "&&&" "||" "..." ".." "///" "===" "++" "--"
-                                                   "=>" "|>" "<|" "||>" "<||" "|||>" "<|||::=" "|]"
-                                                   "[|" "|}" "{|" "[<" ">]" ":?>" ":?" "/=" "[||]"
-                                                   "!!" "?:" "?." "::" "+++" "??" "##" "###" "####"
-                                                   ":::" ".?" "?=" "=!=" "<|>" "<:" ":<" ":>" ">:"
-                                                   "<>" "***" ";;" "/==" ".=" ".-" "__" "=/=" "<-<"
-                                                   "<<<" ">>>" "<=<" "<<=" "<==" "<==>" "==>" "=>>"
-                                                   ">=>" ">>=" ">>-" ">-" "<~>" "-<" "-<<" "<<" "---"
-                                                   "<-|" "<=|" "\\\\" "\\/" "|=>" "|->" "<~~" "<~" "~~"
-                                                   "~~>" "~>" "<$>" "<$" "$>" "<+>" "<+" "+>" "<*>"
-                                                   "<*" "*>" "</" "</>" "/>" "<->" "..<" "~=" "~-"
-                                                   "-~" "~@" "^=" "-|" "_|_" "|-" "||-" "|=" "||="
-                                                   "#{" "#[" "]#" "#(" "#?" "#_" "#_(" "#:" "#!" "#="))
+              (ligature-set-ligatures 'prog-mode
+                                      '("--" "---" "==" "===" "!=" "!==" "=!=" "=:=" "=/=" "<=" ">=" "&&"
+                                        "&&&" "&=" "++" "+++" "***" ";;" "!!" "??" "?:" "?." "?=" "<:" ":<"
+                                        ":>" ">:" "<>" "<<<" ">>>" "<<" ">>" "||" "-|" "_|_" "|-" "||-"
+                                        "|=" "||=" "##" "###" "####" "#{" "#[" "]#" "#(" "#?" "#_" "#_("
+                                        "#:" "#!" "#=" "^=" "<$>" "<$" "$>" "<+>" "<+" "+>" "<*>" "<*" "*>"
+                                        "</" "</>" "/>" "<!--" "<#--" "-->" "->" "->>" "<<-" "<-" "<=<"
+                                        "=<<" "<<=" "<==" "<=>" "<==>" "==>" "=>" "=>>" ">=>" ">>="
+                                        ">>-" ">-" ">--" "-<" "-<<" ">->" "<-<" "<-|" "<=|" "|=>" "|->"
+                                        "<->" "<~~" "<~" "<~>" "~~" "~~>" "~>" "~-" "-~" "~@" "[||]" "|]"
+                                        "[|" "|}" "{|" "[<" ">]" "|>" "<|" "||>" "<||" "|||>" "<|||"
+                                        "<|>" "..." ".." ".=" ".-" "..<" ".?" "::" ":::" ":=" "::=" ":?"
+                                        ":?>" "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__"))
               (global-ligature-mode t)
             '';
           };
@@ -934,23 +972,54 @@ in
             after = [ "mpdel" ];
           };
 
-          lsp-modeline = {
+          eglot = {
             enable = true;
+            hook = [
+              ''
+                ((c-mode c++-mode
+                  clojure-mode clojurec-mode clojurescript-mode
+                  css-mode less-css-mode sass-mode scss-mode
+                  go-mode
+                  haskell-mode
+                  html-mode sgml-mode mhtml-mode web-mode
+                  js-mode typescript-mode
+                  python-mode
+                  rust-mode
+                  sh-mode) . eglot-ensure)
+              ''
+            ];
+            config = ''
+              (setq eglot-server-programs
+                    '(((c-mode c++-mode) . ("${pkgs.clang-tools}/bin/clangd"))
+                      ((clojure-mode clojurec-mode clojurescript-mode) . ("${pkgs.clojure-lsp}/bin/clojure-lsp"))
+                      ((css-mode less-css-mode sass-mode scss-mode) . ("${pkgs.nodePackages.vscode-css-languageserver-bin}/bin/css-languageserver" "--stdio"))
+                      (go-mode . ("${pkgs.gotools}/bin/gopls"))
+                      (haskell-mode . ("${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper" "--lsp"))
+                      ((html-mode sgml-mode mhtml-mode web-mode) . ("${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver" "--stdio"))
+                      ((js-mode typescript-mode) . ("${pkgs.nodePackages.javascript-typescript-langserver}/bin/javascript-typescript-stdio"))
+                      (python-mode . ("${pkgs.python3Packages.python-language-server}/bin/pyls"))
+                      (rust-mode . ("${pkgs.rust-analyzer}/bin/rust-analyzer"))
+                      (sh-mode . ("${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start"))))
+            '';
+          };
+
+          lsp-modeline = {
+            enable = false;
             package = "lsp-mode";
           };
 
           lsp-ui = {
-            enable = true;
+            enable = false;
             command = [ "lsp-ui-mode" ];
           };
 
           lsp-ivy = {
-            enable = true;
+            enable = false;
             command = [ "lsp-ivy-workspace-symbol" ];
           };
 
           lsp-treemacs = {
-            enable = true;
+            enable = false;
             command = [ "lsp-treemacs-errors-list" ];
           };
 
@@ -1380,7 +1449,7 @@ in
           };
 
           flycheck = {
-            enable = true;
+            enable = false; # Trying out flymake
             diminish = [ "flycheck-mode" ];
             command = [ "global-flycheck-mode" ];
             defer = 1;
@@ -1394,12 +1463,12 @@ in
           };
 
           flycheck-haskell = {
-            enable = true;
+            enable = false;
             hook = [ "(flycheck-mode . flycheck-haskell-setup)" ];
           };
 
           flycheck-plantuml = {
-            enable = true;
+            enable = false;
             hook = [ "(flycheck-mode . flycheck-plantuml-setup)" ];
           };
 

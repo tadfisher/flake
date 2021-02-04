@@ -5,6 +5,8 @@ emacsPackages: with emacsPackages;
 
   company-gnome-shell = callPackage ./gnome-shell-mode/company-gnome-shell.nix { };
 
+  counsel-flymake = callPackage ./counsel-flymake { };
+
   gnome-shell-mode = callPackage ./gnome-shell-mode { };
 
   ligature = callPackage ./ligature { };
