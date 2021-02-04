@@ -11,6 +11,8 @@ with pkgs;
 
   libcapsule-i686 = pkgsi686Linux.callPackage ./libcapsule { };
 
+  libliftoff = callPackage ./libliftoff { };
+
   plex-plexpass = callPackage ./plex-plexpass { };
   plexRaw-plexpass = callPackage ./plex-plexpass/raw.nix { };
 

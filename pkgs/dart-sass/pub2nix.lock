@@ -357,24 +357,24 @@ packages:
       name: shelf_packages_handler
       url: https://pub.dartlang.org
     source: hosted
-    version: 2.0.0
-    sha256: 1nhvj92kjag6ids8y4ld99p3v8qk6fgygc89yyi98xf3v6ijr01b
+    version: 2.0.1
+    sha256: 1kmxmzghxapicdghyk12fgsknp3gz2x8f31dj5af773qwrdsqlfx
   shelf_static:
     dependency: transitive
     description:
       name: shelf_static
       url: https://pub.dartlang.org
     source: hosted
-    version: 0.2.9+1
-    sha256: 1y3gwwacakpb0s54z44397ifx8sv9v3d3kfq69qh7blz0jjgrjzf
+    version: 0.2.9+2
+    sha256: 0mzsxkprcpp11wz53y86535dyqmq0cwnwanpjynr8i5nvhw728dg
   shelf_web_socket:
     dependency: transitive
     description:
       name: shelf_web_socket
       url: https://pub.dartlang.org
     source: hosted
-    version: 0.2.3
-    sha256: 0d8n3ii4c3fn4cnagdglygg3ihfwpgdbvm26bc5vg663v3kq0xn0
+    version: 0.2.4
+    sha256: 0irqplrha12ly42kxicpcwk08ihfq3d16zyixlcpf2vgbl1irsc9
   source_map_stack_trace:
     dependency: transitive
     description:

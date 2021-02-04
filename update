@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 ./pkgs/dart-sass/update.sh
+./pkgs/gamescope/update.sh
+./pkgs/libliftoff/update.sh
 ./pkgs/plex-plexpass/update.sh

@@ -1,8 +1,8 @@
 { lib
 , stdenv
 , fetchFromGitHub
-, cmake
 , glslang
+, makeWrapper
 , meson
 , ninja
 , pixman
@@ -12,6 +12,7 @@
 , libcap
 , libdrm
 , libinput
+, libliftoff
 , libxkbcommon
 , SDL2
 , vulkan-loader
@@ -21,21 +22,37 @@
 , xwayland
 }:
 
-stdenv.mkDerivation rec {
-  pname = "gamescope";
-  version = "3.7.1";
+let
 
-  src = fetchFromGitHub {
-    owner = "Plagman";
-    repo = pname;
-    rev = version;
-    fetchSubmodules = true;
-    sha256 = "sha256-MKX7hdRUn9WG7IfUw7ZFj7EXSM6CpIXiKvUPcrDMeVA=";
-  };
+  source = builtins.fromJSON (builtins.readFile ./source.json);
+  version = builtins.readFile ./version;
+
+  wlroots-git = wlroots.overrideAttrs (attrs: rec {
+    pname = "wlroots-unstable";
+    version = "2020-12-15";
+
+    src = fetchFromGitHub {
+      owner = "swaywm";
+      repo = "wlroots";
+      rev = "da2a2169344ef2dbe0dc31fd013caf30880d6aff";
+      sha256 = "sha256-aRl4Ljt1KoTMPjlK3aFRRXjora7sHFhzn/7gdXMb/EM=";
+    };
+  });
+
+in
+stdenv.mkDerivation rec {
+  pname = "gamescope-unstable";
+  inherit version;
+
+  src = fetchFromGitHub source;
+
+  postUnpack = ''
+    rm -rf $sourceRoot/subprojects
+  '';
 
   nativeBuildInputs = [
-    cmake
     glslang
+    makeWrapper
     meson
     ninja
     pixman
@@ -48,11 +65,12 @@ stdenv.mkDerivation rec {
     libcap
     libdrm
     libinput
+    libliftoff
     libxkbcommon
     SDL2
     vulkan-loader
     wayland
-    wlroots
+    wlroots-git
     xwayland
   ] ++ (with xorg; [
     libX11
@@ -67,6 +85,10 @@ stdenv.mkDerivation rec {
   ]);
 
   dontUseCmakeConfigure = true;
+
+  postInstall = ''
+    wrapProgram $out/bin/gamescope --set WLR_XWAYLAND "${xwayland}/bin/Xwayland"
+  '';
 
   meta = with lib; {
     description = "SteamOS session compositing window manager";

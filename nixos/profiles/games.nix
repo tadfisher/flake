@@ -1,24 +1,24 @@
 { config, pkgs, ... }:
-let
-  steamCfg = config.users.users.steam;
-in
+# let
+#   steamCfg = config.users.users.steam;
+# in
 {
-  imports = [
-    ./users/steam.nix
-  ];
+  # imports = [
+  #   ./users/steam.nix
+  # ];
 
   hardware.steam-hardware.enable = true;
 
-  home-manager.users.steam = { config, lib, pkgs, ... }: {
-    home = {
-      homeDirectory = steamCfg.home;
-      packages = with pkgs; [
-        libarchive
-        steam
-        winetricks
-      ];
-    };
-  };
+  # home-manager.users.steam = { config, lib, pkgs, ... }: {
+  #   home = {
+  #     homeDirectory = steamCfg.home;
+  #     packages = with pkgs; [
+  #       libarchive
+  #       steam
+  #       winetricks
+  #     ];
+  #   };
+  # };
 
   services = {
     udev.extraRules = ''

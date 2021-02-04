@@ -19,6 +19,7 @@
   home.packages = with pkgs; [
     brasero
     celestia
+    gamescope
     inkscape
     transmission-remote-gtk
   ];
