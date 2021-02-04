@@ -21,9 +21,7 @@
 , xorg
 , xwayland
 }:
-
 let
-
   source = builtins.fromJSON (builtins.readFile ./source.json);
   version = builtins.readFile ./version;
 

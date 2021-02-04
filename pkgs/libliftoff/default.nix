@@ -6,7 +6,6 @@
 , ninja
 , pkg-config
 }:
-
 let
   version = builtins.readFile ./version;
   source = builtins.fromJSON (builtins.readFile ./source.json);
