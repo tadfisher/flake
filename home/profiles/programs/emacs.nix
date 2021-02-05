@@ -187,6 +187,9 @@ in
 
           ;; Unbind M-SPC, which I use as a prefix key.
           (global-unset-key (kbd "M-SPC"))
+
+          ;; Set user info.
+          (setq user-mail-address "${config.accounts.email.primaryAccount.address}")
         '';
 
         lsp = {
@@ -811,6 +814,8 @@ in
               "C-x d" = "counsel-dired";
               "C-x C-f" = "counsel-find-file";
               "C-x C-r" = "counsel-recentf";
+              "M-SPC b b" = "counsel-switch-buffer";
+              "M-SPC b o" = "counsel-switch-buffer-other-window";
               "M-SPC f d" = "counsel-dired";
               "M-SPC f f" = "counsel-find-file";
               "M-SPC f l" = "counsel-find-library";
@@ -824,6 +829,7 @@ in
             };
             diminish = [ "counsel-mode" ];
             config = ''
+              (setq counsel-switch-buffer-preview-virtual-buffers t)
               (counsel-mode)
             '';
           };
@@ -833,6 +839,7 @@ in
             demand = true;
             after = [ "projectile" ];
             config = ''
+              (setq counsel-projectile-preview-buffers t)
               (counsel-projectile-mode 1)
             '';
           };
