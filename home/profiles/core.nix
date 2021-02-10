@@ -57,7 +57,10 @@
         };
       };
     };
-    git.enable = true;
+    git = {
+      enable = true;
+      extraConfig.init.defaultBranch = "main";
+    };
     gpg.enable = true;
     home-manager.enable = true;
     mercurial = {

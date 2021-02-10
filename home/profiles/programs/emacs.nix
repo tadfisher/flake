@@ -375,6 +375,10 @@ in
             '';
           };
 
+          kotlin-mode = {
+            enable = true;
+          };
+
           simple = {
             enable = true;
             package = "";
