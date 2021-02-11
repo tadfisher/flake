@@ -24,4 +24,15 @@ with final;
       sha256 = "1iwvlv9qcrjyfbzab00vjqafmp3vdybz1hi02r6lwbgvwyfyrifk";
     };
   });
+
+  gnomeExtensions = prev.gnomeExtensions // {
+    paperwm = prev.gnomeExtensions.paperwm.overrideAttrs (attrs: rec {
+      patches = [
+        (fetchpatch {
+          url = "https://github.com/paperwm/PaperWM/commit/d53746025f45b3a3847bae3d29c32f75c394ef0d.patch";
+          sha256 = "sha256-ad2ZaKY8FP/yjVXPAfJS7Z7BT2jonE0qXtR5Xq6p8Tk=";
+        })
+      ];
+    });
+  };
 }

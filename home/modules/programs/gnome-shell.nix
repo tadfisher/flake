@@ -7,8 +7,7 @@ let
   extensionOpts = { config, ... }: {
     options = {
       id = mkOption {
-        type = types.nullOr types.str;
-        default = null;
+        type = types.str;
         example = "user-theme@gnome-shell-extensions.gcampax.github.com";
         description = ''
           ID of the gnome-shell extension. If not provided, it
@@ -17,16 +16,18 @@ let
       };
 
       package = mkOption {
-        type = types.nullOr types.package;
-        default = null;
+        type = types.package;
         example = "pkgs.gnome3.gnome-shell-extensions";
         description = ''
-          Package providing a gnome-shell extension with id <varname>id</varname>.
+          Package providing a gnome-shell extension in
+          <filename>$out/share/gnome-shell/extensions/''${id}</filename>.
         '';
       };
     };
 
-    config = { id = mkDefault config.package.uuid or null; };
+    config = mkIf (hasAttr "uuid" config.package) {
+      id = mkDefault config.package.uuid;
+    };
   };
 
   themeOpts = {
@@ -43,7 +44,8 @@ let
         default = null;
         example = literalExample "pkgs.plata-theme";
         description = ''
-          Package providing a gnome-shell theme named <varname>name</varname>.
+          Package providing a gnome-shell theme in
+          <filename>$out/share/themes/''${name}/gnome-shell</filename>.
         '';
       };
     };
@@ -51,8 +53,10 @@ let
 
 in
 {
+  meta.maintainers = [ maintainers.tadfisher ];
+
   options.programs.gnome-shell = {
-    enable = mkEnableOption "gnome-shell";
+    enable = mkEnableOption "gnome-shell customization";
 
     extensions = mkOption {
       type = types.listOf (types.submodule extensionOpts);
@@ -87,22 +91,37 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
-    (mkIf (cfg.extensions != { }) {
-      dconf.settings."org/gnome/shell".enabled-extensions =
-        catAttrs "id" cfg.extensions;
-      home.packages = filter (p: p != null) (catAttrs "package" cfg.extensions);
+    (mkIf (cfg.extensions != [ ]) {
+      dconf.settings."org/gnome/shell" = {
+        disable-user-extensions = false;
+        enabled-extensions = catAttrs "id" cfg.extensions;
+      };
+
+      xdg = {
+        enable = true;
+        dataFile = listToAttrs (map
+          ({ id, package }: {
+            name = "gnome-shell/extensions/${id}";
+            value = { source = "${package}/share/gnome-shell/extensions/${id}"; };
+          })
+          cfg.extensions);
+      };
     })
 
     (mkIf (cfg.theme != null) {
       dconf.settings."org/gnome/shell/extensions/user-theme".name =
         cfg.theme.name;
-      home.packages = optional (cfg.theme.package != null) cfg.theme.package;
-      programs.gnome-shell.extensions = [
-        {
-          id = "user-theme@gnome-shell-extensions.gcampax.github.com";
-          package = pkgs.gnome3.gnome-shell-extensions;
-        }
-      ];
+
+      programs.gnome-shell.extensions = [{
+        id = "user-theme@gnome-shell-extensions.gcampax.github.com";
+        package = pkgs.gnome3.gnome-shell-extensions;
+      }];
+
+      xdg = {
+        enable = true;
+        dataFile."themes/${cfg.theme.name}/gnome-shell".source =
+          "${cfg.theme.package}/share/themes/${cfg.theme.name}/gnome-shell";
+      };
     })
   ]);
 }
