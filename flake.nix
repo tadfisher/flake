@@ -170,6 +170,13 @@
             inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
           ];
         };
+        installer = {
+          system = "x86_64-linux";
+          config = ./nixos/hosts/installer.nix;
+          modules = [
+            (import "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix")
+          ];
+        };
         kepler = {
           system = "x86_64-linux";
           config = ./nixos/hosts/kepler.nix;
@@ -217,7 +224,8 @@
       packages = eachSystem (system:
         import ./pkgs { pkgs = pkgsBySystem.${system}; } //
         inputs.nix-dart.packages.${system} //
-        { nix-prefetch-github = inputs.nix-prefetch-github.defaultPackage.${system}; }
+        { nix-prefetch-github = inputs.nix-prefetch-github.defaultPackage.${system}; } //
+        { nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage; }
       );
     };
 }
