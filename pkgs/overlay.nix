@@ -3,6 +3,17 @@ final: prev:
 with final;
 
 {
+  gnomeExtensions = prev.gnomeExtensions // {
+    paperwm = prev.gnomeExtensions.paperwm.overrideAttrs (attrs: rec {
+      patches = [
+        (fetchpatch {
+          url = "https://github.com/paperwm/PaperWM/commit/d53746025f45b3a3847bae3d29c32f75c394ef0d.patch";
+          sha256 = "sha256-ad2ZaKY8FP/yjVXPAfJS7Z7BT2jonE0qXtR5Xq6p8Tk=";
+        })
+      ];
+    });
+  };
+
   paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {
     pname = "paper-icon-theme-unstable";
     version = "2020-03-12";
@@ -25,14 +36,19 @@ with final;
     };
   });
 
-  gnomeExtensions = prev.gnomeExtensions // {
-    paperwm = prev.gnomeExtensions.paperwm.overrideAttrs (attrs: rec {
-      patches = [
-        (fetchpatch {
-          url = "https://github.com/paperwm/PaperWM/commit/d53746025f45b3a3847bae3d29c32f75c394ef0d.patch";
-          sha256 = "sha256-ad2ZaKY8FP/yjVXPAfJS7Z7BT2jonE0qXtR5Xq6p8Tk=";
-        })
-      ];
-    });
-  };
+  sedutil = prev.sedutil.overrideAttrs (attrs: rec {
+    version = "1.15-5ad84d8";
+
+    src = fetchFromGitHub {
+      owner = "ChubbyAnt";
+      repo = "sedutil";
+      rev = version;
+      sha256 = "sha256-JvM52KLiKeF8ui85+9PnCmWgBR4qyybEjtgxRLk8PjA=";
+    };
+
+    meta = attrs.meta // {
+      homepage = "https://sedutil.com";
+      maintainers = with lib.maintainers; [ tadfisher ];
+    };
+  });
 }

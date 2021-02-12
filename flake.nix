@@ -139,6 +139,10 @@
           system = "x86_64-linux";
           config = ./home/hosts/dirac.nix;
         };
+        euler = {
+          system = "x86_64-linux";
+          config = ./home/hosts/euler.nix;
+        };
         tycho = {
           system = "x86_64-linux";
           config = ./home/hosts/tycho.nix;
@@ -166,8 +170,14 @@
           config = ./nixos/hosts/dirac.nix;
           modules = [
             inputs.nixos-hardware.nixosModules.common-cpu-intel-kaby-lake
-            inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
             inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
+          ];
+        };
+        euler = {
+          system = "x86_64-linux";
+          config = ./nixos/hosts/euler.nix;
+          modules = [
+            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t14-amd-gen1
           ];
         };
         installer = {
