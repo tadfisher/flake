@@ -21,7 +21,10 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nur.url = "github:nix-community/NUR";
+    rycee = {
+      url = "gitlab:rycee/nur-expressions";
+      flake = false;
+    };
   };
 
   outputs = { self, ... }@inputs:
@@ -38,7 +41,6 @@
             (self.overlay)
             (inputs.android-nixpkgs.overlay)
             (inputs.emacs-overlay.overlay)
-            (inputs.nur.overlay)
           ];
         }
       );
@@ -89,7 +91,7 @@
         inputs.nixpkgs.lib.nameValuePair name ({ config, lib, pkgs, ... }: {
           imports = [
             inputs.android-nixpkgs.hmModule
-            pkgsBySystem.${system}.nur.repos.rycee.hmModules.emacs-init
+            (import inputs.rycee { inherit pkgs; }).hmModules.emacs-init
             self.hmModules.programs.emacs-lsp
             self.hmModules.programs.firefox
             self.hmModules.programs.gnome-shell
