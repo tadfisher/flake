@@ -6,13 +6,13 @@
 , libargon2
 }:
 let
-  version = "1.0.0";
+  version = "2021-02-12";
 
   src = fetchFromGitHub {
     owner = "dex6";
     repo = "sed-opal-unlocker";
-    rev = "v${version}";
-    sha256 = "0gr94jlw8d01a1bz2x6jhwim2hh4rijlj94x2fqxxhk22lbk61n2";
+    rev = "e68060247614be08e2b08e617142ab58405b761e";
+    sha256 = "gBMsHYR91kl26qqa2kkyEPhBxwQhXGngIOLD3nVB038=";
   };
 
   meta = with lib; {

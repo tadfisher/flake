@@ -35,7 +35,7 @@ in
       options = [ "subvol=root,discard=async,compress=zstd" ];
     };
     "/boot" = {
-      device = "/dev/disk/by-label/boot";
+      device = "/dev/disk/by-label/EFI";
       fsType = "vfat";
     };
     "/home" = {
