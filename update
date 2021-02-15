@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+nix flake update --recreate-lock-file
 ./pkgs/dart-sass/update.sh
 ./pkgs/gamescope/update.sh
 ./pkgs/libliftoff/update.sh

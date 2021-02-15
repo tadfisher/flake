@@ -116,7 +116,6 @@ with lib;
           "browser.tabs.drawInTitlebar" = true;
           "browser.uidensity" = 0;
           "extensions.pocket.enabled" = false;
-          "gfx.webrender.all" = true;
           "gfx.webrender.compositor" = true;
           "svg.context-properties.content.enabled" = true;
           "toolkit.cosmeticAnimations.enabled" = false;

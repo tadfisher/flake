@@ -21,6 +21,7 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nix.url = "github:NixOS/nix";
     rycee = {
       url = "gitlab:rycee/nur-expressions";
       flake = false;
@@ -63,7 +64,7 @@
               nix = {
                 extraOptions = "experimental-features = nix-command flakes";
                 nixPath = [ "nixpkgs=/etc/nixpkgs" ];
-                package = pkgs.nixFlakes;
+                package = inputs.nix.defaultPackage.${system};
                 registry = {
                   self.flake = self;
                   nixpkgs = {
@@ -231,6 +232,10 @@
         overlay = final: prev: import ./pkgs/overlay.nix final prev;
 
         pkgs = final: prev: import ./pkgs { pkgs = final; };
+
+        nix = final: prev: {
+          nixFlakes = inputs.nix.defaultPackage.${prev.system};
+        };
       };
 
       # There's probably an easier way to merge attributes in `overlays' into a
@@ -244,8 +249,11 @@
       packages = eachSystem (system:
         import ./pkgs { pkgs = pkgsBySystem.${system}; } //
         inputs.nix-dart.packages.${system} //
-        { nix-prefetch-github = inputs.nix-prefetch-github.defaultPackage.${system}; } //
-        { nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage; }
+        {
+          nix-prefetch-github = inputs.nix-prefetch-github.defaultPackage.${system};
+          nixFlakes = inputs.nix.defaultPackage.${system};
+          nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
+        }
       );
     };
 }

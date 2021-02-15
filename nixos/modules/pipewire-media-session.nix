@@ -43,7 +43,7 @@ in
 
       package = mkOption {
         type = types.package;
-        default = pkgs.pipewire.mediaSession;
+        default = pkgs.pipewire-latest.mediaSession;
         example = literalExample "pkgs.pipewire.mediaSession";
         description = ''
           The pipewire-media-session derivation to use.

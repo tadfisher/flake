@@ -333,8 +333,8 @@ packages:
       name: pubspec_parse
       url: https://pub.dartlang.org
     source: hosted
-    version: 0.1.7
-    sha256: 0qw7hbmcrwi8mvdpals4n79qf62c0xij8hv6zx708gw7fncq96ax
+    version: 0.1.8
+    sha256: 0az5ivwz7fkzf9cl3kvzlzkaglphhn7pkznccmqy6b5wpdb4sslq
   quiver:
     dependency: transitive
     description:
@@ -525,8 +525,8 @@ packages:
       name: webkit_inspection_protocol
       url: https://pub.dartlang.org
     source: hosted
-    version: 0.7.4
-    sha256: 0sqny1yfh966ngjq7akqbmcxmzxxgkyb9pwa4h3ijs35vwhinv1r
+    version: 0.7.5
+    sha256: 016l354sr5yyicsc2z0y68s1f5z21g245gi75g4rfga1dv1yvrxc
   xml:
     dependency: transitive
     description:

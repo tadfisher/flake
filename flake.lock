@@ -117,6 +117,24 @@
         "type": "github"
       }
     },
+    "nix": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1612967703,
+        "narHash": "sha256-SAKaRKKDd1jM4fgbXUze+ynaHetHOPVkVrMfkRiA5XE=",
+        "owner": "NixOS",
+        "repo": "nix",
+        "rev": "4e98f0345c144b9d85bed1f6b0bc509bf7ddc000",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nix",
+        "type": "github"
+      }
+    },
     "nix-dart": {
       "inputs": {
         "flake-utils": "flake-utils_2",
@@ -178,6 +196,21 @@
     },
     "nixpkgs": {
       "locked": {
+        "lastModified": 1602702596,
+        "narHash": "sha256-fqJ4UgOb4ZUnCDIapDb4gCrtAah5Rnr2/At3IzMitig=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ad0d20345219790533ebe06571f82ed6b034db31",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "ref": "nixos-20.09-small",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
         "lastModified": 1613226215,
         "narHash": "sha256-3rA5cGIrBHD6yeKhNhsF7/t461ww25oJY8KyBb0IhjU=",
         "owner": "NixOS",
@@ -213,10 +246,11 @@
         "android-nixpkgs": "android-nixpkgs",
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager",
+        "nix": "nix",
         "nix-dart": "nix-dart",
         "nix-prefetch-github": "nix-prefetch-github",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "rycee": "rycee"
       }
     },
