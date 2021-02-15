@@ -30,12 +30,7 @@
       driSupport32Bit = true;
     };
 
-    pulseaudio = {
-      enable = true;
-      package = pkgs.pulseaudioFull;
-      modules.module-switch-on-connect = { };
-      support32Bit = true;
-    };
+    pulseaudio.enable = false;
   };
 
   networking.networkmanager = {
@@ -62,6 +57,8 @@
 
   programs.seahorse.enable = false;
 
+  security.rtkit.enable = true;
+
   services = {
     avahi.enable = false;
 
@@ -76,7 +73,13 @@
 
     pcscd.enable = true;
 
-    pipewire.enable = true;
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      media-session.enable = true;
+    };
 
     printing.enable = true;
 

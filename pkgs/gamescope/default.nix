@@ -78,6 +78,7 @@ stdenv.mkDerivation rec {
     libXext
     libXfixes
     libXi
+    libXres
     libXxf86vm
     libXtst
   ]);

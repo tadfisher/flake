@@ -48,9 +48,14 @@
       mkNixosConfiguration = name: { system, config, modules ? [ ] }:
         inputs.nixpkgs.lib.nameValuePair name (inputs.nixpkgs.lib.nixosSystem {
           inherit system;
+
           modules = modules ++ [
+            { disabledModules = [ "services/desktops/pipewire.nix" ]; }
+
             self.nixosModules.hardware.pulseaudio
             self.nixosModules.services.pia-vpn
+            self.nixosModules.services.pipewire
+            self.nixosModules.services.pipewire-media-session
 
             ({ pkgs, ... }: {
               environment.etc.nixpkgs.source = inputs.nixpkgs;
@@ -208,6 +213,8 @@
       nixosModules = {
         hardware.pulseaudio = ./nixos/modules/pulseaudio.nix;
         services.pia-vpn = ./nixos/modules/pia-vpn.nix;
+        services.pipewire = ./nixos/modules/pipewire.nix;
+        services.pipewire-media-session = ./nixos/modules/pipewire-media-session.nix;
       };
 
       overlays = {
