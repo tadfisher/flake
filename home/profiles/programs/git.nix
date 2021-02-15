@@ -24,8 +24,9 @@ in
         autoSetupMerge = "true";
         autoSetupRebase = "remote";
       };
-      http.cookiefile = "${config.xdg.configHome}/git/cookies";
       github.user = "tadfisher";
+      http.cookiefile = "${config.xdg.configHome}/git/cookies";
+      init.defaultBranch = "main";
     };
   };
 

@@ -4,7 +4,6 @@
   imports = [
     ../profiles/core.nix
     ../profiles/gnome.nix
-    ../profiles/work.nix
     ../profiles/development/android.nix
     ../profiles/development/go.nix
     ../profiles/development/jvm.nix
@@ -13,7 +12,7 @@
     ../profiles/services/mopidy.nix
   ];
 
-  accounts.email.accounts."tad@simple.com".primary = true;
+  accounts.email.accounts."tadfisher@gmail.com".primary = true;
 
   home.packages = with pkgs; [ inkscape gimp ];
 
@@ -25,6 +24,7 @@
 
   programs = {
     lieer.enable = true;
+    pass.stores.".local/share/pass/personal".primary = true;
     ssh.extraConfig = ''
       Host tycho,tycho.lan
         Match user tad

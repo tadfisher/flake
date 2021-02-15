@@ -98,7 +98,6 @@
             inputs.android-nixpkgs.hmModule
             (import inputs.rycee { inherit pkgs; }).hmModules.emacs-init
             self.hmModules.programs.emacs-lsp
-            self.hmModules.programs.firefox
             self.hmModules.programs.gnome-shell
             self.hmModules.programs.pass
             self.hmModules.services.gnirehtet
@@ -160,7 +159,6 @@
         programs = {
           emacs-init = import ./home/modules/programs/emacs-init.nix;
           emacs-lsp = import ./home/modules/programs/emacs-lsp.nix;
-          firefox = import ./home/modules/programs/firefox.nix;
           gnome-shell = import ./home/modules/programs/gnome-shell.nix;
           pass = import ./home/modules/programs/pass.nix;
         };
