@@ -97,6 +97,7 @@
           imports = [
             inputs.android-nixpkgs.hmModule
             (import inputs.rycee { inherit pkgs; }).hmModules.emacs-init
+            self.hmModules.misc.xdg-system-dirs
             self.hmModules.programs.emacs-lsp
             self.hmModules.programs.gnome-shell
             self.hmModules.programs.pass
@@ -156,6 +157,8 @@
       };
 
       hmModules = {
+        misc.xdg-system-dirs = import ./home/modules/misc/xdg-system-dirs.nix;
+
         programs = {
           emacs-init = import ./home/modules/programs/emacs-init.nix;
           emacs-lsp = import ./home/modules/programs/emacs-lsp.nix;
