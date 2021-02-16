@@ -285,6 +285,11 @@ with lib;
         fi
         gateway="$(cat $STATE_DIRECTORY/wireguard.json | jq -r '.server_ip')"
 
+        if [ ! -f $STATE_DIRECTORY/token.json ]; then
+          >&2 echo "Token not found; is pia-vpn.esrvice running?"
+        fi
+        token="$(cat $STATE_DIRECTORY/token.json | jq -r '.token')"
+
         echo Enabling port forwarding...
         pfconfig=
         cacheFile=$STATE_DIRECTORY/portforward.json
@@ -302,7 +307,7 @@ with lib;
           pfconfig="$(curl -s -m 5 \
             --interface ${cfg.interface} \
             --connect-to "$wg_hostname::$gateway:" \
-            --cacert "/${cfg.certificateFile}" \
+            --cacert "${cfg.certificateFile}" \
             -G --data-urlencode "token=''${token}" \
             "https://''${wg_hostname}:19999/getSignature")"
           if [ "$(echo "$pfconfig" | jq -r '.status')" != "OK" ]; then
