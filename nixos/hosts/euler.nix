@@ -29,19 +29,29 @@ in
   };
 
   fileSystems = {
+    "/boot" = {
+      device = "/dev/nvme0n1p1";
+      fsType = "vfat";
+    };
     "/" = {
-      device = "/dev/nvme0n1";
+      device = "/dev/nvme0n1p2";
       fsType = "btrfs";
       options = [ "subvol=root,discard=async,compress=zstd" ];
     };
-    "/boot" = {
-      device = "/dev/disk/by-label/EFI";
-      fsType = "vfat";
-    };
     "/home" = {
-      device = "/dev/nvme0n1";
+      device = "/dev/nvme0n1p2";
       fsType = "btrfs";
       options = [ "subvol=home,discard=async,compress=zstd" ];
+    };
+    "/mnt/snap" = {
+      device = "/dev/nvme0n1p2";
+      fsType = "btrfs";
+      options = [ "subvol=snap,discard=async,compress=zstd" ];
+    };
+    "/mnt/swap" = {
+      device = "/dev/nvme0n1p2";
+      fsType = "btrfs";
+      options = [ "subvol=swap,discard=async,compress=zstd" ];
     };
   };
 
