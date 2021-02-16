@@ -51,12 +51,18 @@
           inherit system;
 
           modules = modules ++ [
-            { disabledModules = [ "services/desktops/pipewire.nix" ]; }
+            {
+              disabledModules = [
+                "services/desktops/pipewire.nix"
+                "programs/steam.nix"
+              ];
+            }
 
             self.nixosModules.hardware.pulseaudio
             self.nixosModules.services.pia-vpn
             self.nixosModules.services.pipewire
             self.nixosModules.services.pipewire-media-session
+            self.nixosModules.programs.steam
 
             ({ pkgs, ... }: {
               environment.etc.nixpkgs.source = inputs.nixpkgs;
@@ -214,6 +220,7 @@
 
       nixosModules = {
         hardware.pulseaudio = ./nixos/modules/pulseaudio.nix;
+        programs.steam = ./nixos/modules/steam.nix;
         services.pia-vpn = ./nixos/modules/pia-vpn.nix;
         services.pipewire = ./nixos/modules/pipewire.nix;
         services.pipewire-media-session = ./nixos/modules/pipewire-media-session.nix;

@@ -51,4 +51,28 @@ with final;
       maintainers = with lib.maintainers; [ tadfisher ];
     };
   });
+
+  steamPackages =
+    let
+      buildFHSUserEnvBubblewrap = final.callPackage ../builders/build-fhs-userenv-bubblewrap { };
+      callPackage = newScope prev.steamPackages;
+    in
+    rec {
+      inherit (prev.steamPackages)
+        steamArch
+        steam-runtime
+        steam-runtime-wrapped
+        steam
+        steam-fonts
+        steamcmd;
+      steam-fhsenv = callPackage ./steam/fhsenv.nix {
+        inherit (prev.steamPackages) steam-runtime-wrapped;
+        glxinfo-i686 = pkgsi686Linux.glxinfo;
+        steam-runtime-wrapped-i686 =
+          if prev.steamPackages.steamArch == "amd64"
+          then prev.pkgsi686Linux.steamPackages.steam-runtime-wrapped
+          else null;
+        buildFHSUserEnv = buildFHSUserEnvBubblewrap;
+      };
+    };
 }

@@ -20,6 +20,8 @@
   #   };
   # };
 
+  programs.steam.enable = true;
+
   services = {
     udev.extraRules = ''
       ${builtins.readFile ../../data/udev/dualshock3.rules}
