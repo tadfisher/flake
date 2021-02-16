@@ -120,28 +120,30 @@ with lib;
     unifi.enable = true;
   };
 
-  systemd.network.networks = {
-    "40-enp3s0" = {
-      name = "enp4s0";
-      DHCP = "ipv4";
-      networkConfig = {
-        DNSSEC = "allow-downgrade";
-        EmitLLDP = "nearest-bridge";
-        LLMNR = true;
-        MulticastDNS = true;
+  systemd.network = {
+    networks = {
+      "40-enp3s0" = {
+        name = "enp3s0";
+        DHCP = "ipv4";
+        networkConfig = {
+          DNSSEC = "allow-downgrade";
+          EmitLLDP = "nearest-bridge";
+          LLMNR = true;
+          MulticastDNS = true;
+        };
+        dhcpConfig.UseDomains = true;
       };
-      dhcpConfig.UseDomains = true;
-    };
-    "40-enp4s0" = {
-      name = "enp4s0";
-      DHCP = "ipv4";
-      networkConfig = {
-        DNSSEC = "allow-downgrade";
-        EmitLLDP = "nearest-bridge";
-        LLMNR = true;
-        MulticastDNS = true;
+      "40-enp4s0" = {
+        name = "enp4s0";
+        DHCP = "ipv4";
+        networkConfig = {
+          DNSSEC = "allow-downgrade";
+          EmitLLDP = "nearest-bridge";
+          LLMNR = true;
+          MulticastDNS = true;
+        };
+        dhcpConfig.UseDomains = true;
       };
-      dhcpConfig.UseDomains = true;
     };
   };
 
