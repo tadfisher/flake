@@ -273,11 +273,11 @@ with lib;
       };
 
       script = ''
-        if [ ! -f $CACHE_DIRECTORY/region.json ]; then
+        if [ ! -f $STATE_DIRECTORY/region.json ]; then
           >&2 echo "Region information not found; is pia-vpn.service running?"
           exit 1
         fi
-        wg_hostname="$(cat $CACHE_DIRECTORY/region.json | jq -r '.servers.wg[0].cn')"
+        wg_hostname="$(cat $STATE_DIRECTORY/region.json | jq -r '.servers.wg[0].cn')"
 
         if [ ! -f $STATE_DIRECTORY/wireguard.json ]; then
           >&2 echo "Connection information not found; is pia-vpn.service running?"
@@ -287,7 +287,7 @@ with lib;
 
         echo Enabling port forwarding...
         pfconfig=
-        cacheFile=$CACHE_DIRECTORY/portforward.json
+        cacheFile=$STATE_DIRECTORY/portforward.json
 
         if [ -f "$cacheFile" ]; then
           pfconfig=$(cat "$cacheFile")
