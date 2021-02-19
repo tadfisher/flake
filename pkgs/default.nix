@@ -13,8 +13,6 @@ with pkgs;
 
   libliftoff = callPackage ./libliftoff { };
 
-  pipewire-latest = callPackage ./pipewire { };
-
   plex-plexpass = callPackage ./plex-plexpass { };
   plexRaw-plexpass = callPackage ./plex-plexpass/raw.nix { };
 

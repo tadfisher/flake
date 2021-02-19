@@ -75,14 +75,10 @@
 
     pipewire = {
       enable = true;
-      package = pkgs.pipewire-latest;
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
-      media-session = {
-        enable = true;
-        package = pkgs.pipewire-latest.mediaSession;
-      };
+      media-session.enable = true;
     };
 
     printing.enable = true;
