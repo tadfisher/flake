@@ -6,7 +6,7 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    sedutil
+    sedutil-fork
     sed-opal-unlocker
   ];
 

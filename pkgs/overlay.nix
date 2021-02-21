@@ -36,7 +36,7 @@ with final;
     };
   });
 
-  sedutil = prev.sedutil.overrideAttrs (attrs: rec {
+  sedutil-fork = prev.sedutil.overrideAttrs (attrs: rec {
     version = "1.15-5ad84d8";
 
     src = fetchFromGitHub {

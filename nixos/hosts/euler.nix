@@ -13,13 +13,22 @@ in
   ];
 
   boot = {
-    initrd.availableKernelModules = [
-      "nvme"
-      "sd_mod"
-      "usbhid"
-      "usb_storage"
-      "xhci_pci"
-    ];
+    initrd = {
+      availableKernelModules = [
+        "nvme"
+        "sd_mod"
+        "usbhid"
+        "usb_storage"
+        "xhci_pci"
+      ];
+      opal = {
+        devices.root = {
+          opalDevice = "/dev/nvme1";
+          blockDevice = "/dev/nvme1n1";
+        };
+        sedutilPackage = pkgs.sedutil-fork;
+      };
+    };
     kernelModules = [
       "kvm-amd"
     ];
@@ -34,22 +43,22 @@ in
       fsType = "vfat";
     };
     "/" = {
-      device = "/dev/nvme0n1p2";
+      device = "/dev/nvme1n1";
       fsType = "btrfs";
       options = [ "subvol=root,discard=async,compress=zstd" ];
     };
     "/home" = {
-      device = "/dev/nvme0n1p2";
+      device = "/dev/nvme1n1";
       fsType = "btrfs";
       options = [ "subvol=home,discard=async,compress=zstd" ];
     };
     "/mnt/snap" = {
-      device = "/dev/nvme0n1p2";
+      device = "/dev/nvme1n1";
       fsType = "btrfs";
       options = [ "subvol=snap,discard=async,compress=zstd" ];
     };
     "/mnt/swap" = {
-      device = "/dev/nvme0n1p2";
+      device = "/dev/nvme1n1";
       fsType = "btrfs";
       options = [ "subvol=swap,discard=async,compress=zstd" ];
     };
@@ -63,7 +72,7 @@ in
   powerManagement = {
     cpuFreqGovernor = "conservative";
     # powerUpCommands = ''
-    #   ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme0 ${../../secrets/euler/sedhash}
+    #   ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme1 ${../../secrets/euler/sedhash}
     # '';
   };
 

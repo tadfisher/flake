@@ -1,4 +1,5 @@
 { config, lib, pkgs, ... }:
+
 with lib;
 let
   secrets = import ../../secrets;
@@ -13,12 +14,18 @@ in
   ];
 
   boot = {
-    initrd.availableKernelModules = [
-      "nvme"
-      "sd_mod"
-      "usb_storage"
-      "xhci_pci"
-    ];
+    initrd = {
+      availableKernelModules = [
+        "nvme"
+        "sd_mod"
+        "usb_storage"
+        "xhci_pci"
+      ];
+      opal.devices.root = {
+        opalDevice = "/dev/nvme1";
+        blockDevice = "/dev/nvme1n1";
+      };
+    };
     kernelModules = [
       "coretemp"
       "kvm-intel"
@@ -31,6 +38,7 @@ in
     ] ++ (optional
       (versionAtLeast config.boot.kernelPackages.kernel.version "5.9")
       "msr.allow_writes=on");
+    plymouth.theme = "breeze-text";
   };
 
   environment.etc = {
@@ -114,17 +122,17 @@ in
   };
 
   fileSystems = {
+    "/boot" = {
+      device = "/dev/disk/by-label/boot";
+      fsType = "vfat";
+    };
     "/" = {
-      device = "/dev/nvme0n1p1";
+      device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
       options = [ "subvol=root,discard=async,compress=zstd" ];
     };
-    "/boot" = {
-      device = "/dev/disk/by-uuid/6922-B344";
-      fsType = "vfat";
-    };
     "/home" = {
-      device = "/dev/nvme0n1p1";
+      device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
       options = [ "subvol=home,discard=async,compress=zstd" ];
     };
@@ -161,7 +169,7 @@ in
   powerManagement = {
     cpuFreqGovernor = "conservative";
     powerUpCommands = ''
-      ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme0n1 ${../../secrets/dirac/sedhash}
+      ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme1n1 ${../../secrets/dirac/sedhash}
     '';
   };
 
