@@ -45,22 +45,22 @@ in
     "/" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
-      options = [ "subvol=root,discard=async,compress=zstd" ];
+      options = [ "subvol=root" "discard=async" "compress=zstd" ];
     };
     "/home" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
-      options = [ "subvol=home,discard=async,compress=zstd" ];
+      options = [ "subvol=home" "discard=async" "compress=zstd" ];
     };
     "/mnt/pool" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
-      options = [ "discard=async,compress=zstd" ];
+      options = [ "discard=async" "compress=zstd" ];
     };
     "/mnt/snap" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
-      options = [ "subvol=snap,discard=async,compress=zstd" ];
+      options = [ "subvol=snap" "discard=async" "compress=zstd" ];
     };
   };
 
@@ -70,10 +70,10 @@ in
   };
 
   powerManagement = {
-    cpuFreqGovernor = "conservative";
-    # powerUpCommands = ''
-    #   ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme1 ${../../secrets/euler/sedhash}
-    # '';
+    cpuFreqGovernor = "schedutil";
+    powerUpCommands = ''
+        ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme1 ${../../secrets/euler/pool.hash}
+      # '';
   };
 
   services = {

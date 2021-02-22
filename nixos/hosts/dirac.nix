@@ -179,7 +179,7 @@ in
   powerManagement = {
     cpuFreqGovernor = "conservative";
     powerUpCommands = ''
-      ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme1n1 ${../../secrets/dirac/sedhash}
+      ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme1 ${../../secrets/dirac/pool.hash}
     '';
   };
 
