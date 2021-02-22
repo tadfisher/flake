@@ -21,7 +21,7 @@ in
         "usb_storage"
         "xhci_pci"
       ];
-      opal.devices.root = {
+      opal.drives.system = {
         opalDevice = "/dev/nvme1";
         blockDevice = "/dev/nvme1n1";
       };
@@ -136,6 +136,16 @@ in
       fsType = "btrfs";
       options = [ "subvol=home,discard=async,compress=zstd" ];
     };
+    "/mnt/pool" = {
+      device = "/dev/disk/by-label/pool";
+      fsType = "btrfs";
+      options = [ "discard=async,compress=zstd" ];
+    };
+    "/mnt/snap" = {
+      device = "/dev/disk/by-label/pool";
+      fsType = "btrfs";
+      options = [ "subvol=snap,discard=async,compress=zstd" ];
+    };
   };
 
   hardware.pulseaudio = {
@@ -208,6 +218,8 @@ in
       naturalScrolling = true;
     };
   };
+
+  swapDevices = [{ label = "swap"; }];
 
   system.stateVersion = "21.03";
 }

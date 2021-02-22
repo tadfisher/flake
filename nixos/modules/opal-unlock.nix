@@ -162,11 +162,11 @@ in
     };
   };
 
-  config = {
+  config = mkIf (cfg.drives != { }) {
     assertions = [
       {
-        assertion = cfg.devices != { } -> config.boot.initrd.enable;
-        message = "Option 'boot.initrd.opal.devices' requires 'boot.initrd.enable'.";
+        assertion = config.boot.initrd.enable;
+        message = "Option 'boot.initrd.opal.drives' requires 'boot.initrd.enable'.";
       }
     ];
 
@@ -181,11 +181,11 @@ in
         $out/bin/sedutil-cli --help 2>&1 | grep -q "sedutil-cli"
       '';
 
-      # We need to unlock devices before LVM but after plymouth is set up.
+      # We need to unlock drives before LVM but after plymouth is set up.
       preLVMCommands = mkOrder 2000 ''
         ${if config.boot.plymouth.enable then plymouthFunctions else consoleFunctions}
         ${commonFunctions}
-        ${concatStringsSep "\n" (mapAttrsToList unlockCommand cfg.devices)}
+        ${concatStringsSep "\n" (mapAttrsToList unlockCommand cfg.drives)}
       '';
     };
 

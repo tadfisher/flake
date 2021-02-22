@@ -22,9 +22,9 @@ in
         "xhci_pci"
       ];
       opal = {
-        devices.root = {
-          opalDevice = "/dev/nvme1";
-          blockDevice = "/dev/nvme1n1";
+        drives.system = {
+          opalDevice = "/dev/nvme0";
+          blockDevice = "/dev/nvme0n1";
         };
         sedutilPackage = pkgs.sedutil-fork;
       };
@@ -39,28 +39,28 @@ in
 
   fileSystems = {
     "/boot" = {
-      device = "/dev/nvme0n1p1";
+      device = "/dev/disk/by-label/boot";
       fsType = "vfat";
     };
     "/" = {
-      device = "/dev/nvme1n1";
+      device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
       options = [ "subvol=root,discard=async,compress=zstd" ];
     };
     "/home" = {
-      device = "/dev/nvme1n1";
+      device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
       options = [ "subvol=home,discard=async,compress=zstd" ];
     };
+    "/mnt/pool" = {
+      device = "/dev/disk/by-label/pool";
+      fsType = "btrfs";
+      options = [ "discard=async,compress=zstd" ];
+    };
     "/mnt/snap" = {
-      device = "/dev/nvme1n1";
+      device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
       options = [ "subvol=snap,discard=async,compress=zstd" ];
-    };
-    "/mnt/swap" = {
-      device = "/dev/nvme1n1";
-      fsType = "btrfs";
-      options = [ "subvol=swap,discard=async,compress=zstd" ];
     };
   };
 
@@ -93,6 +93,8 @@ in
       naturalScrolling = true;
     };
   };
+
+  swapDevices = [{ label = "swap"; }];
 
   system.stateVersion = "21.03";
 }
