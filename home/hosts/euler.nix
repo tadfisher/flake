@@ -24,7 +24,7 @@
 
   programs = {
     lieer.enable = true;
-    pass.stores.".local/share/pass/personal".primary = true;
+    pass.stores."${config.xdg.dataHome}/password-store".primary = true;
   };
 
   services = {
