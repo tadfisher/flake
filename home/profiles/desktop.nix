@@ -72,6 +72,7 @@ with lib;
       noto-fonts-emoji
       roboto
       roboto-mono
+      slack
       xorg.xhost
     ];
   };
