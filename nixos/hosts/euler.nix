@@ -72,7 +72,7 @@ in
   powerManagement = {
     cpuFreqGovernor = "schedutil";
     powerUpCommands = ''
-        ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme1 ${../../secrets/euler/pool.hash}
+        ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme0n1 ${../../secrets/euler/pool.hash}
       # '';
   };
 
