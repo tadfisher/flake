@@ -1,7 +1,7 @@
 {
     "owner": "emersion",
     "repo": "libliftoff",
-    "rev": "fbc4cf8dba64d6652bdff936c6ea1b496a16e268",
-    "sha256": "xI2Zbc3444CBKF7YdAaDPQxGxcXlniznWzOjOJ+ObNc=",
+    "rev": "c4ef21af356e1d164a2ff76ac1bee26bfede03ab",
+    "sha256": "CAkddw6fEdoiTQf3gcze7ncopoFDrmlr4wArphqbYLM=",
     "fetchSubmodules": false
 }

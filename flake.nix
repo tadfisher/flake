@@ -29,10 +29,12 @@
   };
 
   outputs = { self, ... }@inputs:
+    with inputs.nixpkgs.lib;
+
     let
       systems = [ "x86_64-linux" ];
 
-      eachSystem = inputs.nixpkgs.lib.genAttrs systems;
+      eachSystem = genAttrs systems;
 
       pkgsBySystem = eachSystem (system:
         import inputs.nixpkgs {
@@ -42,12 +44,13 @@
             (self.overlay)
             (inputs.android-nixpkgs.overlay)
             (inputs.emacs-overlay.overlay)
-          ];
+          ]
+          ++ optional (self.overlays ? ${system}) self.overlays.${system};
         }
       );
 
       mkNixosConfiguration = name: { system, config, modules ? [ ] }:
-        inputs.nixpkgs.lib.nameValuePair name (inputs.nixpkgs.lib.nixosSystem {
+        nameValuePair name (nixosSystem {
           inherit system;
 
           modules = modules ++ [
@@ -78,11 +81,11 @@
                 };
               };
               nixpkgs.pkgs = pkgsBySystem.${system};
-              system.configurationRevision = inputs.nixpkgs.lib.mkIf (self ? rev) self.rev;
+              system.configurationRevision = mkIf (self ? rev) self.rev;
             })
 
             config
-          ] ++ (inputs.nixpkgs.lib.optionals (builtins.hasAttr name self.hmConfigurations) [
+          ] ++ (optionals (self.hmConfigurations ? ${name}) [
             inputs.home-manager.nixosModules.home-manager
             {
               home-manager = {
@@ -98,7 +101,7 @@
         let
           homeConfig = config;
         in
-        inputs.nixpkgs.lib.nameValuePair name ({ config, lib, pkgs, ... }: {
+        nameValuePair name ({ config, lib, pkgs, ... }: {
           imports = [
             inputs.android-nixpkgs.hmModule
             (import inputs.rycee { inherit pkgs; }).hmModules.emacs-init
@@ -106,13 +109,14 @@
             self.hmModules.programs.emacs-lsp
             self.hmModules.programs.gnome-shell
             self.hmModules.programs.pass
+            self.hmModules.programs.pass-git-helper
             self.hmModules.services.gnirehtet
             self.hmModules.services.mopidy
             homeConfig
           ];
 
-          systemd.user.sessionVariables."NIX_PATH" = inputs.nixpkgs.lib.mkForce
-            "nixpkgs=${config.xdg.dataHome}/nixpkgs\${NIX_PATH:+:}$NIX_PATH";
+          systemd.user.sessionVariables."NIX_PATH" =
+            mkForce "nixpkgs=${config.xdg.dataHome}/nixpkgs\${NIX_PATH:+:}$NIX_PATH";
 
           xdg = {
             dataFile."nixpkgs".source = inputs.nixpkgs;
@@ -125,7 +129,7 @@
                     type = "path";
                     path = input.outPath;
                   } // (
-                    inputs.nixpkgs.lib.filterAttrs
+                    filterAttrs
                       (n: _: n == "lastModified" || n == "rev" || n == "revCount" || n == "narHash")
                       input
                   );
@@ -146,7 +150,7 @@
 
     in
     {
-      hmConfigurations = inputs.nixpkgs.lib.mapAttrs' mkHomeConfiguration {
+      hmConfigurations = mapAttrs' mkHomeConfiguration {
         dirac = {
           system = "x86_64-linux";
           config = ./home/hosts/dirac.nix;
@@ -169,6 +173,7 @@
           emacs-lsp = import ./home/modules/programs/emacs-lsp.nix;
           gnome-shell = import ./home/modules/programs/gnome-shell.nix;
           pass = import ./home/modules/programs/pass.nix;
+          pass-git-helper = import ./home/modules/programs/pass-git-helper.nix;
         };
 
         services = {
@@ -177,7 +182,7 @@
         };
       };
 
-      nixosConfigurations = inputs.nixpkgs.lib.mapAttrs' mkNixosConfiguration {
+      nixosConfigurations = mapAttrs' mkNixosConfiguration {
         dirac = {
           system = "x86_64-linux";
           config = ./nixos/hosts/dirac.nix;
@@ -232,6 +237,8 @@
         };
 
         dart = final: prev: inputs.nix-dart.overlay final prev;
+
+        euler = final: prev: import ./pkgs/euler.nix final prev;
 
         overlay = final: prev: import ./pkgs/overlay.nix final prev;
 

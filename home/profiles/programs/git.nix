@@ -5,28 +5,31 @@ let secrets = import ../../../secrets;
 
 in
 {
-  programs.git = {
-    enable = true;
-    package = pkgs.gitAndTools.gitFull;
-    userName = "Tad Fisher";
-    userEmail = "tadfisher@gmail.com";
-    ignores = [ "*~" "#*#" ];
-    signing = {
-      key = "tadfisher@gmail.com";
-      signByDefault = true;
-    };
-    delta = {
+  programs = {
+    git = {
       enable = true;
-      options = { features = "decorations"; };
-    };
-    extraConfig = {
-      branch = {
-        autoSetupMerge = "true";
-        autoSetupRebase = "remote";
+      package = pkgs.gitAndTools.gitFull;
+      userName = "Tad Fisher";
+      userEmail = "tadfisher@gmail.com";
+      ignores = [ "*~" "#*#" ];
+      signing = {
+        key = "tadfisher@gmail.com";
+        signByDefault = true;
       };
-      github.user = "tadfisher";
-      http.cookiefile = "${config.xdg.configHome}/git/cookies";
-      init.defaultBranch = "main";
+      delta = {
+        enable = true;
+        options = { features = "decorations"; };
+      };
+      extraConfig = {
+        branch = {
+          autoSetupMerge = "true";
+          autoSetupRebase = "remote";
+        };
+        github.user = "tadfisher";
+        http.cookiefile = "${config.xdg.configHome}/git/cookies";
+        init.defaultBranch = "main";
+      };
+      passGitHelper.enable = true;
     };
   };
 

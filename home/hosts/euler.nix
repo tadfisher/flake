@@ -10,6 +10,7 @@
     ../profiles/development/nix.nix
     ../profiles/development/python.nix
     ../profiles/services/mopidy.nix
+    ../profiles/work.nix
   ];
 
   accounts.email.accounts."tadfisher@gmail.com".primary = true;
@@ -25,6 +26,10 @@
   programs = {
     lieer.enable = true;
     pass.stores."${config.xdg.dataHome}/password-store".primary = true;
+    git.passGitHelper.mapping."github.com" = {
+      target = "github.com/euler";
+      skip_username = 6;
+    };
   };
 
   services = {
