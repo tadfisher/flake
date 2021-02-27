@@ -1,7 +1,12 @@
 { config, lib, pkgs, ... }:
 
 {
-  boot.plymouth.enable = true;
+  boot = {
+    consoleLogLevel = 0;
+    initrd.verbose = false;
+    kernelParams = [ "quiet" "udev.log_priority=3" ];
+    plymouth.enable = true;
+  };
 
   environment.systemPackages = with pkgs; [
     gnome3.adwaita-icon-theme

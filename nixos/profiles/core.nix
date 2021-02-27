@@ -6,7 +6,6 @@ with lib;
   boot = {
     cleanTmpDir = true;
     kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [ "quiet" ];
     supportedFilesystems = [ "exfat" ];
   };
 

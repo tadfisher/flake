@@ -332,6 +332,13 @@ in
             '';
           };
 
+          cmake-mode = {
+            enable = true;
+            config = ''
+              (setq cmake-mode-cmake-executable "${pkgs.cmake}/bin/cmake")
+            '';
+          };
+
           counsel-flymake = {
             enable = true;
           };
