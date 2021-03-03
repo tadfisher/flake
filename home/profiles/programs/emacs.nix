@@ -1759,7 +1759,7 @@ in
           auth-source-pass = {
             enable = true;
             config = ''
-              (setq auth-source-pass-filename "${config.programs.pass.primaryStore.absPath}")
+              (setq auth-source-pass-filename "${config.programs.password-store.settings.PASSWORD_STORE_DIR}")
               (auth-source-pass-enable)
             '';
           };

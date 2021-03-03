@@ -44,8 +44,7 @@
             (self.overlay)
             (inputs.android-nixpkgs.overlay)
             (inputs.emacs-overlay.overlay)
-          ]
-          ++ optional (self.overlays ? ${system}) self.overlays.${system};
+          ];
         }
       );
 
@@ -108,7 +107,6 @@
             self.hmModules.misc.xdg-system-dirs
             self.hmModules.programs.emacs-lsp
             self.hmModules.programs.gnome-shell
-            self.hmModules.programs.pass
             self.hmModules.programs.pass-git-helper
             self.hmModules.services.gnirehtet
             self.hmModules.services.mopidy
@@ -172,7 +170,6 @@
           emacs-init = import ./home/modules/programs/emacs-init.nix;
           emacs-lsp = import ./home/modules/programs/emacs-lsp.nix;
           gnome-shell = import ./home/modules/programs/gnome-shell.nix;
-          pass = import ./home/modules/programs/pass.nix;
           pass-git-helper = import ./home/modules/programs/pass-git-helper.nix;
         };
 
@@ -237,8 +234,6 @@
         };
 
         dart = final: prev: inputs.nix-dart.overlay final prev;
-
-        euler = final: prev: import ./pkgs/euler.nix final prev;
 
         overlay = final: prev: import ./pkgs/overlay.nix final prev;
 

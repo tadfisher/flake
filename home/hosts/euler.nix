@@ -15,7 +15,11 @@
 
   accounts.email.accounts."tadfisher@gmail.com".primary = true;
 
-  home.packages = with pkgs; [ inkscape gimp ];
+  home.packages = with pkgs; [
+    haskell-language-server
+    inkscape
+    gimp
+  ];
 
   android-sdk.packages = sdk: with sdk; [
     system-images-android-23-google-apis-x86
@@ -25,7 +29,6 @@
 
   programs = {
     lieer.enable = true;
-    pass.stores."${config.xdg.dataHome}/password-store".primary = true;
     git.passGitHelper.mapping."github.com" = {
       target = "github.com/euler";
       skip_username = 6;

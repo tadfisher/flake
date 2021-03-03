@@ -2,8 +2,6 @@
 
 with lib;
 let
-  pass = config.programs.pass.stores.".local/share/pass/personal";
-
   cfgNotmuch = config.programs.notmuch;
 
   cfgEmail = config.accounts.email;
@@ -74,7 +72,7 @@ in
         msmtp.enable = true;
         notmuch.enable = true;
         passwordCommand =
-          "${pass.command} show mail.google.com/tadfisher@gmail.com";
+          "${config.programs.password-store.package}/bin/pass show mail.google.com/tadfisher@gmail.com";
         realName = "Tad Fisher";
         userName = "tadfisher@gmail.com";
       };

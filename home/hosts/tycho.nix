@@ -23,6 +23,4 @@
     inkscape
     transmission-remote-gtk
   ];
-
-  programs.pass.stores.".local/share/pass/personal".primary = true;
 }

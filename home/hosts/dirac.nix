@@ -24,7 +24,6 @@
 
   programs = {
     lieer.enable = true;
-    pass.stores.".local/share/pass/personal".primary = true;
     ssh.extraConfig = ''
       Host tycho,tycho.lan
         Match user tad

@@ -64,10 +64,9 @@
       userName = "Tad Fisher";
       userEmail = "tadfisher@gmail.com";
     };
-    pass = {
+    password-store = {
       enable = true;
       package = pkgs.pass.withExtensions (e: [ e.pass-audit e.pass-otp ]);
-      stores.".local/share/pass/personal".alias = "pp";
     };
     ssh = {
       enable = true;
