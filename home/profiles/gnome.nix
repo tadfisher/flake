@@ -185,11 +185,6 @@ with lib;
 
   programs.gnome-terminal.enable = true;
 
-  qt = {
-    enable = true;
-    platformTheme = "gnome";
-  };
-
   # Disable gnome-keyring ssh-agent
   xdg.configFile = {
     "autostart/gnome-keyring-ssh.desktop".text = ''

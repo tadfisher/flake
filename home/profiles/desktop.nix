@@ -60,9 +60,8 @@ with lib;
     packages = with pkgs; [
       emacs-all-the-icons-fonts
       gksu
-      gnome3.adwaita-icon-theme
-      gnome3.gnome-themes-extra
       gparted
+      gnome3.gnome-themes-extra
       jetbrains-mono
       keybase
       libreoffice
@@ -135,6 +134,10 @@ with lib;
   qt = {
     enable = true;
     platformTheme = "gnome";
+    style = {
+      name = "adwaita-dark";
+      package = pkgs.adwaita-qt;
+    };
   };
 
   services.gpg-agent.pinentryFlavor = "gnome3";
