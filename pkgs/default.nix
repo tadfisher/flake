@@ -7,11 +7,21 @@ with pkgs;
 
   gamescope = callPackage ./gamescope { };
 
+  gimp = callPackage ./gimp {
+    gegl = gegl_0_4;
+    lcms = lcms2;
+    inherit (darwin.apple_sdk.frameworks) AppKit Cocoa;
+  };
+
+  maxflow = callPackage ./maxflow { };
+
   libcapsule = callPackage ./libcapsule { };
 
   libcapsule-i686 = pkgsi686Linux.callPackage ./libcapsule { };
 
   libliftoff = callPackage ./libliftoff { };
+
+  paperwm = callPackage ./paperwm { };
 
   plex-plexpass = callPackage ./plex-plexpass { };
   plexRaw-plexpass = callPackage ./plex-plexpass/raw.nix { };

@@ -104,10 +104,7 @@ with lib;
       ];
     };
 
-    # TODO Use native-comp when this is resolved:
-    # https://github.com/nix-community/emacs-overlay/issues/74#issuecomment-758160258
-    # emacs.package = pkgs.emacsPgtkGcc;
-    emacs.package = pkgs.emacsPgtk;
+    emacs.package = pkgs.emacsPgtkGcc;
 
     firefox = {
       enable = true;

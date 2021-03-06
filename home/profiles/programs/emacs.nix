@@ -840,7 +840,6 @@ in
             };
             diminish = [ "counsel-mode" ];
             config = ''
-              (setq counsel-switch-buffer-preview-virtual-buffers t)
               (counsel-mode)
             '';
           };
@@ -850,7 +849,6 @@ in
             demand = true;
             after = [ "projectile" ];
             config = ''
-              (setq counsel-projectile-preview-buffers t)
               (counsel-projectile-mode 1)
             '';
           };
@@ -866,6 +864,10 @@ in
           string-inflection = {
             enable = true;
             bind = { "C-c C-u" = "string-inflection-all-cycle"; };
+          };
+
+          swift-mode = {
+            enable = true;
           };
 
           # Configure magit, a nice mode for the git SCM.

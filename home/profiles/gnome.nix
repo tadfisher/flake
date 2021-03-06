@@ -166,7 +166,8 @@ with lib;
     enable = true;
     extensions = [
       { package = pkgs.gnomeExtensions.dash-to-panel; }
-      { package = pkgs.gnomeExtensions.paperwm; }
+      { package = pkgs.gnomeExtensions.gsconnect; }
+      { package = pkgs.paperwm; }
     ];
     theme = {
       name = "Plata-Noir";

@@ -3,16 +3,15 @@ final: prev:
 with final;
 
 {
-  gnomeExtensions = prev.gnomeExtensions // {
-    paperwm = prev.gnomeExtensions.paperwm.overrideAttrs (attrs: rec {
-      patches = [
-        (fetchpatch {
-          url = "https://github.com/paperwm/PaperWM/commit/d53746025f45b3a3847bae3d29c32f75c394ef0d.patch";
-          sha256 = "sha256-ad2ZaKY8FP/yjVXPAfJS7Z7BT2jonE0qXtR5Xq6p8Tk=";
-        })
-      ];
-    });
-  };
+  gegl_0_4 = prev.gegl_0_4.overrideAttrs (attrs: rec {
+    version = "0.4.28";
+    src = fetchurl {
+      url = "https://download.gimp.org/pub/gegl/${lib.versions.majorMinor version}/${attrs.pname}-${version}.tar.xz";
+      sha256 = "sha256-HRENhXfVTMo7NCOTFb03xXzLJ91DVWVQdKLSs/2JeQA=";
+    };
+    patches = [];
+    buildInputs = attrs.buildInputs ++ [ maxflow ];
+  });
 
   paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {
     pname = "paper-icon-theme-unstable";
