@@ -9,7 +9,7 @@ with final;
       url = "https://download.gimp.org/pub/gegl/${lib.versions.majorMinor version}/${attrs.pname}-${version}.tar.xz";
       sha256 = "sha256-HRENhXfVTMo7NCOTFb03xXzLJ91DVWVQdKLSs/2JeQA=";
     };
-    patches = [];
+    patches = [ ];
     buildInputs = attrs.buildInputs ++ [ maxflow ];
   });
 

@@ -70,7 +70,8 @@
 
 let
   python = python3.withPackages (pp: with pp; [ pygobject3 ]);
-in stdenv.mkDerivation rec {
+in
+stdenv.mkDerivation rec {
   pname = "gimp";
   version = "2.99.4";
 
