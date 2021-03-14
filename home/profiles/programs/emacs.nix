@@ -355,6 +355,10 @@ in
             '';
           };
 
+          dts-mode = {
+            enable = true;
+          };
+
           flymake = {
             enable = true;
             package = "";
