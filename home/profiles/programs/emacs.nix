@@ -365,6 +365,10 @@ in
             hook = [ "(prog-mode . flymake-mode)" ];
           };
 
+          go-mode = {
+            enable = true;
+          };
+
           image-dired = {
             enable = true;
             package = "";
