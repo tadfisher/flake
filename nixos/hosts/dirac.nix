@@ -38,7 +38,6 @@ in
     ] ++ (optional
       (versionAtLeast config.boot.kernelPackages.kernel.version "5.9")
       "msr.allow_writes=on");
-    plymouth.theme = "breeze-text";
   };
 
   environment.etc = {

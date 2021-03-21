@@ -87,7 +87,7 @@ with lib;
 
     "org/gnome/mutter" = {
       auto-maximize = false;
-      experimental-features = [ "autostart-xwayland" "rt-scheduler" ];
+      experimental-features = [ "autostart-xwayland" "rt-scheduler" "scale-monitor-framebuffer" ];
     };
 
     "org/gnome/mutter/keybindings" = {
