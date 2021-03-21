@@ -259,6 +259,9 @@
           nix-prefetch-github = inputs.nix-prefetch-github.defaultPackage.${system};
           nixFlakes = inputs.nix.defaultPackage.${system};
           nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
+          nixos-rebuild = inputs.nixpkgs.legacyPackages.${system}.nixos-rebuild.override {
+            nix = self.packages.${system}.nixFlakes;
+          };
         }
       );
     };
