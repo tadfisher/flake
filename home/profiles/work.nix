@@ -12,7 +12,7 @@ with lib;
     };
     lieer = {
       enable = true;
-      dropNonExistingLabels = true;
+      settings.drop_non_existing_label = true;
       sync.enable = true;
     };
     msmtp.enable = true;

@@ -355,8 +355,13 @@ in
             '';
           };
 
-          dts-mode = {
+          envrc = {
             enable = true;
+            demand = true;
+            bindKeyMap = { "M-SPC E" = "envrc-command-map"; };
+            config = ''
+              (envrc-global-mode)
+            '';
           };
 
           flymake = {
@@ -365,9 +370,7 @@ in
             hook = [ "(prog-mode . flymake-mode)" ];
           };
 
-          go-mode = {
-            enable = true;
-          };
+          go-mode.enable = true;
 
           image-dired = {
             enable = true;
@@ -388,6 +391,20 @@ in
                     image-dired-external-viewer "${pkgs.xdg_utils}/bin/xdg-open"
                     image-dired-main-image-directory "${config.xdg.userDirs.pictures}/")
             '';
+          };
+
+          jq-mode = {
+            enable = true;
+            mode = [ ''"\\.jq\\'"'' ];
+          };
+
+          json-mode = {
+            enable = true;
+            bindLocal = {
+              json-mode-map = {
+                "M-SPC m q" = "jq-interactively";
+              };
+            };
           };
 
           kotlin-mode = {
@@ -974,7 +991,7 @@ in
           };
 
           direnv = {
-            enable = true;
+            enable = false;
             demand = true;
             hook = [ "(lsp-before-initialize . direnv-update-environment)" ];
             config = ''
@@ -1145,7 +1162,15 @@ in
 
           markdown-mode = {
             enable = true;
-            mode = [ ''"\\.mdwn\\'"'' ''"\\.markdown\\'"'' ''"\\.md\\'"'' ];
+            command = [ "markdown-mode" "gfm-mode" ];
+            mode = [
+              ''("README\\.md\\'" . gfm-mode)''
+              ''("\\.markdown\\'" . markdown-mode)''
+              ''("\\.md\\'" . markdown-mode)''
+            ];
+            config = ''
+              (setq markdown-command "${pkgs.pandoc}/bin/pandoc")
+            '';
           };
 
           pandoc-mode = {
@@ -1584,8 +1609,6 @@ in
               (add-to-list 'company-backends 'company-restclient)
             '';
           };
-
-          json-mode = { enable = true; };
 
           php-mode = {
             enable = true;

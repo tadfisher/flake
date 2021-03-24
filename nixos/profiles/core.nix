@@ -88,4 +88,6 @@ with lib;
   };
 
   time.timeZone = "America/Los_Angeles";
+
+  zramSwap.enable = true;
 }

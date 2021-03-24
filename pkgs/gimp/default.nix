@@ -12,10 +12,12 @@
 , gtk3
 , glib
 , gdk-pixbuf
+, graphviz
 , isocodes
 , pango
 , cairo
 , libarchive
+, luajit
 , freetype
 , fontconfig
 , lcms
@@ -84,8 +86,8 @@ stdenv.mkDerivation rec {
     domain = "gitlab.gnome.org";
     owner = "GNOME";
     repo = "gimp";
-    rev = "GIMP_2_99_4";
-    sha256 = "sha256-xk5skpZVGURS5R5FB4qm3NPcNMSjdNhslfaUfsWaaio=";
+    rev = "34463786b175edbd883cc4ea52f087ebbd3d4c2a";
+    sha256 = "sha256-0+z4oYYIMZbJyIK/X0PfDql25V8zvSfiLJi84Ry1Vfo=";
   };
 
   patches = [
@@ -158,6 +160,7 @@ stdenv.mkDerivation rec {
     freetype
     fontconfig
     lcms
+    libarchive
     libpng
     libjpeg
     poppler
@@ -183,8 +186,10 @@ stdenv.mkDerivation rec {
     libmypaint
     mypaint-brushes1
     webkitgtk
-    alsaLib
+    gnome3.adwaita-icon-theme
+    (luajit.withPackages (pp: [ pp.lgi ]))
   ] ++ lib.optionals (!stdenv.isDarwin) [
+    alsaLib
     gjs
   ] ++ lib.optionals stdenv.isDarwin [
     AppKit
@@ -200,13 +205,12 @@ stdenv.mkDerivation rec {
   ];
 
   mesonFlags = [
-    "-Dlua=false"
-    "-Dvala-plugins=disabled" # currently failing (https://gitlab.gnome.org/GNOME/gimp/issues/5407)
     "-Dbug-report-url=https://github.com/NixOS/nixpkgs/issues/new"
     "-Dicc-directory=/run/current-system/sw/share/color/icc"
     "-Dcheck-update=false"
   ] ++ lib.optionals stdenv.isDarwin [
-    "-Djavascript=never" # spidermonkey (gjs) does not build on Darwin
+    "-Dalsa=disabled"
+    "-Djavascript=false" # spidermonkey (gjs) does not build on Darwin
   ];
 
   # on Darwin,
@@ -238,6 +242,10 @@ stdenv.mkDerivation rec {
       --subst-var-by GIMP_GIT_VERSION "GIMP_2.99.?-g${builtins.substring 0 10 src.rev}" \
       --subst-var-by GIMP_GIT_VERSION_ABBREV "${builtins.substring 0 10 src.rev}" \
       --subst-var-by GIMP_GIT_LAST_COMMIT_YEAR "${builtins.substring 9 4 version}"
+  '';
+
+  preFixup = ''
+    gappsWrapperArgs+=(--prefix PATH : "${lib.makeBinPath [ graphviz ]}")
   '';
 
   postInstall = ''

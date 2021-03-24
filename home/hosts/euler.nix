@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
 
+with lib;
+
 {
   imports = [
     ../profiles/core.nix
@@ -17,16 +19,15 @@
 
   accounts.email.accounts."tadfisher@gmail.com".primary = true;
 
+  android-sdk.packages = mkForce (sdk: with sdk; [
+    cmdline-tools-latest
+    platform-tools
+  ]);
+
   home.packages = with pkgs; [
-    haskell-language-server
+    aws
     inkscape
     gimp
-  ];
-
-  android-sdk.packages = sdk: with sdk; [
-    system-images-android-23-google-apis-x86
-    system-images-android-24-google-apis-x86
-    system-images-android-27-google-apis-playstore-x86
   ];
 
   programs = {

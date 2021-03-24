@@ -9,6 +9,7 @@ in
     ../profiles/core.nix
     ../profiles/users/tad.nix
     ../profiles/uefi.nix
+    ../profiles/virt-amd.nix
     ../profiles/workstation.nix
   ];
 
@@ -35,6 +36,17 @@ in
     kernelParams = [
       "mitigations=off"
     ];
+  };
+
+  environment.etc."NetworkManager/system-connections/mercury.nmconnection" = {
+    mode = "0600";
+    source = pkgs.substituteAll {
+      src = ../../secrets/euler/vpn/mercury.nmconnection.in;
+      ca = ../../secrets/euler/vpn/mercury-ca.pem;
+      cert = ../../secrets/euler/vpn/mercury-cert.pem;
+      key = ../../secrets/euler/vpn/mercury-key.pem;
+      ta = ../../secrets/euler/vpn/mercury-tls-auth.pem;
+    };
   };
 
   fileSystems = {
@@ -66,9 +78,9 @@ in
 
   nix = {
     binaryCaches = [ "https://cache.mercury.com/" ];
-    binaryCachePublicKeys = [ "cache.mercury.com:yhfFlgvqtv0cAxzflJ0aZW3mbulx4+5EOZm6k3oML+I= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
-    buildCores = 8;
-    maxJobs = 2;
+    binaryCachePublicKeys = [ "cache.mercury.com:yhfFlgvqtv0cAxzflJ0aZW3mbulx4+5EOZm6k3oML+I=" ];
+    buildCores = 4;
+    maxJobs = 4;
   };
 
   powerManagement = {
@@ -77,6 +89,8 @@ in
         ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme0n1 ${../../secrets/euler/pool.hash}
       # '';
   };
+
+  security.pki.certificateFiles = [ ../../secrets/euler/mercury.ca.crt ];
 
   services = {
     btrfs.autoScrub = {
