@@ -77,8 +77,8 @@ packages:
       name: cli_repl
       url: https://pub.dartlang.org
     source: hosted
-    version: 0.2.0+1
-    sha256: 12qp7vb4g9y4hld4c55zwzcfn9578x53g4yrk1p493203x2clai2
+    version: 0.2.1
+    sha256: 0mpdiffdi6qhjmn8dyff22is38rsc2m4pzpbw9fwg7dxas8iidf8
   cli_util:
     dependency: transitive
     description:
@@ -213,16 +213,16 @@ packages:
       name: json_annotation
       url: https://pub.dartlang.org
     source: hosted
-    version: 4.0.0
-    sha256: 0qlp0yhy9hmdln2qj7wchsqcdciy7ivz7s83cq3czx8wlbxwwadq
+    version: 4.0.1
+    sha256: 0whqicabqwlz0sp2qzvps5674zz7qp0606m21gir75q9gfi1nhmq
   logging:
     dependency: transitive
     description:
       name: logging
       url: https://pub.dartlang.org
     source: hosted
-    version: 1.0.0
-    sha256: 0rbagjbil8d1mrqgfanm29jbamrg0xqpa0hmdhl0mwwfyj9nmqxw
+    version: 1.0.1
+    sha256: 1jqh1fphbscmf18xwi0zshcy6f3d3lry1wls2wg685ay53dvvp06
   matcher:
     dependency: transitive
     description:
@@ -552,4 +552,4 @@ packages:
     version: 2.2.1
     sha256: 0maqm03fdqkvhc129pz9mp15vkyzwwsxf15hbps7l7yjsyasxlp6
 sdks:
-  dart: '>=2.12.0-0.0 <3.0.0'
+  dart: '>=2.12.0 <3.0.0'

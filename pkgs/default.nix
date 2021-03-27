@@ -7,11 +7,11 @@ with pkgs;
 
   gamescope = callPackage ./gamescope { };
 
-  gimp = callPackage ./gimp {
-    gegl = gegl_0_4;
-    lcms = lcms2;
-    inherit (darwin.apple_sdk.frameworks) AppKit Cocoa;
-  };
+  # gimp = callPackage ./gimp {
+  #   gegl = gegl_0_4;
+  #   lcms = lcms2;
+  #   inherit (darwin.apple_sdk.frameworks) AppKit Cocoa;
+  # };
 
   maxflow = callPackage ./maxflow { };
 

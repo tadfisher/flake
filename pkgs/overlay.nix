@@ -3,16 +3,6 @@ final: prev:
 with final;
 
 {
-  gegl_0_4 = prev.gegl_0_4.overrideAttrs (attrs: rec {
-    version = "0.4.28";
-    src = fetchurl {
-      url = "https://download.gimp.org/pub/gegl/${lib.versions.majorMinor version}/${attrs.pname}-${version}.tar.xz";
-      sha256 = "sha256-HRENhXfVTMo7NCOTFb03xXzLJ91DVWVQdKLSs/2JeQA=";
-    };
-    patches = [ ];
-    buildInputs = attrs.buildInputs ++ [ maxflow ];
-  });
-
   paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {
     pname = "paper-icon-theme-unstable";
     version = "2020-03-12";

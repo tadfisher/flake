@@ -6,6 +6,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/android-nixpkgs";
     };
+    emacs-flake.url = "github:mjlbach/emacs-overlay";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,7 +22,6 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nix.url = "github:NixOS/nix";
     rycee = {
       url = "gitlab:rycee/nur-expressions";
       flake = false;
@@ -43,7 +43,6 @@
           overlays = [
             (self.overlay)
             (inputs.android-nixpkgs.overlay)
-            (inputs.emacs-overlay.overlay)
           ];
         }
       );
@@ -70,7 +69,7 @@
               nix = {
                 extraOptions = "experimental-features = nix-command flakes";
                 nixPath = [ "nixpkgs=/etc/nixpkgs" ];
-                package = inputs.nix.defaultPackage.${system};
+                package = self.packages.${system}.nixUnstable;
                 registry = {
                   self.flake = self;
                   nixpkgs = {
@@ -115,35 +114,6 @@
 
           systemd.user.sessionVariables."NIX_PATH" =
             mkForce "nixpkgs=${config.xdg.dataHome}/nixpkgs\${NIX_PATH:+:}$NIX_PATH";
-
-          xdg = {
-            dataFile."nixpkgs".source = inputs.nixpkgs;
-
-            configFile."nix/registry.json".text = builtins.toJSON {
-              version = 2;
-              flakes =
-                let
-                  toInput = input: {
-                    type = "path";
-                    path = input.outPath;
-                  } // (
-                    filterAttrs
-                      (n: _: n == "lastModified" || n == "rev" || n == "revCount" || n == "narHash")
-                      input
-                  );
-                in
-                [
-                  {
-                    from = { id = "self"; type = "indirect"; };
-                    to = toInput inputs.self;
-                  }
-                  {
-                    from = { id = "nixpkgs"; type = "indirect"; };
-                    to = toInput inputs.nixpkgs;
-                  }
-                ];
-            };
-          };
         });
 
     in
@@ -226,41 +196,44 @@
       };
 
       overlays = {
+        dart = final: prev: inputs.nix-dart.overlay final prev;
+
         # This would be part of `packages' but that doesn’t support nested attrsets
         # (e.g. using `lib.makeScope').
-        emacs = final: prev: {
-          emacsPackagesFor = emacs: (prev.emacsPackagesFor emacs).overrideScope'
-            (efinal: eprev: import ./pkgs/emacs efinal);
-        };
-
-        dart = final: prev: inputs.nix-dart.overlay final prev;
+        emacs = final: prev:
+          let
+            emacs-overlay = inputs.emacs-overlay.overlay final prev;
+          in
+          {
+            inherit (inputs.emacs-flake.packages.${prev.system}) emacsPgtkGcc;
+            emacsPackagesFor = emacs:
+              (emacs-overlay.emacsPackagesFor emacs).overrideScope'
+                (efinal: eprev: import ./pkgs/emacs efinal);
+          };
 
         overlay = final: prev: import ./pkgs/overlay.nix final prev;
 
         pkgs = final: prev: import ./pkgs { pkgs = final; };
-
-        nix = final: prev: {
-          nixFlakes = inputs.nix.defaultPackage.${prev.system};
-        };
       };
 
       # There's probably an easier way to merge attributes in `overlays' into a
       # single function.
       overlay = final: prev:
         (self.overlays.dart final prev) //
-        (self.overlays.pkgs final prev) //
         (self.overlays.emacs final prev) //
+        (self.overlays.pkgs final prev) //
         (self.overlays.overlay final prev);
 
       packages = eachSystem (system:
         import ./pkgs { pkgs = pkgsBySystem.${system}; } //
         inputs.nix-dart.packages.${system} //
         {
+          emacsPgtkGcc = inputs.emacs-flake.packages.${system}.emacsPgtkGcc;
           nix-prefetch-github = inputs.nix-prefetch-github.defaultPackage.${system};
-          nixFlakes = inputs.nix.defaultPackage.${system};
           nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
+          nixUnstable = inputs.nixpkgs.legacyPackages.${system}.nixUnstable;
           nixos-rebuild = inputs.nixpkgs.legacyPackages.${system}.nixos-rebuild.override {
-            nix = self.packages.${system}.nixFlakes;
+            nix = self.packages.${system}.nixUnstable;
           };
         }
       );

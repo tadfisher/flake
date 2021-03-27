@@ -147,29 +147,6 @@ in
     };
   };
 
-  hardware.pulseaudio = {
-    modules.module-echo-cancel = {
-      package = pkgs.pulseaudio-modules-bt;
-      arguments = {
-        use_master_format = true;
-        aec_method = "webrtc";
-        aec_args = {
-          analog_gain_control = false;
-          digital_gain_control = true;
-          beamforming = true;
-          mic_geometry = [ (-3.0e-2) 0.0 0.0 3.0e-2 0.0 0.0 ];
-          noise_suppression = true;
-        };
-        source_name = "echoCancel_source";
-        sink_name = "echoCancel_sink";
-      };
-    };
-    extraConfig = ''
-      set-default-source echoCancel_source
-      set-default-sink echoCancel_sink
-    '';
-  };
-
   nix = {
     buildCores = 4;
     maxJobs = 2;
@@ -178,7 +155,7 @@ in
   powerManagement = {
     cpuFreqGovernor = "conservative";
     powerUpCommands = ''
-      ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme1 ${../../secrets/dirac/pool.hash}
+      ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme1n1 ${../../secrets/dirac/pool.hash}
     '';
   };
 
