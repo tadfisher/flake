@@ -939,7 +939,7 @@ in
 
           # Configure AUCTeX.
           latex = {
-            enable = true;
+            enable = false;
             package = "auctex";
             mode = [ ''("\\.tex\\'" . latex-mode)'' ];
             hook = [

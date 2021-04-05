@@ -69,11 +69,17 @@ with lib;
       noto-fonts
       noto-fonts-cjk
       noto-fonts-emoji
+      qt5.qtwayland
       roboto
       roboto-mono
       slack
       xorg.xhost
     ];
+
+    sessionVariables = {
+      QT_QPA_PLATFORM = "wayland";
+      SDL_VIDEODRIVER = "wayland";
+    };
   };
 
   programs = {

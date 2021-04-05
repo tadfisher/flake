@@ -5,6 +5,8 @@
     gnome3.gnome-chess
     enyo-doom
     gzdoom
+    openmw
+    portmod
     protontricks
     retroarch
     steam-run

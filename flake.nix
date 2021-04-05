@@ -200,16 +200,16 @@
 
         # This would be part of `packages' but that doesn’t support nested attrsets
         # (e.g. using `lib.makeScope').
-        emacs = final: prev:
-          let
-            emacs-overlay = inputs.emacs-overlay.overlay final prev;
-          in
-          {
-            inherit (inputs.emacs-flake.packages.${prev.system}) emacsPgtkGcc;
-            emacsPackagesFor = emacs:
-              (emacs-overlay.emacsPackagesFor emacs).overrideScope'
-                (efinal: eprev: import ./pkgs/emacs efinal);
-          };
+        # emacs = final: prev:
+        #   let
+        #     emacs-overlay = inputs.emacs-overlay.overlay final prev;
+        #   in
+        #   {
+        #     inherit (inputs.emacs-flake.packages.${prev.system}) emacsPgtkGcc;
+        #     emacsPackagesFor = emacs:
+        #       (emacs-overlay.emacsPackagesFor emacs).overrideScope'
+        #         (efinal: eprev: (final.callPackage ./pkgs/emacs {}) efinal eprev);
+        #   };
 
         overlay = final: prev: import ./pkgs/overlay.nix final prev;
 
@@ -219,8 +219,9 @@
       # There's probably an easier way to merge attributes in `overlays' into a
       # single function.
       overlay = final: prev:
+        (inputs.emacs-overlay.overlay final prev) //
         (self.overlays.dart final prev) //
-        (self.overlays.emacs final prev) //
+        # (self.overlays.emacs final prev) //
         (self.overlays.pkgs final prev) //
         (self.overlays.overlay final prev);
 

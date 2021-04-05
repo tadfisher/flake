@@ -3,6 +3,9 @@ final: prev:
 with final;
 
 {
+  emacsPackagesFor = emacs:
+    (prev.emacsPackagesFor emacs).overrideScope' (callPackage ./emacs { });
+
   paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {
     pname = "paper-icon-theme-unstable";
     version = "2020-03-12";
