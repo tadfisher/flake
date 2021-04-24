@@ -26,14 +26,14 @@ let
   version = builtins.readFile ./version;
 
   wlroots-git = wlroots.overrideAttrs (attrs: rec {
-    pname = "wlroots-unstable";
-    version = "2020-12-15";
+    pname = "wlroots";
+    version = "0.13.0";
 
     src = fetchFromGitHub {
       owner = "swaywm";
       repo = "wlroots";
-      rev = "da2a2169344ef2dbe0dc31fd013caf30880d6aff";
-      sha256 = "sha256-aRl4Ljt1KoTMPjlK3aFRRXjora7sHFhzn/7gdXMb/EM=";
+      rev = version;
+      sha256 = "sha256-/u2gx9oNG0T6TW/y3y7hhKZ8QXZog58VCs+Xq+2C9AY=";
     };
   });
 

@@ -9,7 +9,10 @@
     ../profiles/development/jvm.nix
     ../profiles/development/nix.nix
     ../profiles/development/python.nix
+    ../profiles/misc/mail.nix
     ../profiles/services/mopidy.nix
+    ../profiles/services/gpg-agent.nix
+    ../profiles/services/kbfs.nix
     ../profiles/work.nix
   ];
 

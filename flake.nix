@@ -12,6 +12,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
     };
+    naersk.url = "github:nmattia/naersk";
     nix-dart = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/nix-dart";
@@ -22,6 +23,10 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    portmod = {
+      url = "gitlab:portmod/portmod";
+      flake = false;
+    };
     rycee = {
       url = "gitlab:rycee/nur-expressions";
       flake = false;
@@ -39,7 +44,15 @@
       pkgsBySystem = eachSystem (system:
         import inputs.nixpkgs {
           inherit system;
-          config.allowUnfree = true;
+
+          config =
+            let
+              profiles = import ./nixpkgs { profiles = [ "games" ]; };
+            in
+            { allowUnfree = true; } //
+            profiles.games;
+
+
           overlays = [
             (self.overlay)
             (inputs.android-nixpkgs.overlay)
@@ -127,6 +140,10 @@
           system = "x86_64-linux";
           config = ./home/hosts/euler.nix;
         };
+        kepler = {
+          system = "x86_64-linux";
+          config = ./home/hosts/kepler.nix;
+        };
         tycho = {
           system = "x86_64-linux";
           config = ./home/hosts/tycho.nix;
@@ -213,7 +230,7 @@
 
         overlay = final: prev: import ./pkgs/overlay.nix final prev;
 
-        pkgs = final: prev: import ./pkgs { pkgs = final; };
+        pkgs = final: prev: self.packages.${prev.system} or { };
       };
 
       # There's probably an easier way to merge attributes in `overlays' into a
@@ -221,7 +238,6 @@
       overlay = final: prev:
         (inputs.emacs-overlay.overlay final prev) //
         (self.overlays.dart final prev) //
-        # (self.overlays.emacs final prev) //
         (self.overlays.pkgs final prev) //
         (self.overlays.overlay final prev);
 
@@ -235,6 +251,10 @@
           nixUnstable = inputs.nixpkgs.legacyPackages.${system}.nixUnstable;
           nixos-rebuild = inputs.nixpkgs.legacyPackages.${system}.nixos-rebuild.override {
             nix = self.packages.${system}.nixUnstable;
+          };
+          portmod = import inputs.portmod {
+            pkgs = pkgsBySystem.${system};
+            naersk = import inputs.naersk;
           };
         }
       );

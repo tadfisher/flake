@@ -78,7 +78,6 @@ with lib;
 
     sessionVariables = {
       QT_QPA_PLATFORM = "wayland";
-      SDL_VIDEODRIVER = "wayland";
     };
   };
 

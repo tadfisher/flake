@@ -5,7 +5,6 @@
     ./misc/mail.nix
     ./programs/emacs.nix
     ./programs/git.nix
-    ./programs/texlive.nix
   ];
 
   home = {
@@ -24,6 +23,7 @@
       gnupg
       jq
       lm_sensors
+      p7zip
       ripgrep
       rw
       telnet
@@ -47,15 +47,6 @@
     direnv = {
       enable = true;
       enableNixDirenvIntegration = true;
-      config = {
-        whitelist = {
-          prefix = [
-            "${config.home.homeDirectory}/proj"
-            "${config.home.homeDirectory}/simple"
-            "${config.home.homeDirectory}/src"
-          ];
-        };
-      };
     };
     gpg.enable = true;
     home-manager.enable = true;
@@ -73,29 +64,6 @@
       compression = true;
       controlMaster = "auto";
       controlPersist = "10m";
-      matchBlocks."kepler" = {
-        hostname = "kepler.lan";
-        user = "tad";
-        extraOptions = {
-          RemoteForward = "/run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra";
-        };
-      };
-    };
-  };
-
-  services = {
-    gpg-agent = {
-      enable = true;
-      defaultCacheTtl = 3600;
-      defaultCacheTtlSsh = 3600;
-      enableExtraSocket = true;
-      enableSshSupport = true;
-      grabKeyboardAndMouse = false;
-    };
-    kbfs = {
-      enable = true;
-      extraFlags = [ "-label kbfs" "-mount-type normal" ];
-      mountPoint = ".local/keybase";
     };
   };
 

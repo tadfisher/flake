@@ -8,8 +8,9 @@
     enableBsnesMercury = true;
     enableCitra = true;
     enableDesmume = true;
-    enableDolphin = true;
     enableMGBA = true;
+    enableMupen64Plus = true;
+    enableParallelN64 = true;
     enableYabause = true;
   };
 }

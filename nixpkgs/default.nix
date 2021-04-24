@@ -5,8 +5,8 @@ let
   profile = name: {
     inherit name;
     value =
-      if pathExists "./${name}.nix"
-      then import ./. + "/${name}.nix"
+      if pathExists (./. + "/${name}.nix")
+      then import (./. + "/${name}.nix")
       else null;
   };
 
