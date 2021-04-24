@@ -67,7 +67,7 @@ in
             proxy_buffering off;
           '';
           locations."/" = {
-            proxyPass = "http://plex.lan:32400";
+            proxyPass = "http://localhost:32400/";
             extraConfig = ''
               proxy_set_header X-Plex-Client-Identifier $http_x_plex_client_identifier;
               proxy_set_header X-Plex-Device $http_x_plex_device;
