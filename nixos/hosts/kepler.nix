@@ -119,6 +119,7 @@ with lib;
 
     unifi = {
       enable = true;
+      openPorts = true;
       unifiPackage = pkgs.unifi6;
     };
   };
