@@ -14,7 +14,7 @@ in
     acme = {
       acceptTerms = true;
       certs."orion.tad.codes" = {
-        domain = "*.orion.tad.codes";
+        extraDomainNames = [ "*.orion.tad.codes" ];
         email = "tadfisher@gmail.com";
         dnsProvider = "cloudflare";
         credentialsFile = "/root/nixos/secrets/cloudflare-dns.env";
