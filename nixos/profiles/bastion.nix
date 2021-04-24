@@ -2,6 +2,9 @@
 
 with lib;
 
+let
+  acmeCerts = config.security.acme.certs."orion.tad.codes".directory;
+in
 {
   networking = {
     firewall.allowedTCPPorts = [ 22 80 443 ];
@@ -38,9 +41,9 @@ with lib;
       recommendedTlsSettings = true;
       virtualHosts = {
         "orion.tad.codes" = {
-          sslCertificate = "${certs."orion.tad.codes".directory}/fullchain.pem";
-          sslCertificateKey = "${certs."orion.tad.codes".directory}/key.pem";
-          sslTrustedCertificate = "${certs."orion.tad.codes".directory}/chain.pem";
+          sslCertificate = "${acmeCerts}/fullchain.pem";
+          sslCertificateKey = "${acmeCerts}/key.pem";
+          sslTrustedCertificate = "${acmeCerts}/chain.pem";
           forceSSL = true;
           default = true;
           extraConfig = ''
@@ -54,9 +57,9 @@ with lib;
           };
         };
         "plex.orion.tad.codes" = {
-          sslCertificate = "${certs."orion.tad.codes".directory}/fullchain.pem";
-          sslCertificateKey = "${certs."orion.tad.codes".directory}/key.pem";
-          sslTrustedCertificate = "${certs."orion.tad.codes".directory}/chain.pem";
+          sslCertificate = "${acmeCerts}/fullchain.pem";
+          sslCertificateKey = "${acmeCerts}/key.pem";
+          sslTrustedCertificate = "${acmeCerts}/chain.pem";
           forceSSL = true;
           extraConfig = ''
             client_max_body_size 0;
@@ -131,7 +134,7 @@ with lib;
       enable = true;
       blacklist_threshold = 120;
     };
-
-    users.users.nginx.extraGroups = [ "acme" ];
   };
+
+  users.users.nginx.extraGroups = [ "acme" ];
 }

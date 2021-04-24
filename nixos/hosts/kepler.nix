@@ -6,6 +6,7 @@ with lib;
     ../profiles/core.nix
     ../profiles/media.nix
     ../profiles/seedbox.nix
+    ../profiles/bastion.nix
     ../profiles/services/sshd.nix
     ../profiles/users/tad.nix
     ../profiles/uefi.nix
