@@ -117,7 +117,10 @@ with lib;
       watch-dir = "/srv/media/.incoming/";
     };
 
-    unifi.enable = true;
+    unifi = {
+      enable = true;
+      unifiPackage = pkgs.unifi6;
+    };
   };
 
   systemd.network = {
