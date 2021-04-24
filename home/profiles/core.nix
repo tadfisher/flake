@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ./misc/mail.nix
     ./programs/emacs.nix
     ./programs/git.nix
   ];
