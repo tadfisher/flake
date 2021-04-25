@@ -479,6 +479,14 @@ in
             '';
           };
 
+          tramp = {
+            enable = true;
+            config = ''
+              (setq tramp-shell-prompt-pattern
+                    "\\(?:^\\|\\)[^]#$%>\n]*#?[]#$%>].* *\\(\\[[[:digit:];]*[[:alpha:]] *\\)*")
+            '';
+          };
+
           xref = {
             enable = true;
             package = "";
