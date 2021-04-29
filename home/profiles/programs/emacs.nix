@@ -893,6 +893,7 @@ in
 
           swift-mode = {
             enable = true;
+            mode = [ ''("\\.swift\\'" . swift-mode)'' ];
           };
 
           # Configure magit, a nice mode for the git SCM.
