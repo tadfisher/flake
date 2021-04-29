@@ -21,8 +21,6 @@ with pkgs;
 
   libliftoff = callPackage ./libliftoff { };
 
-  jetbrains-mono = callPackage ./jetbrains-mono { };
-
   paperwm = callPackage ./paperwm { };
 
   plex-plexpass = callPackage ./plex-plexpass { };
