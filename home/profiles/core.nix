@@ -8,11 +8,6 @@
   ];
 
   home = {
-    # Conflicts with pcscd
-    file.".gnupg/scdaemon.conf".text = ''
-      disable-ccid
-    '';
-
     homeDirectory = "/home/tad";
 
     packages = with pkgs; [
@@ -48,7 +43,10 @@
       enable = true;
       enableNixDirenvIntegration = true;
     };
-    gpg.enable = true;
+    gpg = {
+      enable = true;
+      scdaemonSettings.disable-ccid = true;
+    };
     home-manager.enable = true;
     mercurial = {
       enable = true;

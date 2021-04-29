@@ -127,4 +127,27 @@ mkMerge [
       gnome3.gnome-boxes
     ];
   })
+
+  # TODO https://github.com/NixOS/nixpkgs/pull/121105
+  {
+    systemd.services.pcscd.serviceConfig.ExecStart = [
+      ""
+      "${getBin pkgs.pcsclite}/bin/pcscd -f -x -c /etc/reader.conf"
+    ];
+  }
+
+  # TODO https://github.com/NixOS/nixpkgs/issues/121121
+  {
+    environment.systemPackages = [ pkgs.pcsclite ];
+
+    security.polkit.extraConfig = ''
+      polkit.addRule(function(action, subject) {
+        if (action.id == "org.debian.pcsc-lite.access_pcsc" &&
+            subject.isInGroup("wheel")) {
+          return polkit.Result.YES;
+        }
+      });
+    '';
+
+  }
 ]
