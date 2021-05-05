@@ -64,31 +64,31 @@ with lib;
     "/srv/backup" = {
       device = "/dev/sda";
       fsType = "btrfs";
-      options = [ "subvol=backup" ];
+      options = [ "subvol=backup" "compress-force=zstd" ];
     };
 
     "/srv/mail" = {
       device = "/dev/sda";
       fsType = "btrfs";
-      options = [ "subvol=mail" ];
+      options = [ "subvol=mail" "compress-force=zstd" ];
     };
 
     "/srv/media" = {
       device = "/dev/sda";
       fsType = "btrfs";
-      options = [ "subvol=media" ];
+      options = [ "subvol=media" "compress-force=zstd" ];
     };
 
     "/srv/torrents" = {
       device = "/dev/sda";
       fsType = "btrfs";
-      options = [ "subvol=torrents" ];
+      options = [ "subvol=torrents" "compress-force=zstd" ];
     };
 
     "/srv/steam" = {
       device = "/dev/sda";
       fsType = "btrfs";
-      options = [ "subvol=steam" ];
+      options = [ "subvol=steam" "compress-force=zstd" ];
     };
   };
 

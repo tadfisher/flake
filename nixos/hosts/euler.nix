@@ -57,22 +57,22 @@ in
     "/" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
-      options = [ "subvol=root" "discard=async" "compress=zstd" ];
+      options = [ "subvol=root" "discard=async" "compress-force=zstd" ];
     };
     "/home" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
-      options = [ "subvol=home" "discard=async" "compress=zstd" ];
+      options = [ "subvol=home" "discard=async" "compress-force=zstd" ];
     };
     "/mnt/pool" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
-      options = [ "discard=async" "compress=zstd" ];
+      options = [ "discard=async" "compress-force=zstd" ];
     };
     "/mnt/snap" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
-      options = [ "subvol=snap" "discard=async" "compress=zstd" ];
+      options = [ "subvol=snap" "discard=async" "compress-force=zstd" ];
     };
   };
 
