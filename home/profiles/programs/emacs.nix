@@ -442,7 +442,7 @@ in
           };
 
           pretty-tabs = {
-            enable = true;
+            enable = false;
             after = [ "tab-bar" "all-the-icons" ];
             extraConfig = ''
               :functions pretty-tabs-mode
@@ -497,7 +497,7 @@ in
           base16-plata-noir-theme = {
             enable = true;
             package = "base16-plata-theme";
-            after = [ "base16-theme" "pretty-tabs" ];
+            after = [ "base16-theme" ];
             config = ''
               (when-let* ((dir (file-name-directory
                                 (locate-file "base16-plata-noir-theme"

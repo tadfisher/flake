@@ -40,6 +40,8 @@ with lib;
   hardware.enableRedistributableFirmware = true;
 
   networking = {
+    # Needed for mDNS
+    firewall.allowedUDPPorts = [ 5353 ];
     useDHCP = false;
     useNetworkd = true;
   };
