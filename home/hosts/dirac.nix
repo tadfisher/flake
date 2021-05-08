@@ -19,9 +19,14 @@
   home.packages = with pkgs; [ inkscape gimp ];
 
   android-sdk.packages = sdk: with sdk; [
-    system-images-android-23-google-apis-x86
-    system-images-android-24-google-apis-x86
-    system-images-android-27-google-apis-playstore-x86
+    build-tools-30-0-2
+    cmdline-tools-latest
+    emulator
+    platforms-android-30
+    platform-tools
+    skiaparser-1
+    sources-android-30
+    system-images-android-30-google-apis-playstore-x86
   ];
 
   programs = {
