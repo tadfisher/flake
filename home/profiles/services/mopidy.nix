@@ -2,6 +2,10 @@
 
 with lib;
 
+let
+  secrets = (import ../../../secrets).mopidy;
+
+in
 {
   services.mopidy = {
     enable = true;
@@ -10,20 +14,25 @@ with lib;
       mopidy-mpd
       mopidy-mpris
       mopidy-somafm
+      mopidy-spotify
       mopidy-youtube
     ];
 
-    configuration = generators.toINI { } {
+    settings = {
       core.restore_state = true;
       audio.mixer = "none";
       mpd = {
         enabled = true;
         hostname = "127.0.0.1";
       };
+      spotify = {
+        client_id = secrets.spotify.clientId;
+        client_secret = secrets.spotify.clientSecret;
+      };
       youtube = {
         api_enabled = true;
         autoplay_enabled = true;
-        youtube_api_key = (import ../../../secrets).google.apiKey;
+        youtube_api_key = secrets.youtube.apiKey;
       };
     };
   };

@@ -87,7 +87,6 @@ with lib;
     networkConfig = {
       DNSSEC = "allow-downgrade";
       EmitLLDP = "nearest-bridge";
-      LLMNR = true;
       MulticastDNS = true;
     };
     dhcpConfig.UseDomains = true;

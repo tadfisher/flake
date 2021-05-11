@@ -12,6 +12,7 @@
       "libvirtd"
       "media"
       "networkmanager"
+      "scanner"
       "vboxusers"
       "video"
       "wheel"

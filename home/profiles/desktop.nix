@@ -72,6 +72,7 @@ with lib;
       qt5.qtwayland
       roboto
       roboto-mono
+      simple-scan
       slack
       xorg.xhost
     ];

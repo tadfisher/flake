@@ -80,6 +80,7 @@ with lib;
       MulticastDNS=true
       DNSOverTLS=opportunistic
     '';
+    llmnr = "false";
   };
 
   systemd.network.enable = true;

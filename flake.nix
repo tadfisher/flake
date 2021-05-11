@@ -81,7 +81,7 @@
               networking.hostName = name;
               nix = {
                 extraOptions = "experimental-features = nix-command flakes";
-                nixPath = [ "nixpkgs=/etc/nixpkgs" ];
+                nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
                 package = self.packages.${system}.nixUnstable;
                 registry = {
                   self.flake = self;

@@ -39,6 +39,17 @@ mkMerge [
       };
 
       pulseaudio.enable = false;
+
+      sane = {
+        enable = true;
+        brscan4 = {
+          enable = true;
+          netDevices.brother = {
+            model = "MFC-9130CW";
+            nodename = "brother";
+          };
+        };
+      };
     };
 
     networking.networkmanager = {
@@ -89,12 +100,17 @@ mkMerge [
         media-session.enable = true;
       };
 
-      printing.enable = true;
+      printing = {
+        enable = true;
+        drivers = with pkgs; [ mfc9130cwlpr mfc9130cw-cupswrapper ];
+      };
 
       samba = {
         enable = true;
         nsswins = true;
       };
+
+      saned.enable = true;
 
       tlp.enable = false;
 

@@ -1,13 +1,10 @@
 { config, lib, pkgs, ... }:
 
-with pkgs;
 with lib;
 let
   cfg = config.services.mopidy;
 
-  mopidyConf = writeText "mopidy.conf" cfg.configuration;
-
-  mopidyEnv = buildEnv {
+  mopidyEnv = with pkgs; buildEnv {
     name = "mopidy-with-extensions-${mopidy.version}";
     paths = closePropagation cfg.extensionPackages;
     pathsToLink = [ "/${mopidyPackages.python.sitePackages}" ];
@@ -20,6 +17,12 @@ let
         }"
     '';
   };
+
+  settingsFormat = pkgs.formats.ini {
+    listToValue = concatMapStringsSep "," (generators.mkValueStringDefault {});
+  };
+
+  mopidyConf = settingsFormat.generate "mopidy.conf" cfg.settings;
 
 in
 {
@@ -47,11 +50,16 @@ in
       '';
     };
 
-    configuration = mkOption {
-      default = "";
-      type = types.lines;
+    settings = mkOption {
+      default = { };
+      type = types.submodule {
+        freeformType = settingsFormat.type;
+      };
       description = ''
         The configuration that Mopidy should use.
+        </para><para>
+        See <link xlink:href="https://docs.mopidy.com/en/latest/config/" />
+        for supported values.
       '';
     };
 
@@ -60,7 +68,7 @@ in
       type = types.listOf types.str;
       description = ''
         Extra config file read by Mopidy when the service starts.
-        Later files in the list overrides earlier configuration.
+        Values from later files in the list override values from earlier files.
       '';
     };
   };

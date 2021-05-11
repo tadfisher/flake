@@ -15,6 +15,9 @@ with pkgs;
 
   maxflow = callPackage ./maxflow { };
 
+  mfc9130cw-cupswrapper = callPackage ./mfc9130cwcupswrapper { };
+  mfc9130cwlpr = pkgsi686Linux.callPackage ./mfc9130cwlpr { };
+
   libcapsule = callPackage ./libcapsule { };
 
   libcapsule-i686 = pkgsi686Linux.callPackage ./libcapsule { };
