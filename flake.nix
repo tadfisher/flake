@@ -6,11 +6,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/android-nixpkgs";
     };
+    dash-to-panel = {
+      url = "github:home-sweet-gnome/dash-to-panel";
+      flake = false;
+    };
     emacs-flake.url = "github:mjlbach/emacs-overlay";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:tadfisher/home-manager/lieer";
+      url = "github:nix-community/home-manager";
     };
     naersk.url = "github:nmattia/naersk";
     nix-dart = {
@@ -23,12 +27,20 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    paperwm = {
+      url = "github:paperwm/PaperWM/next-release";
+      flake = false;
+    };
     portmod = {
       url = "gitlab:portmod/portmod";
       flake = false;
     };
     rycee = {
       url = "gitlab:rycee/nur-expressions";
+      flake = false;
+    };
+    vertical-overview = {
+      url = "github:RensAlthuis/vertical-overview";
       flake = false;
     };
   };
@@ -116,7 +128,7 @@
           imports = [
             inputs.android-nixpkgs.hmModule
             (import inputs.rycee { inherit pkgs; }).hmModules.emacs-init
-            self.hmModules.misc.xdg-system-dirs
+            # self.hmModules.misc.xdg-system-dirs
             self.hmModules.programs.emacs-lsp
             self.hmModules.programs.gnome-shell
             self.hmModules.programs.pass-git-helper
@@ -151,7 +163,7 @@
       };
 
       hmModules = {
-        misc.xdg-system-dirs = import ./home/modules/misc/xdg-system-dirs.nix;
+        # misc.xdg-system-dirs = import ./home/modules/misc/xdg-system-dirs.nix;
 
         programs = {
           emacs-init = import ./home/modules/programs/emacs-init.nix;
@@ -242,7 +254,7 @@
         (self.overlays.overlay final prev);
 
       packages = eachSystem (system:
-        import ./pkgs { pkgs = pkgsBySystem.${system}; } //
+        import ./pkgs { inherit inputs; pkgs = pkgsBySystem.${system}; } //
         inputs.nix-dart.packages.${system} //
         {
           emacsPgtkGcc = inputs.emacs-flake.packages.${system}.emacsPgtkGcc;

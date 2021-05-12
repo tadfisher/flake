@@ -11,9 +11,9 @@ with lib;
       signByDefault = true;
     };
     lieer = {
-      enable = true;
-      settings.drop_non_existing_label = true;
-      sync.enable = true;
+      enable = false;
+      #settings.drop_non_existing_label = true;
+      #sync.enable = true;
     };
     msmtp.enable = true;
     notmuch.enable = true;

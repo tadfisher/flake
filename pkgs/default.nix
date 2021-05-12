@@ -1,9 +1,13 @@
-{ pkgs ? import <nixpkgs> { } }:
+{ inputs
+, pkgs
+}:
 
 with pkgs;
 
 {
   dart-sass = callPackage ./dart-sass { };
+
+  dash-to-panel = callPackage ./dash-to-panel { src = inputs.dash-to-panel; };
 
   gamescope = callPackage ./gamescope { };
 
@@ -24,7 +28,7 @@ with pkgs;
 
   libliftoff = callPackage ./libliftoff { };
 
-  paperwm = callPackage ./paperwm { };
+  paperwm = callPackage ./paperwm { src = inputs.paperwm; };
 
   plex-plexpass = callPackage ./plex-plexpass { };
   plexRaw-plexpass = callPackage ./plex-plexpass/raw.nix { };
@@ -49,6 +53,8 @@ with pkgs;
   steamos-modeswitch-inhibitor-i686 = pkgsi686Linux.callPackage ./steamos-modeswitch-inhibitor { };
 
   xcompose = callPackage ./xcompose { };
+
+  vertical-overview = callPackage ./vertical-overview { src = inputs.vertical-overview; };
 
   zephyr-toolchain = callPackage ./zephyr-toolchain { };
 }

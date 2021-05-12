@@ -165,8 +165,9 @@ with lib;
   programs.gnome-shell = {
     enable = true;
     extensions = [
-      { package = pkgs.gnomeExtensions.dash-to-panel; }
+      { package = pkgs.dash-to-panel; }
       { package = pkgs.paperwm; }
+      { package = pkgs.vertical-overview; }
     ];
     theme = {
       name = "Plata-Noir";

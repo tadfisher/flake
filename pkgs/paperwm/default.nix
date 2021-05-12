@@ -1,20 +1,15 @@
-{ lib, stdenv, fetchFromGitHub, fetchpatch }:
+{ lib, stdenv, fetchFromGitHub, fetchpatch, src }:
 
-let
-  source = builtins.fromJSON (builtins.readFile ./source.json);
-  version = builtins.readFile ./version;
-
-in
 stdenv.mkDerivation rec {
   pname = "paperwm-unstable";
-  inherit version;
+  version = "40.0";
 
-  src = fetchFromGitHub source;
+  inherit src;
 
   patches = [
     (fetchpatch {
-      url = "https://github.com/paperwm/PaperWM/commit/d53746025f45b3a3847bae3d29c32f75c394ef0d.patch";
-      sha256 = "sha256-ad2ZaKY8FP/yjVXPAfJS7Z7BT2jonE0qXtR5Xq6p8Tk=";
+      url = "https://github.com/tadfisher/PaperWM/commit/1c2fabc3c738bbd78d22c3c878ed6919fee9b723.patch";
+      sha256 = "sha256-BoG9aIWcgbSUZZ5AI+xlWyogy+OrgiHrqEJnv0eElTA=";
     })
   ];
 

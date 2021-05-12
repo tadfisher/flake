@@ -64,7 +64,6 @@ with lib;
       gnome3.gnome-themes-extra
       jetbrains-mono
       keybase
-      libreoffice
       material-icons
       noto-fonts
       noto-fonts-cjk
@@ -148,4 +147,15 @@ with lib;
   };
 
   services.gpg-agent.pinentryFlavor = "gnome3";
+
+  xdg.configFile."gtk-4.0/settings.ini".source = (pkgs.formats.ini {}).generate "settings.ini" {
+    Settings = {
+      gtk-application-prefer-dark-theme = 1;
+      gtk-cursor-blink = false;
+      gtk-font-name = "Roboto 9.75";
+      gtk-icon-theme-name = "Paper";
+      gtk-im-module = "xim";
+      gtk-theme-name = "Plata-Noir";
+    };
+  };
 }
