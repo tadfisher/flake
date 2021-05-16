@@ -19,7 +19,7 @@ let
   };
 
   settingsFormat = pkgs.formats.ini {
-    listToValue = concatMapStringsSep "," (generators.mkValueStringDefault {});
+    listToValue = concatMapStringsSep "," (generators.mkValueStringDefault { });
   };
 
   mopidyConf = settingsFormat.generate "mopidy.conf" cfg.settings;

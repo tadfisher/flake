@@ -325,8 +325,8 @@ packages:
       name: shelf
       url: https://pub.dartlang.org
     source: hosted
-    version: 1.1.2
-    sha256: 1hgvc83fy93rsr0fkwhp0q3gzz14dd7sh62s22a8c4g759nh3ccn
+    version: 1.1.4
+    sha256: 145f3h664i7002196n3nbd3pbazf5cwnjlwm4pl79kn0z5z1458h
   shelf_packages_handler:
     dependency: transitive
     description:
@@ -421,8 +421,8 @@ packages:
       name: test
       url: https://pub.dartlang.org
     source: hosted
-    version: 1.17.3
-    sha256: 0l8ixknp07vhipnzkybillg089m411k68i5kr8fhw8n4zwl6wz43
+    version: 1.17.4
+    sha256: 1rxx3zxfzm8ldzl1j09prn983p7sapvrrbwpp0i9kkw0sd8p7bnd
   test_api:
     dependency: transitive
     description:
@@ -437,8 +437,8 @@ packages:
       name: test_core
       url: https://pub.dartlang.org
     source: hosted
-    version: 0.3.23
-    sha256: 0d4jk242a703y3652d228vqqp3588nzmycbjk23v1ypb7rxlh407
+    version: 0.3.24
+    sha256: 1dm4a21gdqgy6q6bl70zgf1yizb6ib455zhsfsryk034341qpvwx
   test_descriptor:
     dependency: direct dev
     description:

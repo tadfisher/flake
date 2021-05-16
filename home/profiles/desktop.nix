@@ -148,7 +148,7 @@ with lib;
 
   services.gpg-agent.pinentryFlavor = "gnome3";
 
-  xdg.configFile."gtk-4.0/settings.ini".source = (pkgs.formats.ini {}).generate "settings.ini" {
+  xdg.configFile."gtk-4.0/settings.ini".source = (pkgs.formats.ini { }).generate "settings.ini" {
     Settings = {
       gtk-application-prefer-dark-theme = 1;
       gtk-cursor-blink = false;
