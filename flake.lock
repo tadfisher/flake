@@ -278,15 +278,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1621135068,
-        "narHash": "sha256-aPJlgosfLp3QtPDFLf/N7qNpIo5Q45MpYyzlaACL2G4=",
-        "owner": "nix-community",
+        "lastModified": 1621202796,
+        "narHash": "sha256-J1xW44lkXoPR2vZfmgri6jnYXBJ7MqPauqASbbITo7g=",
+        "owner": "tadfisher",
         "repo": "home-manager",
-        "rev": "77188bcd6e2c6c7a99253b36f08ed7b65f2901d2",
+        "rev": "8a33f8c77cd28deeb32bf1c27082e11c726c103f",
         "type": "github"
       },
       "original": {
-        "owner": "nix-community",
+        "owner": "tadfisher",
+        "ref": "gnome-shell",
         "repo": "home-manager",
         "type": "github"
       }

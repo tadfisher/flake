@@ -85,7 +85,7 @@ mkMerge [
 
       fwupd.enable = true;
 
-      gnome3 = {
+      gnome = {
         chrome-gnome-shell.enable = true;
         experimental-features.realtime-scheduling = true;
       };
@@ -129,7 +129,7 @@ mkMerge [
 
       xserver = {
         enable = true;
-        desktopManager.gnome3.enable = true;
+        desktopManager.gnome.enable = true;
         displayManager.gdm.enable = true;
         enableCtrlAltBackspace = true;
         libinput.enable = true;

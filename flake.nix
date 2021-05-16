@@ -14,7 +14,7 @@
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:nix-community/home-manager";
+      url = "github:tadfisher/home-manager/gnome-shell";
     };
     naersk.url = "github:nmattia/naersk";
     nix-dart = {
@@ -128,9 +128,7 @@
           imports = [
             inputs.android-nixpkgs.hmModule
             (import inputs.rycee { inherit pkgs; }).hmModules.emacs-init
-            # self.hmModules.misc.xdg-system-dirs
             self.hmModules.programs.emacs-lsp
-            self.hmModules.programs.gnome-shell
             self.hmModules.programs.pass-git-helper
             self.hmModules.services.gnirehtet
             self.hmModules.services.mopidy
@@ -163,12 +161,9 @@
       };
 
       hmModules = {
-        # misc.xdg-system-dirs = import ./home/modules/misc/xdg-system-dirs.nix;
-
         programs = {
           emacs-init = import ./home/modules/programs/emacs-init.nix;
           emacs-lsp = import ./home/modules/programs/emacs-lsp.nix;
-          gnome-shell = import ./home/modules/programs/gnome-shell.nix;
           pass-git-helper = import ./home/modules/programs/pass-git-helper.nix;
         };
 
