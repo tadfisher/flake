@@ -29,4 +29,8 @@ with final;
   org-cv = callPackage ./org-cv { };
 
   pretty-tabs = callPackage ./pretty-tabs { };
+
+  tramp = prev.tramp.overrideAttrs (attrs: rec {
+    patches = [ ./tramp-detect-wrapped-gvfs.patch ] ++ (attrs.patches or []);
+  });
 }
