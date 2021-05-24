@@ -18,7 +18,7 @@ with final;
   });
 
   # TODO Waiting on https://github.com/NixOS/nixpkgs/pull/101093
-  plata-theme = prev.plata-theme.overrideAttrs (attrs: rec {
+  plata-theme = (prev.plata-theme.overrideAttrs (attrs: rec {
     version = "0.9.9";
     src = fetchFromGitLab {
       owner = "tista500";
@@ -26,7 +26,7 @@ with final;
       rev = version;
       sha256 = "1iwvlv9qcrjyfbzab00vjqafmp3vdybz1hi02r6lwbgvwyfyrifk";
     };
-  });
+  })).override { gtkNextSupport = true; };
 
   sedutil-fork = prev.sedutil.overrideAttrs (attrs: rec {
     version = "1.15-5ad84d8";
