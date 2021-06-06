@@ -32,65 +32,57 @@
 
 ;;; Code:
 
-(defgroup pretty-tabs nil
-  "Pretty ‘tab-bar-mode' display."
-  :group 'tab-bar
-  :prefix "pretty-tabs-")
-
-(defcustom pretty-tabs-close-tab-image nil
-  "Image spec to use for the tab close button."
-  :type `(choice (const :tag "None" nil)
-                 (plist :tag "Image spec")
-                 (sexp :tag "Other"))
-  :group 'pretty-tabs)
-
-(defcustom pretty-tabs-close-tab-image-inactive nil
-  "Image spec to use for the tab close button in inactive tabs."
-  :type `(choice (const :tag "None" nil)
-                 (plist :tag "Image spec")
-                 (sexp :tag "Other"))
-  :group 'pretty-tabs)
-
-(defcustom pretty-tabs-new-tab-image nil
-  "Image spec to use for the new tab button."
-  :type `(choice (const :tag "None" nil)
-                 (plist :tag "Image spec")
-                 (sexp :tag "Other"))
-  :group 'pretty-tabs)
-
-(defcustom pretty-tabs-tab-height 36
-  "Preferred tab height in pixels."
-  :type '(integer :tag "Height (px)")
-  :group 'pretty-tabs)
-
-(defcustom pretty-tabs-tab-margin 8
-  "Horizontal tab margin in pixels."
-  :type '(integer :tag "Width (px)")
-  :group 'pretty-tabs)
-
-(defcustom pretty-tabs-image-margin 8
-  "Margin between images or buttons and the tab text."
-  :type '(integer :tag "Width (px)")
-  :group 'pretty-tabs)
-
-(defcustom pretty-tabs-buffer-icon t
-  "Show an icon for the current buffer using ‘all-the-icons-icon-for-buffer'."
-  :type 'boolean
-  :group 'pretty-tabs)
-
-(defconst pretty-tabs-default-binding
-  `(menu-item ,(purecopy "tab bar") ignore
-              :filter tab-bar-make-keymap))
-
-(defconst pretty-tabs-pretty-binding
-  `(menu-item ,(purecopy "tab bar") ignore
-              :filter pretty-tabs-make-keymap))
-
 (defconst pretty-tabs--close-button (concat tab-bar-close-button))
 (defconst pretty-tabs--close-button-inactive (concat tab-bar-close-button))
 (defconst pretty-tabs--new-button (concat tab-bar-new-button))
 (defconst pretty-tabs--tab-space " ")
 (defconst pretty-tabs--image-space " ")
+
+(defun pretty-tabs-default-close-tab-image (active &optional ascent)
+  (require 'svg)
+  (let ((svg (svg-create 16 16)))
+    (svg-path svg
+              '((moveto ((5 . 4)))
+                (elliptical-arc ((1 1 -1 1) (1 1 0.29297 0.70703)))
+                (lineto ((2.29297 . 2.29297) (-2.29297 . 2.29297)))
+                (elliptical-arc ((1 1 4 11)) :relative nil)
+                (elliptical-arc ((1 1 1 1) (1 1 0.70703 -0.29297)))
+                (lineto ((2.29297 . -2.29297) (2.2832 . 2.2832)))
+                (elliptical-arc ((1 1 0.7168 0.30273) (1 1 1 -1) (1 1 -0.29297 -0.70703)))
+                (lineto ((9.41426 . 8)) :relative nil)
+                (lineto ((2.2832 . -2.2832)))
+                (elliptical-arc ((1 1 12 5)) :relative nil)
+                (elliptical-arc ((1 1 -1 -1) (1 1 -0.70703 0.29297)))
+                (lineto ((-2.29297 . 2.29297) (-2.2832 . -2.2832)))
+                (elliptical-arc ((1 1 0 0)))
+                (elliptical-arc ((1 1 5 4)) :relative nil)
+                (closepath))
+              :relative t
+              :fill-color (face-foreground
+                           (if active 'tab-bar-tab 'tab-bar-tab-inactive)
+                           nil t))
+    (svg-image svg :ascent (or ascent 75))))
+
+(defun pretty-tabs-default-add-tab-image (&optional ascent)
+  (require 'svg)
+  (let ((svg (svg-create 16 16)))
+    (svg-path svg
+              '((moveto ((7 . 2)))
+                (vertical-lineto    (4))
+                (horizontal-lineto (-4))
+                (vertical-lineto    (2))
+                (horizontal-lineto  (4))
+                (vertical-lineto    (4))
+                (horizontal-lineto  (2))
+                (vertical-lineto   (-4))
+                (horizontal-lineto  (4))
+                (vertical-lineto   (-2))
+                (horizontal-lineto (-4))
+                (vertical-lineto   (-4))
+                (closepath))
+              :relative t
+              :fill-color (face-foreground 'tab-bar nil t))
+    (svg-image svg :ascent (or ascent 70))))
 
 (defun pretty-tabs--update-button (button image &rest props)
   "Update BUTTON with IMAGE.
@@ -136,62 +128,9 @@ Ensure text properties PROPS exist on BUTTON."
                               pretty-tabs-tab-margin
                               pretty-tabs-image-margin))
 
-(defun pretty-tabs--watch-close-tab-image (_sym val op _where)
-  (when (eq op 'set)
-    (pretty-tabs--update-button pretty-tabs--close-button val
-                                'close-tab t
-                                :help "Close tab")))
-
-(defun pretty-tabs--watch-close-tab-image-inactive (_sym val op _where)
-  (when (eq op 'set)
-    (pretty-tabs--update-button pretty-tabs--close-button-inactive val
-                                'close-tab t
-                                :help "Close tab")))
-
-(defun pretty-tabs--watch-new-tab-image (_sym val op _where)
-  (when (eq op 'set)
-    (pretty-tabs--update-button pretty-tabs--new-button val)))
-
-(defun pretty-tabs--watch-tab-height (_sym val op _where)
-  (when (eq op 'set)
-    (pretty-tabs--update-spaces val
-                                pretty-tabs-tab-margin
-                                pretty-tabs-image-margin)))
-
-(defun pretty-tabs--watch-tab-margin (_sym val op _where)
-  (when (eq op 'set)
-    (pretty-tabs--update-spaces pretty-tabs-tab-height
-                                val
-                                pretty-tabs-image-margin)))
-
-(defun pretty-tabs--watch-image-margin (_sym val op _where)
-  (when (eq op 'set)
-    (pretty-tabs--update-spaces pretty-tabs-tab-height
-                                pretty-tabs-tab-margin
-                                val)))
-
-(defun pretty-tabs--add-watchers ()
-  "Setup variable watchers."
-  (add-variable-watcher 'pretty-tabs-close-tab-image #'pretty-tabs--watch-close-tab-image)
-  (add-variable-watcher 'pretty-tabs-close-tab-image-inactive
-                        #'pretty-tabs--watch-close-tab-image-inactive)
-  (add-variable-watcher 'pretty-tabs-new-tab-image #'pretty-tabs--watch-new-tab-image)
-  (add-variable-watcher 'pretty-tabs-tab-height #'pretty-tabs--watch-tab-height)
-  (add-variable-watcher 'pretty-tabs-tab-margin #'pretty-tabs--watch-tab-margin)
-  (add-variable-watcher 'pretty-tabs-image-margin #'pretty-tabs--watch-image-margin))
-
-(defun pretty-tabs--remove-watchers ()
-  "Remove variable watchers."
-  (remove-variable-watcher 'pretty-tabs-close-tab-image #'pretty-tabs--watch-close-tab-image)
-  (remove-variable-watcher 'pretty-tabs-close-tab-image-inactive
-                        #'pretty-tabs--watch-close-tab-image-inactive)
-  (remove-variable-watcher 'pretty-tabs-new-tab-image #'pretty-tabs--watch-new-tab-image)
-  (remove-variable-watcher 'pretty-tabs-tab-height #'pretty-tabs--watch-tab-height)
-  (remove-variable-watcher 'pretty-tabs-tab-margin #'pretty-tabs--watch-tab-margin)
-  (remove-variable-watcher 'pretty-tabs-image-margin #'pretty-tabs--watch-image-margin))
-
-(defun pretty-tabs-tab-icon (&optional f)
-  "Return the tab icon for the active buffer in frame F."
+(defun pretty-tabs-default-tab-icon (&optional f)
+  "Return the tab icon for the active buffer.
+If F is specified, restrict to a font family."
   (let* ((buffer (window-buffer (minibuffer-selected-window)))
          (base-f (concat "all-the-icons-icon" (when f (format "-%s" f))))
          (file-f (intern (concat base-f "-for-file")))
@@ -205,141 +144,185 @@ Ensure text properties PROPS exist on BUTTON."
                                            :face 'all-the-icons-dsilver
                                            :v-adjust 0.0)
                    icon)
-                 'display '(raise -0.2))))
+                 'display '(raise -0.2))))1
 
-(defun pretty-tabs-make-tabs (&optional frame)
-  "Return a list of tabs belonging to the selected FRAME.
-Ensure the frame parameter `tabs' is pre-populated.
-Update the current tab name when it exists.
-Return its existing value or a new value."
-  (let ((tabs (frame-parameter frame 'tabs)))
-    (if tabs
-        (let* ((current-tab (assq 'current-tab tabs))
-               (current-tab-name (assq 'name current-tab))
-               (current-tab-explicit-name (assq 'explicit-name current-tab))
-               (current-tab-icon (assq 'icon current-tab)))
-          (when (and current-tab-name
-                     current-tab-explicit-name
-                     (not (cdr current-tab-explicit-name)))
-            (setf (cdr current-tab-name)
-                  (funcall tab-bar-tab-name-function)))
-          (when current-tab-icon
-            (setf (cdr current-tab-icon)
-                  (pretty-tabs-tab-icon))))
-      ;; Create default tabs
-      (setq tabs (list (tab-bar--current-tab)))
-      (set-frame-parameter frame 'tabs tabs))
-    tabs))
+(defgroup pretty-tabs nil
+  "Pretty ‘tab-bar-mode' display."
+  :group 'tab-bar
+  :prefix "pretty-tabs-")
 
-(defun pretty-tabs-make-keymap (&optional _ignore)
-  "Generate an actual keymap from `tab-bar-map'.
-Its main job is to show tabs in the tab bar."
-  (if (= 1 (length tab-bar-map))
-      (pretty-tabs-make-keymap-1)
-    (let ((key (cons (frame-terminal) tab-bar-map)))
-      (or (gethash key tab-bar-keymap-cache)
-          (puthash key tab-bar-map tab-bar-keymap-cache)))))
+(defcustom pretty-tabs-close-tab-image
+  (pretty-tabs-default-close-tab-image t)
+  "Image spec to use for the tab close button."
+  :type `(choice (const :tag "None" nil)
+                 (plist :tag "Image spec")
+                 (sexp :tag "Other"))
+  :initialize 'custom-initialize-default
+  :set (lambda (sym val)
+         (set-default sym val)
+         (pretty-tabs--update-button pretty-tabs--close-button val
+                                     'close-tab t
+                                     :help "Close tab")
+         (force-mode-line-update))
+  :group 'pretty-tabs)
 
-(defun pretty-tabs-render-tab (tab active pos show-close)
-  "Render TAB to a propertized string.
-If ACTIVE is non-nil, render the tab as active.
-POS is the index of the tab starting with 1.
-MARGIN is the propertized margin string.
-IMAGE-MARGIN is the propertized image margin string.
-If SHOW-CLOSE is non-nil, render a close button in the tab."
-  (let* ((face (if active 'tab-bar-tab 'tab-bar-tab-inactive))
+(defcustom pretty-tabs-close-tab-image-inactive
+  (pretty-tabs-default-close-tab-image nil)
+  "Image spec to use for the tab close button in inactive tabs."
+  :type `(choice (const :tag "None" nil)
+                 (plist :tag "Image spec")
+                 (sexp :tag "Other"))
+  :initialize 'custom-initialize-default
+  :set (lambda (sym val)
+         (set-default sym val)
+         (pretty-tabs--update-button pretty-tabs--close-button-inactive val
+                                     'close-tab t
+                                     :help "Close tab")
+         (force-mode-line-update))
+  :group 'pretty-tabs)
+
+(defcustom pretty-tabs-add-tab-image
+  (pretty-tabs-default-add-tab-image)
+  "Image spec to use for the new tab button."
+  :type `(choice (const :tag "None" nil)
+                 (plist :tag "Image spec")
+                 (sexp :tag "Other"))
+  :initialize 'custom-initialize-default
+  :set (lambda (sym val)
+         (set-default sym val)
+         (pretty-tabs--update-button pretty-tabs--new-button val)
+         (force-mode-line-update))
+  :group 'pretty-tabs)
+
+(defcustom pretty-tabs-tab-height 36
+  "Preferred tab height in pixels."
+  :type '(integer :tag "Height (px)")
+  :initialize 'custom-initialize-default
+  :set (lambda (sym val)
+         (set-default sym val)
+         (pretty-tabs--refresh-spaces)
+         (force-mode-line-update))
+  :group 'pretty-tabs)
+
+(defcustom pretty-tabs-tab-margin 8
+  "Horizontal tab margin in pixels."
+  :type '(integer :tag "Width (px)")
+  :initialize 'custom-initialize-default
+  :set (lambda (sym val)
+         (set-default sym val)
+         (pretty-tabs--refresh-spaces)
+         (force-mode-line-update))
+  :group 'pretty-tabs)
+
+(defcustom pretty-tabs-image-margin 8
+  "Margin between images or buttons and the tab text."
+  :type '(integer :tag "Width (px)")
+  :initialize 'custom-initialize-default
+  :set (lambda (sym val)
+         (set-default sym val)
+         (pretty-tabs--refresh-spaces)
+         (force-mode-line-update))
+  :group 'pretty-tabs)
+
+(defcustom pretty-tabs-buffer-icon t
+  "Show an icon for the current buffer using ‘pretty-tabs-tab-icon-function'."
+  :type 'boolean
+  :initialize 'custom-initialize-default
+  :set (lambda (sym val)
+         (set-default sym val)
+         (force-mode-line-update))
+  :group 'pretty-tabs)
+
+(defcustom pretty-tabs-tab-icon-function #'pretty-tabs-default-tab-icon
+  "Function to get a tab icon for the current buffer."
+  :type 'function
+  :initialize 'custom-initialize-default
+  :set (lambda (sym val)
+         (set-default sym val)
+         (force-mode-line-update))
+  :group 'pretty-tabs)
+
+(defvar pretty-tabs--original-tabs-function nil)
+(defvar pretty-tabs--original-tab-name-format-function nil)
+
+(defun pretty-tabs--initialize ()
+  "Initialize 'pretty-tabs-mode'."
+  (pretty-tabs--update-button pretty-tabs--close-button
+                              pretty-tabs-close-tab-image
+                              'close-tab t
+                              :help "Close tab")
+  (pretty-tabs--update-button pretty-tabs--close-button-inactive
+                              pretty-tabs-close-tab-image-inactive
+                              'close-tab t
+                              :help "Close tab")
+  (pretty-tabs--update-button pretty-tabs--new-button
+                              pretty-tabs-add-tab-image)
+  (pretty-tabs--refresh-spaces))
+
+(defun pretty-tabs--separator (width)
+  (if window-system
+      (propertize " " 'display `(space :width ,width))
+    (tab-bar-separator)))
+
+(defun pretty-tabs-tab-name-format (tab i)
+  (let* ((current-p (eq (car tab) 'current-tab))
+         (face (funcall tab-bar-tab-face-function tab))
          (fg (face-foreground face nil t))
-         (bg (face-background face nil t)))
+         (bg (face-background face nil t))
+         (space (propertize pretty-tabs--tab-space 'face face))
+         (image-space (propertize pretty-tabs--image-space 'face face)))
     (concat
-     (propertize pretty-tabs--tab-space 'face face)
+     space
      (if-let* ((pretty-tabs-buffer-icon)
                (icon (alist-get 'icon tab))
                (iface (get-text-property 0 'face icon)))
-         (concat (propertize icon
-                             'face (append iface `(:background ,bg)))
-                 (propertize pretty-tabs--image-space 'face face))
+         (concat
+          (propertize icon 'face (append iface `(:background ,bg)))
+          image-space)
        "")
-       (if tab-bar-tab-hints
-           (propertize (format "%d " pos) 'face face)
+     (if tab-bar-tab-hints (format "%d " pos) "")
+     (propertize (alist-get 'name tab) 'face face)
+     (or (and tab-bar-close-button-show
+              (not (eq tab-bar-close-button-show
+                       (if current-p 'non-selected 'selected)))
+              (let* ((icon (if current-p pretty-tabs--close-button pretty-tabs--close-button-inactive))
+                     (iface (get-text-property 0 'face icon)))
+                (concat image-space
+                        (propertize icon 'face (append iface `(:foreground ,fg :background ,bg))))))
          "")
-    (propertize (alist-get 'name tab) 'face face)
-    (if-let* ((show-close)
-              (icon (if active pretty-tabs--close-button pretty-tabs--close-button-inactive))
-              (iface (get-text-property 0 'face icon)))
-        (concat (propertize pretty-tabs--image-space 'face face)
-                (propertize icon
-                            'face (append iface `(:foreground ,fg :background ,bg))))
-      "")
-    (propertize pretty-tabs--tab-space 'face face))))
+     space)))
 
-(defun pretty-tabs-make-keymap-1 ()
-  "Generate an actual keymap from `tab-bar-map', without caching."
-  (let* ((separator (or tab-bar-separator (if window-system " " "|")))
-         (left-separator
-          (if window-system
-              (propertize " " 'display '(space :width left-fringe))
-            "|"))
-         (right-separator
-          (if window-system
-              (propertize " " 'display '(space :width right-fringe))
-            "|"))
-         (i 0)
-         (tabs (funcall tab-bar-tabs-function)))
-    (append
-     '(keymap (mouse-1 . tab-bar-handle-mouse))
-     (when tab-bar-history-mode
-       `((sep-history-back menu-item ,separator ignore)
-         (history-back
-          menu-item ,tab-bar-back-button tab-bar-history-back
-          :help "Click to go back in tab history")
-         (sep-history-forward menu-item ,separator ignore)
-         (history-forward
-          menu-item ,tab-bar-forward-button tab-bar-history-forward
-          :help "Click to go forward in tab history")))
-     (mapcan
-      (lambda (tab)
-        (setq i (1+ i))
-        (append
-         `((,(intern (format "sep-%i" i)) menu-item
-            ,(pcase i
-              (1 left-separator)
-              (_ separator))
-            ignore))
-         (cond
-          ((eq (car tab) 'current-tab)
-           `((current-tab
-              menu-item
-              ,(pretty-tabs-render-tab tab t i
-                                       (and tab-bar-close-button-show
-                                            (not (eq tab-bar-close-button-show
-                                                     'non-selected))))
-              ignore
-              :help "Current tab")))
-          (t
-           `((,(intern (format "tab-%i" i))
-              menu-item
-              ,(pretty-tabs-render-tab tab nil i
-                                       (and tab-bar-close-button-show
-                                            (not (eq tab-bar-close-button-show
-                                                     'selected))))
-              ,(or
-                (alist-get 'binding tab)
-                `(lambda ()
-                   (interactive)
-                   (tab-bar-select-tab ,i)))
-              :help "Click to visit tab"))))
-         `((,(if (eq (car tab) 'current-tab) 'C-current-tab (intern (format "C-tab-%i" i)))
-            menu-item ""
-            ,(or
-              (alist-get 'close-binding tab)
-              `(lambda ()
-                 (interactive)
-                 (tab-bar-close-tab ,i)))))))
-      tabs)
-     (when tab-bar-new-button
-       `((sep-add-tab menu-item ,separator ignore)
-         (add-tab menu-item ,pretty-tabs--new-button tab-bar-new-tab
-                  :help "New tab"))))))
+(defun pretty-tabs--format-tab (tab i)
+  (append
+   `((,(intern (format "sep-%i" i)) menu-item
+      ,(pcase i
+         (1 (pretty-tabs--separator 'left-fringe))
+         (_ (tab-bar-separator)))
+      ignore))
+   (cond
+    ((eq (car tab) 'current-tab)
+     `((current-tab
+        menu-item
+        ,(funcall tab-bar-tab-name-format-function tab i)
+        ignore
+        :help "Current tab")))
+    (t
+     `((,(intern (format "tab-%i" i))
+        menu-item
+        ,(funcall tab-bar-tab-name-format-function tab i)
+        ,(or
+          (alist-get 'binding tab)
+          `(lambda ()
+             (interactive)
+             (tab-bar-select-tab ,i)))
+        :help "Click to visit tab"))))
+   `((,(if (eq (car tab) 'current-tab) 'C-current-tab (intern (format "C-tab-%i" i)))
+      menu-item ""
+      ,(or
+        (alist-get 'close-binding tab)
+        `(lambda ()
+           (interactive)
+           (tab-bar-close-tab ,i)))))))
 
 (defun pretty-tabs--tab (tab-fun &optional frame)
   "Advise TAB-FUN to retain the ’icon’ entry.
@@ -351,40 +334,89 @@ Pass FRAME to TAB-FUN."
 
 (defun pretty-tabs--current-tab (current-tab-fun &optional tab frame)
   "Advise CURRENT-TAB-FUN to retain the ’icon’ entry.
-Pass TAB and FRAME to TAB-FUN."
-  (let* ((tab (or tab (assq 'current-tab (frame-parameter frame 'tabs))))
-         (icon (alist-get 'icon tab))
+Pass TAB and FRAME to CURRENT-TAB-FUN."
+  (let* ((tab (or tab (tab-bar--current-tab-find nil frame)))
+         (icon (or (alist-get 'icon tab)
+                   (funcall pretty-tabs-tab-icon-function)))
          (res (funcall current-tab-fun tab frame)))
     (append res `((icon . ,icon)))))
 
+(defun pretty-tabs--current-tab-make (current-tab-make-fun &optional tab)
+  "Advise CURRENT-TAB-MAKE-FUN to add an ’icon’ entry.
+Pass TAB to CURRENT-TAB-MAKE-FUN."
+  (let ((tab (funcall current-tab-make-fun tab))
+        (icon (funcall pretty-tabs-tab-icon-function)))
+    (append tab `((icon . ,icon)))))
+
+(defun pretty-tabs--format-add-tab ()
+  (when (and tab-bar-new-button-show tab-bar-new-button)
+    `((add-tab menu-item ,pretty-tabs--new-button tab-bar-new-tab
+               :help "New tab"))))
+
+(defun pretty-tabs-tabs (&optional frame)
+  "Return a list of tabs belonging to the FRAME.
+Ensure the frame parameter `tabs' is pre-populated.
+Update the current tab name when it exists.
+Return its existing value or a new value."
+  (let ((tabs (frame-parameter frame 'tabs)))
+    (if tabs
+        (let* ((current-tab (tab-bar--current-tab-find tabs))
+               (current-tab-name (assq 'name current-tab))
+               (current-tab-explicit-name (assq 'explicit-name current-tab))
+               (current-tab-icon (assq 'icon current-tab)))
+          (when (and current-tab-name
+                     current-tab-explicit-name
+                     (not (cdr current-tab-explicit-name)))
+            (setf (cdr current-tab-name)
+                  (funcall tab-bar-tab-name-function)))
+          (when (and current-tab-icon
+                     (not (cdr current-tab-icon)))
+            (setf (cdr current-tab-icon)
+                  (funcall pretty-tabs-tab-icon-function))))
+      ;; Create default tabs
+      (setq tabs (list (tab-bar--current-tab-make)))
+      (tab-bar-tabs-set tabs frame))
+    tabs))
+
 (define-minor-mode pretty-tabs-mode
-  "Make tab-bar-mode prettier."
+  "Make 'tab-bar-mode' prettier."
   :global t
   :lighter nil
+
   (if pretty-tabs-mode
       (progn
+        (pretty-tabs--initialize)
+
         (advice-add 'tab-bar--tab
                     :around #'pretty-tabs--tab)
         (advice-add 'tab-bar--current-tab
                     :around #'pretty-tabs--current-tab)
-        (pretty-tabs--add-watchers)
-        (pretty-tabs--update-button pretty-tabs--close-button
-                                    pretty-tabs-close-tab-image)
-        (pretty-tabs--update-button pretty-tabs--close-button-inactive
-                                    (or pretty-tabs-close-tab-image-inactive
-                                        pretty-tabs-close-tab-image))
-        (pretty-tabs--update-button pretty-tabs--new-button
-                                    pretty-tabs-new-tab-image)
-        (pretty-tabs--refresh-spaces)
-        (global-set-key [tab-bar] pretty-tabs-pretty-binding)
-        (setq tab-bar-tabs-function #'pretty-tabs-make-tabs)
-        (tab-bar-mode -1)
-        (tab-bar-mode 1))
-    (global-set-key [tab-bar] pretty-tabs-default-binding)
-    (setq tab-bar-tabs-function #'pretty-tabs-make-tabs)
+        (advice-add 'tab-bar--current-tab-make
+                    :around #'pretty-tabs--current-tab-make)
+        (advice-add 'tab-bar--format-tab
+                    :override #'pretty-tabs--format-tab)
+        (advice-add 'tab-bar-format-add-tab
+                    :override #'pretty-tabs--format-add-tab)
+
+        (setq pretty-tabs--original-tabs-function
+              (or pretty-tabs--original-tabs-function
+                  tab-bar-tabs-function)
+              pretty-tabs--original-tab-name-format-function
+              (or pretty-tabs--original-tab-name-format-function
+                  tab-bar-tab-name-format-function)
+              tab-bar-tabs-function #'pretty-tabs-tabs
+              tab-bar-tab-name-format-function #'pretty-tabs-tab-name-format))
+
+    (setq tab-bar-tabs-function (or pretty-tabs--original-tabs-function
+                                    #'tab-bar-tabs)
+          tab-bar-tab-name-format-function (or pretty-tabs--original-tab-name-format-function
+                                               #'tab-bar-tab-name-format-default)
+          pretty-tabs--original-tabs-function nil
+          pretty-tabs--original-tab-name-format-function nil)
     (advice-remove 'tab-bar--tab #'pretty-tabs--tab)
+    (advice-remove 'tab-bar--current-tab-make #'pretty-tabs--current-tab-make)
     (advice-remove 'tab-bar--current-tab #'pretty-tabs--current-tab)
-    (pretty-tabs--remove-watchers)))
+    (advice-remove 'tab-bar--format-tab #'pretty-tabs--format-tab)))
 
 (provide 'pretty-tabs)
 ;;; pretty-tabs.el ends here

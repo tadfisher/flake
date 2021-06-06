@@ -442,7 +442,7 @@ in
           };
 
           pretty-tabs = {
-            enable = false;
+            enable = true;
             after = [ "tab-bar" "all-the-icons" ];
             extraConfig = ''
               :functions pretty-tabs-mode
