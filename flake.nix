@@ -14,7 +14,7 @@
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:tadfisher/home-manager";
+      url = "github:nix-community/home-manager";
     };
     naersk.url = "github:nmattia/naersk";
     nix-dart = {

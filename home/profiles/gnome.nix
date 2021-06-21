@@ -102,7 +102,16 @@ with lib;
 
     "org/gnome/settings-daemon/peripherals/mouse" = { locate-pointer = true; };
 
-    "org/gnome/shell" = { always-show-log-out = true; };
+    "org/gnome/shell" = {
+      always-show-log-out = true;
+      disable-user-extensions = false;
+      enabled-extensions = with pkgs; [
+        dash-to-panel.uuid
+        paperwm.uuid
+        vertical-overview.uuid
+        "user-theme@gnome-shell-extensions.gcampax.github.com"
+      ];
+    };
 
     "org/gnome/shell/overrides" = {
       attach-modal-dialogs = false;
@@ -148,6 +157,8 @@ with lib;
       toggle-scratch-layer = [ "<Super>s" ];
     };
 
+    "org/gnome/shell/extensions/user-theme".name = "Plata-Noir";
+
     "org/gnome/shell/keybindings" = {
       focus-active-notification = [ "" ];
       toggle-overview = [ "" ];
@@ -155,25 +166,28 @@ with lib;
   };
 
   home.packages = with pkgs; [
-    chrome-gnome-shell
+    dash-to-panel
     gnome3.dconf-editor
+    gnome3.gnome-shell-extensions
     gnome3.gnome-tweaks
+    paperwm
     roboto
+    vertical-overview
     virtmanager
   ];
 
-  programs.gnome-shell = {
-    enable = true;
-    extensions = [
-      { package = pkgs.dash-to-panel; }
-      { package = pkgs.paperwm; }
-      { package = pkgs.vertical-overview; }
-    ];
-    theme = {
-      name = "Plata-Noir";
-      package = pkgs.plata-theme;
-    };
-  };
+  # programs.gnome-shell = {
+  #   enable = true;
+  #   extensions = [
+  #     { package = pkgs.dash-to-panel; }
+  #     { package = pkgs.paperwm; }
+  #     { package = pkgs.vertical-overview; }
+  #   ];
+  #   theme = {
+  #     name = "Plata-Noir";
+  #     package = pkgs.plata-theme;
+  #   };
+  # };
 
   # Prevent clobbering SSH_AUTH_SOCK
   pam.sessionVariables = { GSM_SKIP_SSH_AGENT_WORKAROUND = "1"; };
