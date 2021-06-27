@@ -259,10 +259,6 @@
           nixos-rebuild = inputs.nixpkgs.legacyPackages.${system}.nixos-rebuild.override {
             nix = self.packages.${system}.nixUnstable;
           };
-          portmod = import inputs.portmod {
-            pkgs = pkgsBySystem.${system};
-            naersk = import inputs.naersk;
-          };
         }
       );
     };

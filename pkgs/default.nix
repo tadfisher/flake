@@ -28,10 +28,16 @@ with pkgs;
 
   libliftoff = callPackage ./libliftoff { };
 
+  naersk = callPackage inputs.naersk { };
+
   paperwm = callPackage ./paperwm { src = inputs.paperwm; };
 
   plex-plexpass = callPackage ./plex-plexpass { };
   plexRaw-plexpass = callPackage ./plex-plexpass/raw.nix { };
+
+  portmod = callPackage ./portmod {
+    src = inputs.portmod;
+  };
 
   python-ips = python3.pkgs.callPackage ./python-ips { };
 
