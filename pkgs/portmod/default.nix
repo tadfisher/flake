@@ -1,6 +1,6 @@
 { lib
 , stdenv
-, naersk
+, naersk-lib
 , src
 , bubblewrap
 , cacert
@@ -12,7 +12,7 @@
 }:
 
 let
-  portmod-rust = naersk.buildPackage {
+  portmod-rust = naersk-lib.buildPackage {
     inherit src;
     buildInputs = [ python3Packages.python ];
     copyLibs = true;

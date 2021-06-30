@@ -4,7 +4,10 @@
 
 with pkgs;
 
-{
+let
+  naersk-lib = inputs.naersk.lib."${stdenv.system}";
+
+in {
   dart-sass = callPackage ./dart-sass { };
 
   dash-to-panel = callPackage ./dash-to-panel { src = inputs.dash-to-panel; };
@@ -28,14 +31,13 @@ with pkgs;
 
   libliftoff = callPackage ./libliftoff { };
 
-  naersk = callPackage inputs.naersk { };
-
   paperwm = callPackage ./paperwm { src = inputs.paperwm; };
 
   plex-plexpass = callPackage ./plex-plexpass { };
   plexRaw-plexpass = callPackage ./plex-plexpass/raw.nix { };
 
   portmod = callPackage ./portmod {
+    inherit naersk-lib;
     src = inputs.portmod;
   };
 

@@ -16,7 +16,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
     };
-    naersk.url = "github:nmattia/naersk";
+    naersk = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nmattia/naersk";
+    };
     nix-dart = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/nix-dart";
