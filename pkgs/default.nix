@@ -14,9 +14,11 @@ in {
 
   dash-to-panel = callPackage ./dash-to-panel { src = inputs.dash-to-panel; };
 
-  gamescope = callPackage ./gamescope {
-    src = inputs.gamescope;
-  };
+  kotlin-native-unwrapped = callPackage ./kotlin-native { llvmPackages = llvmPackages_8; };
+
+  kotlin-native = callPackage ./kotlin-native/wrapper.nix { };
+
+  gamescope = callPackage ./gamescope { src = inputs.gamescope; };
 
   # gimp = callPackage ./gimp {
   #   gegl = gegl_0_4;
