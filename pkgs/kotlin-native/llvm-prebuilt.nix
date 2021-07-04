@@ -12,6 +12,7 @@ buildEnv {
     clang
     compiler-rt
     libclang
+    libclang.lib
     libcxx
     libcxxabi
     libunwind

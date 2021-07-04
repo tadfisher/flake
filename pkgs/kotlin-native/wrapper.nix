@@ -8,7 +8,6 @@
 , kotlin-native-unwrapped
 , libffi
 , libgcc
-, lldb
 }:
 
 # Goal: Wrap kotlin-native to use prebuilts supplied by us.
@@ -83,6 +82,8 @@ let
     paths = [ gccForLibs.out stdenv.cc.libc.out stdenv.cc.libc.dev ];
   };
 
+  jvminterop = callPackage ./jvminterop.nix { };
+
   konanProperties = writeText "konan.properties" ''
     dependencies =
     dependenciesUrl = file:///dev/null
@@ -144,8 +145,9 @@ in
 runCommand "kotlin-native-wrapped" { } ''
   mkdir -p $out
   cp -r ${kotlin-native-unwrapped}/* $out/
-  chmod +w $out/konan
+  chmod +w $out/konan $out/bin
   chmod +w $out/konan/konan.properties
   rm $out/konan/konan.properties
   cp ${konanProperties} $out/konan/konan.properties
+  cp ${jvminterop}/bin/jvminterop $out/bin/
 ''

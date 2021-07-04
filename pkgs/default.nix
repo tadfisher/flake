@@ -39,6 +39,17 @@ in {
 
   libcapsule-i686 = pkgsi686Linux.callPackage ./libcapsule { };
 
+  libliftoff = callPackage ./libliftoff { };
+
+  openjdk17-bootstrap = adoptopenjdk-hotspot-bin-16;
+
+  openjdk-panama = callPackage ./openjdk-panama {
+    inherit (inputs) openjdk-panama-foreign;
+    openjfx = null;
+    enableJavaFX = false;
+    inherit (gnome2) GConf gnome_vfs;
+  };
+
   paperwm = callPackage ./paperwm { src = inputs.paperwm; };
 
   plex-plexpass = callPackage ./plex-plexpass { };

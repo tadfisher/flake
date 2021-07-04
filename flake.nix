@@ -38,8 +38,8 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    oomox = {
-      url = "github:themix-project/oomox";
+    openjdk-panama-foreign = {
+      url = "github:openjdk/panama-foreign";
       flake = false;
     };
     paperwm = {
