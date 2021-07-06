@@ -343,6 +343,8 @@ in
             enable = true;
           };
 
+          csv-mode.enable = true;
+
           display-fill-column-indicator = {
             enable = true;
             package = ""; # built-in
