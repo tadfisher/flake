@@ -50,6 +50,8 @@ in {
     inherit (gnome2) GConf gnome_vfs;
   };
 
+  openjdk-panama-headless = openjdk-panama.override { headless = true; };
+
   paperwm = callPackage ./paperwm { src = inputs.paperwm; };
 
   plex-plexpass = callPackage ./plex-plexpass { };

@@ -46,7 +46,7 @@
 
 let
   version = {
-    feature = "17-panama";
+    feature = "18-panama";
     interim = "0";
     build = "0";
   };

@@ -46,4 +46,6 @@
     lieer.enable = true;
     mopidy.enable = true;
   };
+
+  xdg.dataFile."java/openjdk-panama".source = pkgs.openjdk-panama-headless.home;
 }
