@@ -106,7 +106,9 @@ with lib;
       always-show-log-out = true;
       disable-user-extensions = false;
       enabled-extensions = with pkgs; [
+        cleaner-overview.uuid
         dash-to-panel.uuid
+        instant-workspace-switcher.uuid
         paperwm.uuid
         vertical-overview.uuid
         "user-theme@gnome-shell-extensions.gcampax.github.com"
@@ -166,10 +168,12 @@ with lib;
   };
 
   home.packages = with pkgs; [
+    cleaner-overview
     dash-to-panel
     gnome3.dconf-editor
     gnome3.gnome-shell-extensions
     gnome3.gnome-tweaks
+    instant-workspace-switcher
     paperwm
     roboto
     vertical-overview

@@ -12,6 +12,10 @@
     };
     emacs-flake.url = "github:mjlbach/emacs-overlay";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+    instant-workspace-switcher = {
+      url = "github:amalantony/gnome-shell-extension-instant-workspace-switcher";
+      flake = false;
+    };
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";

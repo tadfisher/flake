@@ -8,6 +8,8 @@ let
   naersk-lib = inputs.naersk.lib."${stdenv.system}";
 
 in {
+  cleaner-overview = callPackage ./cleaner-overview { };
+
   dart-sass = callPackage ./dart-sass { };
 
   dash-to-panel = callPackage ./dash-to-panel { src = inputs.dash-to-panel; };
@@ -19,6 +21,10 @@ in {
   #   lcms = lcms2;
   #   inherit (darwin.apple_sdk.frameworks) AppKit Cocoa;
   # };
+
+  instant-workspace-switcher = callPackage ./instant-workspace-switcher {
+    src = inputs.instant-workspace-switcher;
+  };
 
   maxflow = callPackage ./maxflow { };
 
