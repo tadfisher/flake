@@ -33,4 +33,9 @@ with final;
   tramp = prev.tramp.overrideAttrs (attrs: rec {
     patches = [ ./tramp-detect-wrapped-gvfs.patch ] ++ (attrs.patches or [ ]);
   });
+
+  yaml = prev.yaml.overrideAttrs (attrs: rec {
+    # native-comp hangs for this package.
+    postInstall = "";
+  });
 }
