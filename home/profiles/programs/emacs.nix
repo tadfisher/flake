@@ -1039,13 +1039,10 @@ in
                   haskell-mode
                   html-mode sgml-mode mhtml-mode web-mode
                   js-mode typescript-mode
-                  ;;python-mode
                   rust-mode
                   sh-mode) . eglot-ensure)
               ''
             ];
-            # TODO broken for python 3.9
-            # (python-mode . ("${pkgs.python3Packages.python-language-server}/bin/pyls"))
             config = ''
               (setq eglot-server-programs
                     '(((c-mode c++-mode) . ("${pkgs.clang-tools}/bin/clangd"))

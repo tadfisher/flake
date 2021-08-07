@@ -30,6 +30,13 @@
   ];
 
   programs = {
+    devhelp = {
+      enable = true;
+      packages = with pkgs.gnome; [
+        atk
+        glib
+      ];
+    };
     lieer.enable = true;
     ssh.extraConfig = ''
       Host tycho,tycho.lan
@@ -47,5 +54,5 @@
     mopidy.enable = true;
   };
 
-  xdg.dataFile."java/openjdk-panama".source = pkgs.openjdk-panama-headless.home;
+  xdg.dataFile."java/openjdk17".source = pkgs.openjdk17.home;
 }

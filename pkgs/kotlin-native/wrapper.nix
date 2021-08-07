@@ -82,17 +82,24 @@ let
     paths = [ gccForLibs.out stdenv.cc.libc.out stdenv.cc.libc.dev ];
   };
 
-  jvminterop = callPackage ./jvminterop.nix { };
+  jvminterop = konanHome: callPackage ./jvminterop.nix { inherit konanHome; };
 
   konanProperties = writeText "konan.properties" ''
-    dependencies =
     dependenciesUrl = file:///dev/null
-    dependencyProfiles = default
     airplaneMode = true
     downloadingAttempts = 0
     downloadingAttemptIntervalMs = 0
     homeDependencyCache = /tmp/konancache
     reducedLlvmAppendix = compact
+
+    dependencyProfiles = nix
+    llvm-prebuilt.nix = ${llvmPrebuilt}
+    libffi-prebuilt.nix = ${libffiPrebuilt}
+
+    predefinedLlvmDistributions = llvm-prebuilt
+    predefinedLibffiVersions = libffi-prebuilt
+    llvm.${host}.dev = llvm-prebuilt
+    llvm.${host}.user = llvm-prebuilt
 
     # Configurables
     llvmHome.${host} = ${llvmPrebuilt}
@@ -149,5 +156,9 @@ runCommand "kotlin-native-wrapped" { } ''
   chmod +w $out/konan/konan.properties
   rm $out/konan/konan.properties
   cp ${konanProperties} $out/konan/konan.properties
-  cp ${jvminterop}/bin/jvminterop $out/bin/
+
+  substitute ${./jvminterop.in} $out/bin/jvminterop \
+    --subst-var-by shell ${stdenv.shell} \
+    --subst-var-by konanHome $out
+  chmod +x $out/bin/jvminterop
 ''

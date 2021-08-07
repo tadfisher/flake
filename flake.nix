@@ -38,6 +38,13 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    openjdk-17 = {
+      type = "github";
+      owner = "openjdk";
+      repo = "jdk";
+      ref = "jdk-17+31";
+      flake = false;
+    };
     openjdk-panama-foreign = {
       url = "github:openjdk/panama-foreign";
       flake = false;
@@ -143,6 +150,7 @@
           imports = [
             inputs.android-nixpkgs.hmModule
             (import inputs.rycee { inherit pkgs; }).hmModules.emacs-init
+            self.hmModules.programs.devhelp
             self.hmModules.programs.emacs-lsp
             self.hmModules.programs.pass-git-helper
             self.hmModules.services.gnirehtet
@@ -177,6 +185,7 @@
 
       hmModules = {
         programs = {
+          devhelp = import ./home/modules/programs/devhelp.nix;
           emacs-init = import ./home/modules/programs/emacs-init.nix;
           emacs-lsp = import ./home/modules/programs/emacs-lsp.nix;
           pass-git-helper = import ./home/modules/programs/pass-git-helper.nix;

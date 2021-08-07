@@ -11,11 +11,11 @@
 
 stdenv.mkDerivation rec {
   pname = "kotlin-native";
-  version = "1.5.20";
+  version = "1.5.30-M1";
 
   src = fetchurl {
-    url = "https://github.com/JetBrains/kotlin/releases/download/v${version}/kotlin-native-linux-${version}.tar.gz";
-    hash = "sha256-lEkhnslGWxSt2htzCsFO8C2pPp+YIZ9zA79wxMh1t9s=";
+    url = "https://github.com/JetBrains/kotlin/releases/download/v${version}/kotlin-native-linux-x86_64-${version}.tar.gz";
+    hash = "sha256-iPAhaI02opBiCBJ04YEBssxhm5vdbnJrqGkBDMLuGyc=";
   };
 
   nativeBuildInputs = [ autoPatchelfHook ];
@@ -27,6 +27,8 @@ stdenv.mkDerivation rec {
     stdenv.cc.cc.lib
     zlib
   ];
+
+  propagatedBuildInputs = [ jdk ];
 
   installPhase = ''
     mkdir -p $out

@@ -418,6 +418,23 @@
         "type": "github"
       }
     },
+    "openjdk-17": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1626267657,
+        "narHash": "sha256-g669yxKbN5T1L9Be/E6m5eN5qQCqheJluQrpPw0Q5I0=",
+        "owner": "openjdk",
+        "repo": "jdk",
+        "rev": "7b4d84c65487593cdbf841f7f2d359192476db99",
+        "type": "github"
+      },
+      "original": {
+        "owner": "openjdk",
+        "ref": "jdk-17+31",
+        "repo": "jdk",
+        "type": "github"
+      }
+    },
     "openjdk-panama-foreign": {
       "flake": false,
       "locked": {
@@ -511,6 +528,7 @@
         "nix-prefetch-github": "nix-prefetch-github",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",
+        "openjdk-17": "openjdk-17",
         "openjdk-panama-foreign": "openjdk-panama-foreign",
         "paperwm": "paperwm",
         "portmod": "portmod",

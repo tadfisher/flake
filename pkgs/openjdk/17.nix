@@ -2,7 +2,7 @@
 , lib
 , buildEnv
 , fetchurl
-, openjdk-panama-foreign
+, src
 , bash
 , pkg-config
 , autoconf
@@ -46,21 +46,16 @@
 
 let
   version = {
-    feature = "18-panama";
+    feature = "17";
     interim = "0";
-    build = "0";
-  };
-
-  libclangDist = buildEnv {
-    name = "openjdk-libclang-dist";
-    paths = with llvmPackages_9; [ libclang.lib libclang.dev ];
+    build = "31";
   };
 
   openjdk = stdenv.mkDerivation {
     pname = "openjdk" + lib.optionalString headless "-headless";
     version = "${version.feature}+${version.build}";
 
-    src = openjdk-panama-foreign;
+    inherit src;
 
     nativeBuildInputs = [ pkg-config autoconf unzip ];
     buildInputs = [
@@ -133,7 +128,6 @@ let
       "--with-zlib=system"
       "--with-lcms=system"
       "--with-stdc++lib=dynamic"
-      "--with-libclang=${libclangDist}"
     ] ++ lib.optional stdenv.isx86_64 "--with-jvm-features=zgc"
     ++ lib.optional headless "--enable-headless-only"
     ++ lib.optional (!headless && enableJavaFX) "--with-import-modules=${openjfx}";

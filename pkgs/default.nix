@@ -14,7 +14,10 @@ in {
 
   dash-to-panel = callPackage ./dash-to-panel { src = inputs.dash-to-panel; };
 
-  kotlin-native-unwrapped = callPackage ./kotlin-native { llvmPackages = llvmPackages_8; };
+  kotlin-native-unwrapped = callPackage ./kotlin-native {
+    jdk = openjdk_headless;
+    llvmPackages = llvmPackages_8;
+  };
 
   kotlin-native = callPackage ./kotlin-native/wrapper.nix { };
 
@@ -43,14 +46,23 @@ in {
 
   openjdk17-bootstrap = adoptopenjdk-hotspot-bin-16;
 
-  openjdk-panama = callPackage ./openjdk-panama {
-    inherit (inputs) openjdk-panama-foreign;
+  openjdk17 = callPackage ./openjdk/17.nix {
+    src = inputs.openjdk-17;
     openjfx = null;
     enableJavaFX = false;
     inherit (gnome2) GConf gnome_vfs;
   };
 
-  openjdk-panama-headless = openjdk-panama.override { headless = true; };
+  openjdk17_headless = openjdk17.override { headless = true; };
+
+  openjdk-panama-foreign = callPackage ./openjdk/panama-foreign.nix {
+    src = inputs.openjdk-panama-foreign;
+    openjfx = null;
+    enableJavaFX = false;
+    inherit (gnome2) GConf gnome_vfs;
+  };
+
+  openjdk-panama-foreign-headless = openjdk-panama-foreign.override { headless = true; };
 
   paperwm = callPackage ./paperwm { src = inputs.paperwm; };
 

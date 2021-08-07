@@ -1,18 +1,17 @@
 { lib
-, kotlin-native-unwrapped
-, writeShellScriptBin
 , jdk
+, konanHome
 }:
 
-writeShellScriptBin "jvminterop" ''
+''
   declare -a java_args
   declare -a java_opts
   declare -a konan_args
 
-  while [ $# -gt 0 ]; do
-    case "$1" in
+  while [ \$# -gt 0 ]; do
+    case "\$1" in
       -D*)
-        java_args=("''${java_args[@]}" "$1")
+        java_args=("\''${java_args[@]}" "$1")
         shift
         ;;
       -J*)
@@ -36,15 +35,15 @@ writeShellScriptBin "jvminterop" ''
             -Xmx3G \
             -XX:TieredStopAtLevel=1 \
             -Dfile.encoding=UTF-8 \
-            -Dkonan.home=$KONAN_HOME \
-            ''${JAVA_OPTS})
+            -Dkonan.home=\$KONAN_HOME \
+            \''${JAVA_OPTS})
 
-  export KONAN_HOME=${kotlin-native-unwrapped}
-  KONAN_JAR="$KONAN_HOME/konan/lib/kotlin-native.jar"
-  TROVE_JAR="$KONAN_HOME/konan/lib/trove4j.jar"
-  KONAN_CLASSPATH="$KONAN_JAR:$TROVE_JAR"
+  export KONAN_HOME=${konanHome} 
+  KONAN_JAR="\$KONAN_HOME/konan/lib/kotlin-native.jar"
+  TROVE_JAR="\$KONAN_HOME/konan/lib/trove4j.jar"
+  KONAN_CLASSPATH="\$KONAN_JAR:\$TROVE_JAR"
   TOOL_CLASS=org.jetbrains.kotlin.native.interop.gen.jvm.MainKt
   LIBCLANG_DISABLE_CRASH_RECOVERY=1 \
-  $TIMECMD "${jdk.home}/bin/java" "''${java_opts[@]}" "''${java_args[@]}" -cp "$KONAN_CLASSPATH" \
+  $TIMECMD "${jdk.home}/bin/java" "\''${java_opts[@]}" "\''${java_args[@]}" -cp "\$KONAN_CLASSPATH" \
     "$TOOL_CLASS" "''${konan_args[@]}"
 ''
