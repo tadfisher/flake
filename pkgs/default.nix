@@ -14,7 +14,9 @@ in {
 
   dash-to-panel = callPackage ./dash-to-panel { src = inputs.dash-to-panel; };
 
-  gamescope = callPackage ./gamescope { };
+  gamescope = callPackage ./gamescope {
+    src = inputs.gamescope;
+  };
 
   # gimp = callPackage ./gimp {
   #   gegl = gegl_0_4;
@@ -34,8 +36,6 @@ in {
   libcapsule = callPackage ./libcapsule { };
 
   libcapsule-i686 = pkgsi686Linux.callPackage ./libcapsule { };
-
-  libliftoff = callPackage ./libliftoff { };
 
   paperwm = callPackage ./paperwm { src = inputs.paperwm; };
 

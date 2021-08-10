@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 nix flake update
 ./pkgs/dart-sass/update.sh
-./pkgs/gamescope/update.sh
-./pkgs/libliftoff/update.sh
 ./pkgs/plex-plexpass/update.sh

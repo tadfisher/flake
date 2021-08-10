@@ -1039,11 +1039,13 @@ in
                   haskell-mode
                   html-mode sgml-mode mhtml-mode web-mode
                   js-mode typescript-mode
-                  python-mode
+                  ;;python-mode
                   rust-mode
                   sh-mode) . eglot-ensure)
               ''
             ];
+            # TODO broken for python 3.9
+            # (python-mode . ("${pkgs.python3Packages.python-language-server}/bin/pyls"))
             config = ''
               (setq eglot-server-programs
                     '(((c-mode c++-mode) . ("${pkgs.clang-tools}/bin/clangd"))
@@ -1053,7 +1055,6 @@ in
                       (haskell-mode . ("${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper" "--lsp"))
                       ((html-mode sgml-mode mhtml-mode web-mode) . ("${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver" "--stdio"))
                       ((js-mode typescript-mode) . ("${pkgs.nodePackages.javascript-typescript-langserver}/bin/javascript-typescript-stdio"))
-                      (python-mode . ("${pkgs.python3Packages.python-language-server}/bin/pyls"))
                       (rust-mode . ("${pkgs.rust-analyzer}/bin/rust-analyzer"))
                       (sh-mode . ("${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start"))))
             '';

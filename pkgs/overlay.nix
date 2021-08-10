@@ -6,6 +6,13 @@ with final;
   emacsPackagesFor = emacs:
     (prev.emacsPackagesFor emacs).overrideScope' (callPackage ./emacs { });
 
+  # TODO https://github.com/NixOS/nixpkgs/pull/132592
+  notmuch = prev.notmuch.overrideAttrs (attrs: {
+    passthru = attrs.passthru // {
+      pythonSourceRoot = "notmuch-${attrs.version}/bindings/python";
+    };
+  });
+
   paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {
     pname = "paper-icon-theme-unstable";
     version = "2020-03-12";

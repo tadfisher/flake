@@ -1,7 +1,7 @@
 { lib
 , stdenv
 , callPackage
-, fetchFromGitHub
+, src
 , glslang
 , makeWrapper
 , meson
@@ -22,16 +22,13 @@
 , xwayland
 }:
 let
-  source = builtins.fromJSON (builtins.readFile ./source.json);
-  version = builtins.readFile ./version;
   wlroots = callPackage ./wlroots.nix { };
 
 in
 stdenv.mkDerivation rec {
-  pname = "gamescope-unstable";
-  inherit version;
+  name = "gamescope-unstable";
 
-  src = fetchFromGitHub source;
+  inherit src;
 
   postUnpack = ''
     rm -rf $sourceRoot/subprojects

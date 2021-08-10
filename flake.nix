@@ -16,6 +16,10 @@
       url = "github:amalantony/gnome-shell-extension-instant-workspace-switcher";
       flake = false;
     };
+    gamescope = {
+      url = "github:Plagman/gamescope";
+      flake = false;
+    };
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
@@ -34,6 +38,10 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    oomox = {
+      url = "github:themix-project/oomox";
+      flake = false;
+    };
     paperwm = {
       url = "github:paperwm/PaperWM/next-release";
       flake = false;
