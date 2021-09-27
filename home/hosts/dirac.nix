@@ -35,6 +35,7 @@
       packages = with pkgs.gnome; [
         atk
         glib
+        gobject-introspection
       ];
     };
     lieer.enable = true;

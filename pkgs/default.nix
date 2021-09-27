@@ -7,7 +7,8 @@ with pkgs;
 let
   naersk-lib = inputs.naersk.lib."${stdenv.system}";
 
-in {
+in
+{
   cleaner-overview = callPackage ./cleaner-overview { };
 
   dart-sass = callPackage ./dart-sass { };
@@ -41,8 +42,6 @@ in {
   libcapsule = callPackage ./libcapsule { };
 
   libcapsule-i686 = pkgsi686Linux.callPackage ./libcapsule { };
-
-  libliftoff = callPackage ./libliftoff { };
 
   openjdk17-bootstrap = adoptopenjdk-hotspot-bin-16;
 

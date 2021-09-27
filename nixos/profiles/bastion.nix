@@ -136,5 +136,11 @@ in
     };
   };
 
-  users.users.nginx.extraGroups = [ "acme" ];
+  users = {
+    groups.oauth2_proxy = { };
+    users = {
+      nginx.extraGroups = [ "acme" ];
+      oauth2_proxy.group = "oauth2_proxy";
+    };
+  };
 }

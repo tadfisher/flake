@@ -413,6 +413,11 @@ in
             enable = true;
           };
 
+          rainbow-mode = {
+            enable = true;
+            hook = [ "css-mode" "scss-mode" ];
+          };
+
           simple = {
             enable = true;
             package = "";

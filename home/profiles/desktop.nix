@@ -114,6 +114,7 @@ with lib;
 
     firefox = {
       enable = true;
+      package = pkgs.firefox-wayland;
       profiles.default = {
         settings = {
           # "browser.tabs.drawInTitlebar" = true;
