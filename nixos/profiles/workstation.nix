@@ -83,6 +83,8 @@ mkMerge [
 
       dbus.packages = [ pkgs.gcr ];
 
+      flatpak.enable = true;
+
       fwupd.enable = true;
 
       gnome = {
@@ -136,6 +138,11 @@ mkMerge [
         videoDrivers = [ "modesetting" ];
         xkbOptions = "ctrl:nocaps";
       };
+    };
+
+    xdg.portal = {
+      enable = true;
+      gtkUsePortal = true;
     };
   }
 

@@ -67,7 +67,7 @@ let
       settings = mkOption {
         type = with types; attrsOf (either bool (either int str));
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             "browser.startup.homepage" = "https://nixos.org";
             "browser.search.region" = "GB";

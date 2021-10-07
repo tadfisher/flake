@@ -47,7 +47,7 @@ let
       package = mkOption {
         type = types.nullOr types.package;
         default = null;
-        example = literalExample "pkgs.pulseaudio-modules-bt";
+        example = literalExpression "pkgs.pulseaudio-modules-bt";
         description = ''
           Package providing this module.
         '';
@@ -56,7 +56,7 @@ let
       arguments = mkOption {
         type = types.attrs;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             use_master_format = true;
             aec_method = "webrtc";

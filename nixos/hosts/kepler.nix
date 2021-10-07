@@ -150,10 +150,14 @@ with lib;
     };
   };
 
-  users.groups = {
-    games.gid = 1001;
-    # TODO Fix kepler NFS permissions
-    media.gid = 2000;
+  users = {
+    groups = {
+      games.gid = 1001;
+      # TODO Fix kepler NFS permissions
+      media.gid = 2000;
+      unifi = {};
+    };
+    users.unifi.group = "unifi";
   };
 
   virtualisation.libvirtd.enable = true;

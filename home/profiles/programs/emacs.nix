@@ -309,6 +309,12 @@ in
             command = [ "ansi-color-apply-on-region" ];
           };
 
+          auto-rename-tag = {
+            enable = true;
+            command = [ "auto-rename-tag-mode" ];
+            hook = [ "((nxml-mode sgml-mode) . auto-rename-tag-mode)" ];
+          };
+
           autorevert = {
             enable = true;
             diminish = [ "auto-revert-mode" ];
@@ -373,6 +379,24 @@ in
           };
 
           go-mode.enable = true;
+
+          hideshow = {
+            enable = true;
+            package = "";
+            hook = [
+              "((nxml-mode sgml-mode) . hs-minor-mode)"
+            ];
+            config = ''
+              ;; XML folding
+              (let ((tag-start "<!--\\|<[^/>]*[^/]>")
+                    (tag-end "-->\\|</[^/>]*[^/]>")
+                    (comment-start "<!--"))
+                (add-to-list 'hs-special-modes-alist
+                             `(nxml-mode ,tag-start ,tag-end ,comment-start sgml-skip-tag-forward nil))
+                (add-to-list 'hs-special-modes-alist
+                             `(sgml-mode ,tag-start ,tag-end ,comment-start sgml-skip-tag-forward nil)))
+            '';
+          };
 
           image-dired = {
             enable = true;
@@ -1757,9 +1781,7 @@ in
             enable = true;
             mode = [ ''"\\.xml\\'"'' ];
             config = ''
-              (setq nxml-child-indent 4
-                    nxml-attribute-indent 4
-                    nxml-slash-auto-complete-flag t)
+              (setq nxml-slash-auto-complete-flag t)
               (add-to-list 'rng-schema-locating-files
                            "~/.emacs.d/nxml-schemas/schemas.xml")
             '';

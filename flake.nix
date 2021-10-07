@@ -108,6 +108,7 @@
             self.nixosModules.boot.opal-unlock
             self.nixosModules.hardware.pulseaudio
             self.nixosModules.services.pia-vpn
+            self.nixosModules.programs.cardboard
             self.nixosModules.programs.steam
 
             ({ pkgs, ... }: {
@@ -239,6 +240,7 @@
       nixosModules = {
         boot.opal-unlock = ./nixos/modules/opal-unlock.nix;
         hardware.pulseaudio = ./nixos/modules/pulseaudio.nix;
+        programs.cardboard = ./nixos/modules/cardboard.nix;
         programs.steam = ./nixos/modules/steam.nix;
         services.pia-vpn = ./nixos/modules/pia-vpn.nix;
       };

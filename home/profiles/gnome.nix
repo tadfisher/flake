@@ -148,7 +148,7 @@ with lib;
       switch-down = [ "<Super>k" ];
       switch-down-workspace = [ "<Super>n" ];
       switch-first = [ "<Primary><Super>j" ];
-      switch-last = [ "<Primary><Super>k" ];
+      switch-last = [ "<Primary><Super>l" ];
       switch-left = [ "<Super>j" ];
       switch-monitor-left = [ "<Super>h" ];
       switch-monitor-right = [ "<Super>semicolon" ];

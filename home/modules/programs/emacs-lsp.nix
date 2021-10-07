@@ -27,7 +27,7 @@ let
       executables = mkOption {
         type = types.attrsOf types.str;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           { typescript-language-server = "''${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
             typescript = "''${pkgs.nodePackages.typescript}/bin/tsserver";
           }
@@ -48,7 +48,7 @@ let
       config = mkOption {
         type = types.lines;
         default = "";
-        example = literalExample ''
+        example = literalExpression ''
           (setq lsp-clients-clangd-executable "''${pkgs.clang-tools}/bin/clangd")
         '';
         description = ''
@@ -59,7 +59,7 @@ let
       packages = mkOption {
         type = types.listOf types.package;
         default = [ ];
-        example = literalExample ''
+        example = literalExpression ''
           [ pkgs.nodePackages.bash-language-server ];
         '';
         description = ''
@@ -104,7 +104,7 @@ in
       clients = mkOption {
         type = types.attrsOf lspModule;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             "bash" = {
               modes = [ "sh-mode" ];

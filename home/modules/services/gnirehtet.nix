@@ -23,7 +23,7 @@ in
 
       dns = mkOption {
         type = types.listOf types.str;
-        example = literalExample ''
+        example = literalExpression ''
           [ "1.1.1.1" "1.0.0.1" ]
         '';
         description = ''
@@ -35,7 +35,7 @@ in
 
       routes = mkOption {
         type = types.listOf types.str;
-        example = literalExample ''
+        example = literalExpression ''
           [ "10.0.0.0/8" ]
         '';
         description = ''

@@ -93,6 +93,8 @@ in
     '';
   };
 
+  programs.cardboard.enable = true;
+
   security.pki.certificateFiles = [ ../../secrets/euler/mercury.ca.crt ];
 
   services = {

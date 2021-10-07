@@ -21,7 +21,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.gitAndTools.pass-git-helper;
-        defaultText = literalExample "pkgs.gitAndTools.pass-git-helper";
+        defaultText = literalExpression "pkgs.gitAndTools.pass-git-helper";
         description = ''
           pass-git-helper package to install.
         '';
@@ -30,14 +30,16 @@ in
       mapping = mkOption {
         type = mappingModule;
         default = { };
-        example = literalExample {
-          "github.com*".target = "dev/github";
-          "gitlab.*" = {
-            target = "dev/gitlab/user@example.com";
-            username_extractor = "entry_name";
-            skip_password = 10;
-          };
-        };
+        example = literalExpression ''
+          {
+            "github.com*".target = "dev/github";
+            "gitlab.*" = {
+              target = "dev/gitlab/user@example.com";
+              username_extractor = "entry_name";
+              skip_password = 10;
+            };
+          }
+        '';
         description = ''
           Mapping of host pattern to a target entry in the
           password store.

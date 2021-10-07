@@ -17,7 +17,7 @@ in
       }
     ];
     sendEnv = [
-      "SSH_AUTH_SOCK=${socketDir}/S.gpg-agent.ssh"
+      "SSH_AUTH_SOCK"
     ];
   };
 
