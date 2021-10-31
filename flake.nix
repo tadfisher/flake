@@ -263,7 +263,7 @@
 
         overlay = final: prev: import ./pkgs/overlay.nix final prev;
 
-        pkgs = final: prev: self.packages.${prev.system} or { };
+        pkgs = final: prev: self.packages.${prev.hostPlatform.system} or { };
       };
 
       # There's probably an easier way to merge attributes in `overlays' into a

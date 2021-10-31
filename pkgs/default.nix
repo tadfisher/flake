@@ -5,7 +5,7 @@
 with pkgs;
 
 let
-  naersk-lib = inputs.naersk.lib."${stdenv.system}";
+  naersk-lib = inputs.naersk.lib.${stdenv.hostPlatform.system};
 
 in
 {

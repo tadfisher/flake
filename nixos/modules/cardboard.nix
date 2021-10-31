@@ -11,7 +11,8 @@ let
     };
   });
 
-in {
+in
+{
   options.programs.cardboard = {
     enable = mkEnableOption "Cardboard Wayland compositor";
 

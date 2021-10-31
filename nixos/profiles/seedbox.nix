@@ -40,7 +40,6 @@ in
 
     transmission = {
       enable = true;
-      port = 9091;
       settings = {
         download-queue-enabled = true;
         download-queue-size = 3;

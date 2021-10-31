@@ -155,7 +155,7 @@ with lib;
       games.gid = 1001;
       # TODO Fix kepler NFS permissions
       media.gid = 2000;
-      unifi = {};
+      unifi = { };
     };
     users.unifi.group = "unifi";
   };
