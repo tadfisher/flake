@@ -940,14 +940,20 @@ in
             enable = true;
             config = ''
               (setq magit-completing-read-function 'ivy-completing-read
+                    magit-diff-highlight-indentation nil
+                    magit-diff-highlight-trailing nil
+                    magit-diff-paint-whitespace nil
+                    magit-diff-highlight-hunk-body nil
+                    magit-diff-refine-hunk nil
                     magit-git-executable "${config.programs.git.package}/bin/git")
               (add-to-list 'git-commit-style-convention-checks
                            'overlong-summary-line)
+              (remove-hook 'server-switch-hook 'magit-commit-diff)
             '';
           };
 
           magit-delta = {
-            enable = true;
+            enable = false;
             after = [ "magit" ];
             config = ''
               (setq magit-delta-delta-executable "${pkgs.gitAndTools.delta}/bin/delta")
