@@ -1080,15 +1080,33 @@ in
             ];
             config = ''
               (setq eglot-server-programs
-                    '(((c-mode c++-mode) . ("${pkgs.clang-tools}/bin/clangd"))
-                      ((clojure-mode clojurec-mode clojurescript-mode) . ("${pkgs.clojure-lsp}/bin/clojure-lsp"))
-                      ((css-mode less-css-mode sass-mode scss-mode) . ("${pkgs.nodePackages.vscode-css-languageserver-bin}/bin/css-languageserver" "--stdio"))
-                      (go-mode . ("${pkgs.gotools}/bin/gopls"))
-                      (haskell-mode . ("${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper" "--lsp"))
-                      ((html-mode sgml-mode mhtml-mode web-mode) . ("${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver" "--stdio"))
-                      ((js-mode typescript-mode) . ("${pkgs.nodePackages.javascript-typescript-langserver}/bin/javascript-typescript-stdio"))
-                      (rust-mode . ("${pkgs.rust-analyzer}/bin/rust-analyzer"))
-                      (sh-mode . ("${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start"))))
+                    `(((c-mode c++-mode)
+                        . ,(eglot-alternatives '("clangd" "${pkgs.clang-tools}/bin/clangd")))
+                      ((clojure-mode clojurec-mode clojurescript-mode)
+                        . ,(eglot-alternatives '("clojure-lsp" "${pkgs.clojure-lsp}/bin/clojure-lsp")))
+                      ((css-mode less-css-mode sass-mode scss-mode)
+                        . ,(eglot-alternatives
+                            '("css-languageserver" "${pkgs.nodePackages.vscode-css-languageserver-bin}/bin/css-languageserver")
+                            "--stdio"))
+                      (go-mode
+                       . ,(eglot-alternatives '("gopls" "${pkgs.gotools}/bin/gopls")))
+                      (haskell-mode
+                       . ,(eglot-alternatives
+                           '("haskell-language-server-wrapper" "${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper")
+                           "--lsp"))
+                      ((html-mode sgml-mode mhtml-mode web-mode)
+                        . ,(eglot-alternatives
+                            '("html-languageserver" "${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver")
+                            "--stdio"))
+                      ((js-mode typescript-mode)
+                        . ,(eglot-alternatives
+                            '("javascript-typescript-stdio" "${pkgs.nodePackages.javascript-typescript-langserver}/bin/javascript-typescript-stdio")))
+                      (rust-mode
+                       . ,(eglot-alternatives '("rust-analyzer" "${pkgs.rust-analyzer}/bin/rust-analyzer")))
+                      (sh-mode
+                       . ,(eglot-alternatives
+                           '("bash-language-server" "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server")
+                           "start"))))
             '';
           };
 

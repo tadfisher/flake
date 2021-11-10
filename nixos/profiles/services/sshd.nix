@@ -10,7 +10,7 @@ with lib;
 
   services.openssh = {
     enable = true;
-    passwordAuthentication = false;
+    passwordAuthentication = mkDefault false;
     permitRootLogin = "no";
     startWhenNeeded = true;
     extraConfig = ''
