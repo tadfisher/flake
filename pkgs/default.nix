@@ -43,17 +43,6 @@ in
 
   libcapsule-i686 = pkgsi686Linux.callPackage ./libcapsule { };
 
-  openjdk17-bootstrap = adoptopenjdk-hotspot-bin-16;
-
-  openjdk17 = callPackage ./openjdk/17.nix {
-    src = inputs.openjdk-17;
-    openjfx = null;
-    enableJavaFX = false;
-    inherit (gnome2) GConf gnome_vfs;
-  };
-
-  openjdk17_headless = openjdk17.override { headless = true; };
-
   openjdk-panama-foreign = callPackage ./openjdk/panama-foreign.nix {
     src = inputs.openjdk-panama-foreign;
     openjfx = null;

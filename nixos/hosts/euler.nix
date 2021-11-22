@@ -51,7 +51,8 @@ in
 
   fileSystems = {
     "/boot" = {
-      device = "/dev/disk/by-label/boot";
+      # device = "/dev/disk/by-label/boot";
+      device = "/dev/disk/by-uuid/87E0-37B4";
       fsType = "vfat";
     };
     "/" = {
@@ -133,7 +134,7 @@ in
     };
   };
 
-  swapDevices = [{ label = "swap"; }];
+  # swapDevices = [{ label = "swap"; }];
 
   system.stateVersion = "21.03";
 }

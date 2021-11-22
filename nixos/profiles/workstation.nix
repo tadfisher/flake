@@ -11,12 +11,18 @@ mkMerge [
       plymouth.enable = true;
     };
 
-    environment.systemPackages = with pkgs; [
-      gnome3.adwaita-icon-theme
-      gnome3.gnome-themes-extra
-      paper-icon-theme
-      plata-theme
-    ];
+    environment = {
+      etc."systemd/oom.conf".text = ''
+        [OOM]
+        DefaultMemoryPressureDurationSec=20s
+      '';
+      systemPackages = with pkgs; [
+        gnome3.adwaita-icon-theme
+        gnome3.gnome-themes-extra
+        paper-icon-theme
+        plata-theme
+      ];
+    };
 
     fonts.fonts = with pkgs; [
       jetbrains-mono
@@ -137,6 +143,38 @@ mkMerge [
         libinput.enable = true;
         videoDrivers = [ "modesetting" ];
         xkbOptions = "ctrl:nocaps";
+      };
+    };
+
+    systemd = {
+      package = pkgs.systemd.override { withOomd = true; };
+      additionalUpstreamSystemUnits = [ "systemd-oomd.service" ];
+      extraConfig = ''
+        DefaultMemoryAccounting=yes
+        DefaultTasksAccounting=yes
+      '';
+      services = {
+        systemd-oomd = {
+          wantedBy = lib.mkIf (config.swapDevices != []) [ "multi-user.target" ];
+          after = [ "swap.target" ];
+          aliases = [ "dbus-org.freedesktop.oom1.service" ];
+        };
+        "user@".serviceConfig = {
+          ManagedOOMMemoryPressure = "kill";
+          ManagedOOMMemoryPressureLimit = "50%";
+        };
+      };
+      slices."-".sliceConfig = {
+        ManagedOOMSwap = "kill";
+      };
+    };
+
+    users = {
+      groups.systemd-oom.gid = 666;
+      users.systemd-oom = {
+        uid = 666;
+        group = "systemd-oom";
+        isSystemUser = true;
       };
     };
 

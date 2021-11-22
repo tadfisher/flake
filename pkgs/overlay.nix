@@ -74,4 +74,16 @@ with final;
         buildFHSUserEnv = buildFHSUserEnvBubblewrap;
       };
     };
+
+  # https://github.com/NixOS/nixpkgs/pull/145953
+  tree = prev.tree.overrideAttrs (attrs: rec {
+    preConfigure = ''
+      sed -i Makefile -e 's|^OBJS=|OBJS=$(EXTRA_OBJS) |'
+      makeFlagsArray+=(
+        "CC=$CC"
+      )
+    '';
+
+    makeFlags = lib.init attrs.makeFlags;
+  });
 }
