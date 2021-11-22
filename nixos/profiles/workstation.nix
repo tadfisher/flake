@@ -71,8 +71,8 @@ mkMerge [
     };
 
     nix = {
-      daemonNiceLevel = 10;
-      daemonIONiceLevel = 7;
+      daemonCPUSchedPolicy = "batch";
+      daemonIOSchedPriority = 7;
     };
 
     powerManagement = {
