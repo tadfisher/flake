@@ -39,7 +39,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     paperwm = {
-      url = "github:paperwm/PaperWM/next-release";
+      url = "github:tadfisher/PaperWM/gtk4";
       flake = false;
     };
     portmod = {

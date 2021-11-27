@@ -57,15 +57,6 @@ in
 
   sed-opal-unlocker = callPackage ./sed-opal-unlocker { };
 
-  steam-runtime-tools = callPackage ./steam-runtime-tools {
-    stdenv = multiStdenv;
-  };
-
-  steam-runtime-tools-i686 = callPackage ./steam-runtime-tools {
-    stdenv = multiStdenv;
-    steam-runtime-tools-i686 = null;
-  };
-
   steamos-compositor-plus = callPackage ./steamos-compositor-plus { };
 
   steamos-modeswitch-inhibitor = callPackage ./steamos-modeswitch-inhibitor { };
