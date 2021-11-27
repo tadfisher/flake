@@ -6,13 +6,6 @@ with final;
   emacsPackagesFor = emacs:
     (prev.emacsPackagesFor emacs).overrideScope' (callPackage ./emacs { });
 
-  # TODO https://github.com/NixOS/nixpkgs/pull/132592
-  notmuch = prev.notmuch.overrideAttrs (attrs: {
-    passthru = attrs.passthru // {
-      pythonSourceRoot = "notmuch-${attrs.version}/bindings/python";
-    };
-  });
-
   paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {
     pname = "paper-icon-theme-unstable";
     version = "2020-03-12";
@@ -24,16 +17,7 @@ with final;
     };
   });
 
-  # TODO Waiting on https://github.com/NixOS/nixpkgs/pull/101093
-  plata-theme = (prev.plata-theme.overrideAttrs (attrs: rec {
-    version = "0.9.9";
-    src = fetchFromGitLab {
-      owner = "tista500";
-      repo = "plata-theme";
-      rev = version;
-      sha256 = "1iwvlv9qcrjyfbzab00vjqafmp3vdybz1hi02r6lwbgvwyfyrifk";
-    };
-  })).override { gtkNextSupport = true; };
+  plata-theme = prev.plata-theme.override { gtkNextSupport = true; };
 
   sedutil-fork = prev.sedutil.overrideAttrs (attrs: rec {
     version = "1.15-5ad84d8";
@@ -49,41 +33,5 @@ with final;
       homepage = "https://sedutil.com";
       maintainers = with lib.maintainers; [ tadfisher ];
     };
-  });
-
-  steamPackages =
-    let
-      buildFHSUserEnvBubblewrap = final.callPackage ../builders/build-fhs-userenv-bubblewrap { };
-      callPackage = newScope prev.steamPackages;
-    in
-    rec {
-      inherit (prev.steamPackages)
-        steamArch
-        steam-runtime
-        steam-runtime-wrapped
-        steam
-        steam-fonts
-        steamcmd;
-      steam-fhsenv = callPackage ./steam/fhsenv.nix {
-        inherit (prev.steamPackages) steam-runtime-wrapped;
-        glxinfo-i686 = pkgsi686Linux.glxinfo;
-        steam-runtime-wrapped-i686 =
-          if prev.steamPackages.steamArch == "amd64"
-          then prev.pkgsi686Linux.steamPackages.steam-runtime-wrapped
-          else null;
-        buildFHSUserEnv = buildFHSUserEnvBubblewrap;
-      };
-    };
-
-  # https://github.com/NixOS/nixpkgs/pull/145953
-  tree = prev.tree.overrideAttrs (attrs: rec {
-    preConfigure = ''
-      sed -i Makefile -e 's|^OBJS=|OBJS=$(EXTRA_OBJS) |'
-      makeFlagsArray+=(
-        "CC=$CC"
-      )
-    '';
-
-    makeFlags = lib.init attrs.makeFlags;
   });
 }

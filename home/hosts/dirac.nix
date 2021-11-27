@@ -54,6 +54,4 @@
     lieer.enable = true;
     mopidy.enable = true;
   };
-
-  xdg.dataFile."java/openjdk17".source = pkgs.openjdk17.home;
 }

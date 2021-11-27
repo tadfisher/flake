@@ -25,6 +25,7 @@ in
           autoSetupMerge = "true";
           autoSetupRebase = "remote";
         };
+        pull.rebase = "true";
         github.user = "tadfisher";
         http.cookiefile = "${config.xdg.configHome}/git/cookies";
         init.defaultBranch = "main";

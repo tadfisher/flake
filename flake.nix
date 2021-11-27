@@ -38,17 +38,6 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    openjdk-17 = {
-      type = "github";
-      owner = "openjdk";
-      repo = "jdk";
-      ref = "jdk-17+31";
-      flake = false;
-    };
-    openjdk-panama-foreign = {
-      url = "github:openjdk/panama-foreign";
-      flake = false;
-    };
     paperwm = {
       url = "github:paperwm/PaperWM/next-release";
       flake = false;

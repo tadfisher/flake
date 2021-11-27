@@ -11,6 +11,6 @@
     "java/openjdk".source = pkgs.openjdk.home;
     "java/openjdk8".source = pkgs.openjdk8.home;
     "java/openjdk11".source = pkgs.openjdk11.home;
-    "java/jetbrains".source = pkgs.jetbrains.jdk;
+    # "java/jetbrains".source = pkgs.jetbrains.jdk;
   };
 }

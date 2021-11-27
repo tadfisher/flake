@@ -43,15 +43,6 @@ in
 
   libcapsule-i686 = pkgsi686Linux.callPackage ./libcapsule { };
 
-  openjdk-panama-foreign = callPackage ./openjdk/panama-foreign.nix {
-    src = inputs.openjdk-panama-foreign;
-    openjfx = null;
-    enableJavaFX = false;
-    inherit (gnome2) GConf gnome_vfs;
-  };
-
-  openjdk-panama-foreign-headless = openjdk-panama-foreign.override { headless = true; };
-
   paperwm = callPackage ./paperwm { src = inputs.paperwm; };
 
   plex-plexpass = callPackage ./plex-plexpass { };

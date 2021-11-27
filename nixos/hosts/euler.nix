@@ -52,7 +52,7 @@ in
   fileSystems = {
     "/boot" = {
       # device = "/dev/disk/by-label/boot";
-      device = "/dev/disk/by-uuid/87E0-37B4";
+      device = "/dev/disk/by-partlabel/efi";
       fsType = "vfat";
     };
     "/" = {

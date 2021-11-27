@@ -249,7 +249,7 @@ in
               modes = [ "scala-mode" ];
               config = ''
                 (setq lsp-metals-server-command "${pkgs.metals}/bin/metals-emacs"
-                      lsp-metals-java-home "${pkgs.jdk11.home}"
+                      lsp-metals-java-home "${pkgs.jdk.home}"
                       lsp-metals-sbt-script "${pkgs.sbt}/bin/sbt"
                       lsp-metals-gradle-script "${pkgs.gradle}/bin/gradle"
                       lsp-metals-maven-script "${pkgs.maven}/bin/mvn"
