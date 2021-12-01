@@ -10,7 +10,6 @@
       url = "github:home-sweet-gnome/dash-to-panel";
       flake = false;
     };
-    emacs-flake.url = "github:mjlbach/emacs-overlay";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     instant-workspace-switcher = {
       url = "github:amalantony/gnome-shell-extension-instant-workspace-switcher";
@@ -31,6 +30,10 @@
     nix-dart = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/nix-dart";
+    };
+    nix-direnv =  {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/nix-direnv";
     };
     nix-prefetch-github = {
       inputs.nixpkgs.follows = "nixpkgs";
@@ -77,8 +80,11 @@
 
 
           overlays = [
-            (self.overlay)
             (inputs.android-nixpkgs.overlay)
+            (inputs.emacs-overlay.overlay)
+            (inputs.nix-dart.overlay)
+            (inputs.nix-direnv.overlay)
+            (self.overlay)
           ];
         }
       );
@@ -235,21 +241,6 @@
       };
 
       overlays = {
-        dart = final: prev: inputs.nix-dart.overlay final prev;
-
-        # This would be part of `packages' but that doesn’t support nested attrsets
-        # (e.g. using `lib.makeScope').
-        # emacs = final: prev:
-        #   let
-        #     emacs-overlay = inputs.emacs-overlay.overlay final prev;
-        #   in
-        #   {
-        #     inherit (inputs.emacs-flake.packages.${prev.system}) emacsPgtkGcc;
-        #     emacsPackagesFor = emacs:
-        #       (emacs-overlay.emacsPackagesFor emacs).overrideScope'
-        #         (efinal: eprev: (final.callPackage ./pkgs/emacs {}) efinal eprev);
-        #   };
-
         overlay = final: prev: import ./pkgs/overlay.nix final prev;
 
         pkgs = final: prev: self.packages.${prev.hostPlatform.system} or { };
@@ -258,8 +249,6 @@
       # There's probably an easier way to merge attributes in `overlays' into a
       # single function.
       overlay = final: prev:
-        (inputs.emacs-overlay.overlay final prev) //
-        (self.overlays.dart final prev) //
         (self.overlays.pkgs final prev) //
         (self.overlays.overlay final prev);
 
@@ -267,7 +256,6 @@
         import ./pkgs { inherit inputs; pkgs = pkgsBySystem.${system}; } //
         inputs.nix-dart.packages.${system} //
         {
-          emacsPgtkGcc = inputs.emacs-flake.packages.${system}.emacsPgtkGcc;
           nix-prefetch-github = inputs.nix-prefetch-github.defaultPackage.${system};
           nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
           nixUnstable = inputs.nixpkgs.legacyPackages.${system}.nixUnstable;
