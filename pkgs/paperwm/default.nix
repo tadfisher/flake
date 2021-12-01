@@ -6,14 +6,6 @@ stdenv.mkDerivation rec {
 
   inherit src;
 
-  patches = [
-    (fetchpatch {
-      url = "https://github.com/tadfisher/PaperWM/commit/1c2fabc3c738bbd78d22c3c878ed6919fee9b723.patch";
-      sha256 = "sha256-BoG9aIWcgbSUZZ5AI+xlWyogy+OrgiHrqEJnv0eElTA=";
-    })
-  ];
-
-
   uuid = "paperwm@hedning:matrix.org";
 
   dontBuild = true;
