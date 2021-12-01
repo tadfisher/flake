@@ -36,6 +36,13 @@ with lib;
       target = "github.com/euler";
       skip_username = 6;
     };
+    obs-studio = {
+      enable = true;
+      plugins = with pkgs.obs-studio-plugins; [
+        obs-move-transition
+        obs-websocket
+      ];
+    };
   };
 
   services = {
