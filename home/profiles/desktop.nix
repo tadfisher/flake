@@ -68,6 +68,7 @@ with lib;
       noto-fonts
       noto-fonts-cjk
       noto-fonts-emoji
+      nyxt
       qt5.qtwayland
       roboto
       roboto-mono

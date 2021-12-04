@@ -54,8 +54,7 @@ in
 
   fileSystems = {
     "/boot" = {
-      # device = "/dev/disk/by-label/boot";
-      device = "/dev/disk/by-partlabel/efi";
+      device = "/dev/disk/by-label/boot";
       fsType = "vfat";
     };
     "/" = {
@@ -107,6 +106,8 @@ in
       fileSystems = [ "/dev/nvme0n1" ];
     };
 
+    fprintd.enable = true;
+
     postgresql = {
       enable = true;
       package = pkgs.postgresql_12;
@@ -137,7 +138,7 @@ in
     };
   };
 
-  # swapDevices = [{ label = "swap"; }];
+  swapDevices = [{ label = "swap"; }];
 
   system.stateVersion = "21.03";
 }

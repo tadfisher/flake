@@ -6,6 +6,16 @@ with final;
   emacsPackagesFor = emacs:
     (prev.emacsPackagesFor emacs).overrideScope' (callPackage ./emacs { });
 
+  # TODO https://github.com/NixOS/nixpkgs/pull/147032
+  fwupd = prev.fwupd.overrideAttrs (attrs: {
+    patches = attrs.patches ++ [
+      (fetchpatch {
+        url = "https://raw.githubusercontent.com/NixOS/nixpkgs/47f11b5c01e4b9e3e4f2d8c6b20531d77b46b157/pkgs/os-specific/linux/firmware/fwupd/efi-app-path.patch";
+        sha256 = "sha256-RSWkKYhXjIZHHyPx9ri6rRMzoisL0EAEEokVlyG8VWE=";
+      })
+    ];
+  });
+
   nix-direnv = prev.nix-direnv.overrideAttrs (attrs: {
     patches = (attrs.patches or []) ++ [ ./nix-direnv/revert-flakes-dont-run-shellhook.patch ];
   });
