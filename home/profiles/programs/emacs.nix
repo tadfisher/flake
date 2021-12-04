@@ -964,6 +964,12 @@ in
           forge = {
             enable = true;
             after = [ "magit" ];
+            config = ''
+              (transient-append-suffix 'forge-dispatch '(0)
+               ["Edit"
+                ("e a" "assignees" forge-edit-topic-assignees)
+                ("e r" "reviewers" forge-edit-topic-review-requests)])
+            '';
           };
 
           git-messenger = {
