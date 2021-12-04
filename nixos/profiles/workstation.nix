@@ -82,7 +82,19 @@ mkMerge [
 
     programs.seahorse.enable = false;
 
-    security.rtkit.enable = true;
+    security = {
+      rtkit.enable = true;
+
+      tpm2 = {
+        enable = true;
+        abrmd.enable = true;
+        pkcs11.enable = true;
+        tctiEnvironment = {
+          enable = true;
+          interface = "tabrmd";
+        };
+      };
+    };
 
     services = {
       avahi.enable = false;
