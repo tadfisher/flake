@@ -134,6 +134,8 @@ in
 {
   options = {
     boot.initrd.opal = {
+      enable = mkEnableOption "OPAL drive unlocking";
+
       drives = mkOption {
         type = types.attrsOf (types.submodule driveOpts);
         default = { };
@@ -162,7 +164,7 @@ in
     };
   };
 
-  config = mkIf (cfg.drives != { }) {
+  config = mkIf cfg.enable {
     assertions = [
       {
         assertion = config.boot.initrd.enable;

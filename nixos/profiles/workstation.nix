@@ -155,7 +155,7 @@ mkMerge [
       '';
       services = {
         systemd-oomd = {
-          wantedBy = lib.mkIf (config.swapDevices != []) [ "multi-user.target" ];
+          wantedBy = lib.mkIf (config.swapDevices != [ ]) [ "multi-user.target" ];
           after = [ "swap.target" ];
           aliases = [ "dbus-org.freedesktop.oom1.service" ];
         };

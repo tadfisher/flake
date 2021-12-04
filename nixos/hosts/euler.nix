@@ -26,6 +26,7 @@ in
         "xhci_pci"
       ];
       opal = {
+        enable = true;
         drives.system = {
           opalDevice = "/dev/nvme0";
           blockDevice = "/dev/nvme0n1";
