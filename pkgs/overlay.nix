@@ -17,7 +17,7 @@ with final;
   });
 
   nix-direnv = prev.nix-direnv.overrideAttrs (attrs: {
-    patches = (attrs.patches or []) ++ [ ./nix-direnv/revert-flakes-dont-run-shellhook.patch ];
+    patches = (attrs.patches or [ ]) ++ [ ./nix-direnv/revert-flakes-dont-run-shellhook.patch ];
   });
 
   paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {

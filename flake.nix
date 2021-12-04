@@ -31,7 +31,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/nix-dart";
     };
-    nix-direnv =  {
+    nix-direnv = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/nix-direnv";
     };
