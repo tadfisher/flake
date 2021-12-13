@@ -80,7 +80,10 @@ mkMerge [
       scsiLinkPolicy = "med_power_with_dipm";
     };
 
-    programs.seahorse.enable = false;
+    programs = {
+      evolution.enable = true;
+      seahorse.enable = false;
+    };
 
     security = {
       rtkit.enable = true;
@@ -99,6 +102,8 @@ mkMerge [
     services = {
       avahi.enable = false;
 
+      colord.enable = true;
+
       dbus.packages = [ pkgs.gcr ];
 
       flatpak.enable = true;
@@ -116,8 +121,8 @@ mkMerge [
         enable = true;
         alsa.enable = true;
         alsa.support32Bit = true;
+        jack.enable = true;
         pulse.enable = true;
-        media-session.enable = true;
       };
 
       printing = {
@@ -139,6 +144,7 @@ mkMerge [
         extraRules = ''
           ${builtins.readFile ../../data/udev/jlink.rules}
           ${builtins.readFile ../../data/udev/particle.rules}
+          ${builtins.readFile ../../data/udev/spyderx.rules}
         '';
         packages = with pkgs; [
           android-udev-rules
@@ -149,9 +155,13 @@ mkMerge [
 
       xserver = {
         enable = true;
-        desktopManager.gnome.enable = true;
+        desktopManager.gnome = {
+          enable = true;
+          sessionPath = [ pkgs.argyllcms ];
+        };
         displayManager.gdm.enable = true;
         enableCtrlAltBackspace = true;
+        gdk-pixbuf.modulePackages = [ pkgs.webp-pixbuf-loader ];
         libinput.enable = true;
         videoDrivers = [ "modesetting" ];
         xkbOptions = "ctrl:nocaps";

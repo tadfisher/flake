@@ -1,0 +1,13 @@
+ACTION!="add", GOTO="spyderx_rules_end"
+SUBSYSTEM!="usb", GOTO="spyderx_rules_end"
+DRIVER!="usb", GOTO="spyderx_rules_end"
+
+ATTRS{idVendor}=="085c", ATTRS{idProduct}=="0a00", ENV{COLORD_SENSOR_KIND}="spyderX", ENV{COLORD_SENSOR_CAPS}="lcd crt ambient"
+
+ENV{COLORD_SENSOR_KIND}=="*?", ENV{COLOR_MEASUREMENT_DEVICE}="1"
+ENV{COLORD_SENSOR_KIND}=="*?", ENV{ID_MODEL}=="", IMPORT{builtin}="usb_id"
+ENV{COLORD_SENSOR_KIND}=="*?", ENV{ID_MODEL_FROM_DATABASE}=="", IMPORT{builtin}="hwdb --subsystem=usb"
+
+ENV{COLORD_SENSOR_KIND}=="*?", GROUP="colord"
+
+LABEL="spyderx_rules_end"

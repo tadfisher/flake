@@ -91,9 +91,11 @@ in
     cpuFreqGovernor = "schedutil";
     powerUpCommands = ''
       ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme0n1 ${../../secrets/euler/pool.hash}
-      # Limit charging thresholds to 40-50%
-      echo 40 > /sys/class/power_supply/BAT0/charge_control_start_threshold
-      echo 50 > /sys/class/power_supply/BAT0/charge_control_end_threshold
+      # Limit charging thresholds to 60-80%
+      if [ -d "/sys/class/power_supply/BAT0" ]; then
+        echo 60 > /sys/class/power_supply/BAT0/charge_control_start_threshold
+        echo 80 > /sys/class/power_supply/BAT0/charge_control_end_threshold
+      fi
     '';
   };
 
@@ -109,23 +111,28 @@ in
 
     fprintd.enable = true;
 
-    postgresql = {
-      enable = true;
-      package = pkgs.postgresql_12;
-      enableTCPIP = false;
-      authentication = ''
-        local all all trust
-        host all all 127.0.0.1/32 trust
-        host all all ::1/128 trust
-      '';
-      settings = {
-        timezone = "UTC";
-        shared_buffers = 128;
-        fsync = false;
-        synchronous_commit = false;
-        full_page_writes = false;
+    postgresql =
+      let
+        package = pkgs.postgresql_13;
+      in
+      {
+        enable = true;
+        inherit package;
+        enableTCPIP = false;
+        authentication = ''
+          local all all trust
+          host all all 127.0.0.1/32 trust
+          host all all ::1/128 trust
+        '';
+        extraPlugins = [ package.pkgs.postgis ];
+        settings = {
+          timezone = "UTC";
+          shared_buffers = 128;
+          fsync = false;
+          synchronous_commit = false;
+          full_page_writes = false;
+        };
       };
-    };
 
     udev.extraRules = ''
       # Enable systemd device units for android devices

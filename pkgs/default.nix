@@ -67,5 +67,7 @@ in
 
   vertical-overview = callPackage ./vertical-overview { src = inputs.vertical-overview; };
 
+  webp-pixbuf-loader = callPackage ./webp-pixbuf-loader { };
+
   zephyr-toolchain = callPackage ./zephyr-toolchain { };
 }

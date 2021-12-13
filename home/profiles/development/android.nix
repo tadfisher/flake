@@ -28,4 +28,6 @@ with lib;
       androidStudioPackages.canary
     ];
   };
+
+  services.adb.enable = true;
 }

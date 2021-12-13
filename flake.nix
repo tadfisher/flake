@@ -149,6 +149,7 @@
             self.hmModules.programs.devhelp
             self.hmModules.programs.emacs-lsp
             self.hmModules.programs.pass-git-helper
+            self.hmModules.services.adb
             self.hmModules.services.gnirehtet
             self.hmModules.services.mopidy
             homeConfig
@@ -188,6 +189,7 @@
         };
 
         services = {
+          adb = import ./home/modules/services/adb.nix;
           gnirehtet = import ./home/modules/services/gnirehtet.nix;
           mopidy = import ./home/modules/services/mopidy.nix;
         };

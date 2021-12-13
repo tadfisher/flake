@@ -1261,12 +1261,12 @@ in
           nix-mode = {
             enable = true;
             mode = [ ''"\\.nix\\'"'' ''"\\.nix.in\\'"'' ];
-          };
+            hook = [ ''(before-save-hook . nix-format-before-save)'' ];
+            config = ''
+              (setq nix-nixfmt-bin "${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt")
 
-          nix-buffer = {
-            enable = true;
-            init = ''
-              (defvar eshell-path-env "");
+              ;; Match nixpkgs-fmt: align exprs with "in" keyword.
+              (smie-config-local '((0 :after "in" nil)))
             '';
           };
 
