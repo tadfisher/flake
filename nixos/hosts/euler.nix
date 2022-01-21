@@ -7,6 +7,7 @@ in
 {
   imports = [
     ../profiles/core.nix
+    ../profiles/networks/euler.nix
     ../profiles/users/tad.nix
     ../profiles/uefi.nix
     ../profiles/virt-amd.nix
@@ -39,23 +40,28 @@ in
     ];
     kernelParams = [
       "mitigations=off"
+      "iommu=pt"
     ];
   };
 
-  environment.etc."NetworkManager/system-connections/mercury.nmconnection" = {
-    mode = "0600";
-    source = pkgs.substituteAll {
-      src = ../../secrets/euler/vpn/mercury.nmconnection.in;
-      ca = ../../secrets/euler/vpn/mercury-ca.pem;
-      cert = ../../secrets/euler/vpn/mercury-cert.pem;
-      key = ../../secrets/euler/vpn/mercury-key.pem;
-      ta = ../../secrets/euler/vpn/mercury-tls-auth.pem;
+  environment = {
+    etc."NetworkManager/system-connections/mercury.nmconnection" = {
+      mode = "0600";
+      source = pkgs.substituteAll {
+        src = ../../secrets/euler/vpn/mercury.nmconnection.in;
+        ca = ../../secrets/euler/vpn/mercury-ca.pem;
+        cert = ../../secrets/euler/vpn/mercury-cert.pem;
+        key = ../../secrets/euler/vpn/mercury-key.pem;
+        ta = ../../secrets/euler/vpn/mercury-tls-auth.pem;
+      };
     };
+    sessionVariables.AMD_VULKAN_ICD = "radv";
   };
 
   fileSystems = {
     "/boot" = {
-      device = "/dev/disk/by-label/boot";
+      # device = "/dev/disk/by-label/boot";
+      device = "/dev/disk/by-label/EFI";
       fsType = "vfat";
     };
     "/" = {
@@ -88,13 +94,12 @@ in
   };
 
   powerManagement = {
-    cpuFreqGovernor = "schedutil";
     powerUpCommands = ''
       ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme0n1 ${../../secrets/euler/pool.hash}
       # Limit charging thresholds to 60-80%
       if [ -d "/sys/class/power_supply/BAT0" ]; then
-        echo 60 > /sys/class/power_supply/BAT0/charge_control_start_threshold
         echo 80 > /sys/class/power_supply/BAT0/charge_control_end_threshold
+        echo 60 > /sys/class/power_supply/BAT0/charge_control_start_threshold
       fi
     '';
   };

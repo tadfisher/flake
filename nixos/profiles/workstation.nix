@@ -39,10 +39,7 @@ mkMerge [
         package = pkgs.bluezFull;
       };
 
-      opengl = {
-        enable = true;
-        driSupport32Bit = true;
-      };
+      opengl.enable = true;
 
       pulseaudio.enable = false;
 
@@ -56,6 +53,11 @@ mkMerge [
           };
         };
       };
+    };
+
+    i18n.inputMethod = {
+      enabled = "ibus";
+      ibus.engines = with pkgs.ibus-engines; [ typing-booster ];
     };
 
     networking.networkmanager = {
@@ -148,6 +150,8 @@ mkMerge [
         '';
         packages = with pkgs; [
           android-udev-rules
+          # TODO https://github.com/NixOS/nixpkgs/pull/153501
+          libmtp.out
           openocd
           yubikey-personalization
         ];
@@ -202,7 +206,6 @@ mkMerge [
 
     xdg.portal = {
       enable = true;
-      gtkUsePortal = true;
     };
   }
 

@@ -11,7 +11,6 @@
     ../profiles/development/python.nix
     ../profiles/services/gpg-agent.nix
     ../profiles/services/kbfs.nix
-    ../profiles/services/mopidy.nix
   ];
 
   accounts.email.accounts."tadfisher@gmail.com".primary = true;
@@ -52,6 +51,5 @@
   services = {
     gnirehtet.enable = true;
     lieer.enable = true;
-    mopidy.enable = true;
   };
 }

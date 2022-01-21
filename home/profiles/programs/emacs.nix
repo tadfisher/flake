@@ -53,29 +53,16 @@ in
 
       init = {
         enable = true;
+        packageQuickstart = false;
         recommendedGcSettings = true;
         usePackageVerbose = false;
 
-        prelude = ''
-          ;; Disable startup message.
-          (setq inhibit-startup-message t
-                inhibit-startup-echo-area-message (user-login-name))
-
-          (setq initial-major-mode 'fundamental-mode
-                initial-scratch-message nil)
-
-          ;; Disable some GUI distractions.
-          (tool-bar-mode -1)
-          (scroll-bar-mode -1)
-          (menu-bar-mode -1)
-          (blink-cursor-mode -1)
-
-          (setq default-frame-alist
-                '((vertical-scroll-bars . nil)
-                  (width . 100)))
-
-          ;; Customize cursor.
-          (setq-default cursor-type 'bar)
+        earlyInit = ''
+          ;; Disable some GUI distractions. We set these manually to avoid starting
+          ;; the corresponding minor modes.
+          (push '(menu-bar-lines . 0) default-frame-alist)
+          (push '(tool-bar-lines . nil) default-frame-alist)
+          (push '(vertical-scroll-bars . nil) default-frame-alist)
 
           ;; Set up fonts early.
           (set-face-attribute 'default
@@ -86,7 +73,21 @@ in
           (set-face-attribute 'variable-pitch
                               nil
                               :family "Roboto"
-                              :height 98)
+                              :height 88
+                              :weight 'regular)
+        '';
+
+        prelude = ''
+          ;; Disable startup message.
+          (setq inhibit-startup-message t
+                inhibit-startup-echo-area-message (user-login-name))
+
+          (setq initial-major-mode 'fundamental-mode
+                initial-scratch-message nil)
+
+          ;; Customize cursor.
+          (setq blink-cursor-mode nil)
+          (setq-default cursor-type 'bar)
 
           ;; Set frame title.
           (setq frame-title-format
@@ -97,6 +98,9 @@ in
 
           ;; Resize frames per-pixel.
           (setq frame-resize-pixelwise t)
+
+          ;; Scroll per-pixel.
+          (pixel-scroll-precision-mode 1)
 
           ;; Customize tab bar.
           (setq tab-bar-mode t)
@@ -110,6 +114,9 @@ in
           ;; Stop creating backup and autosave files.
           (setq make-backup-files nil
                 auto-save-default nil)
+
+          ;; Default is 4k, which is too low for LSP.
+          (setq read-process-output-max (* 1024 1024))
 
           ;; Always show line and column number in the mode line.
           (line-number-mode)
@@ -127,9 +134,8 @@ in
           (defvar tad/read-only-modes '(read-only-mode special-mode comint-mode vterm-mode)
             "Modes to treat as read-only for UI purposes.")
 
-          ;; Make a reasonable attempt at using one space sentence separation.
-          (setq sentence-end "[.?!][]\"')}]*\\($\\|[ \t]\\)[ \t\n]*"
-                sentence-end-double-space nil)
+          ;; Use one space to end sentences.
+          (setq sentence-end-double-space nil)
 
           ;; I typically want to use UTF-8.
           (prefer-coding-system 'utf-8)
@@ -363,6 +369,10 @@ in
             '';
           };
 
+          dts-mode = {
+            enable = true;
+          };
+
           envrc = {
             enable = true;
             demand = true;
@@ -469,6 +479,27 @@ in
                 :predicate `((not ,@tad/read-only-modes) t))
 
               (tad/global-show-trailing-whitespace-mode)
+              (defun save-buffer-preserve-whitespace (&optional arg)
+                "Save the current buffer, preserving trailing whitespace."
+                (interactive "p")
+                (let ((before-save-hook (remove 'delete-trailing-whitespace before-save-hook)))
+                  (save-buffer arg)))
+
+              (define-minor-mode tad/show-trailing-whitespace-mode
+                "Enable `show-trailing-whitespace' for the current buffer."
+                (setq show-trailing-whitespace tad/show-trailing-whitespace-mode))
+
+              (defun tad/show-trailing-whitespace--turn-on ()
+                "Turn on `tad/show-trailing-whitespace-mode'."
+                (unless (or (minibufferp)
+                            (and (daemonp) (null (frame-parameter 'nil 'client))))
+                  (tad/show-trailing-whitespace-mode)))
+
+              (define-globalized-minor-mode tad/global-show-trailing-whitespace-mode
+                tad/show-trailing-whitespace-mode tad/show-trailing-whitespace--turn-on
+                :predicate `((not ,@tad/read-only-modes) t))
+
+              (tad/global-show-trailing-whitespace-mode)
             '';
           };
 
@@ -516,6 +547,12 @@ in
               (setq tramp-shell-prompt-pattern
                     "\\(?:^\\|\\)[^]#$%>\n]*#?[]#$%>].* *\\(\\[[[:digit:];]*[[:alpha:]] *\\)*")
             '';
+          };
+
+          tree-sitter.enable = true;
+
+          wgrep = {
+            enable = true;
           };
 
           xref = {
@@ -703,8 +740,9 @@ in
             '';
           };
 
+          # TODO This causes an unholy amount of lag in Emacs 29 (at least with PGTK).
           ligature = {
-            enable = true;
+            enable = false;
             # Specific to JetBrains Mono font
             # See https://www.jetbrains.com/lp/mono/#key-features
             config = ''
@@ -1092,18 +1130,18 @@ in
                         . ,(eglot-alternatives '("clojure-lsp" "${pkgs.clojure-lsp}/bin/clojure-lsp")))
                       ((css-mode less-css-mode sass-mode scss-mode)
                         . ,(eglot-alternatives
-                            '("css-languageserver" "${pkgs.nodePackages.vscode-css-languageserver-bin}/bin/css-languageserver")
-                            "--stdio"))
+                            '(("css-languageserver" "--stdio")
+                              ("${pkgs.nodePackages.vscode-css-languageserver-bin}/bin/css-languageserver" "--stdio"))))
                       (go-mode
                        . ,(eglot-alternatives '("gopls" "${pkgs.gotools}/bin/gopls")))
                       (haskell-mode
                        . ,(eglot-alternatives
-                           '("haskell-language-server-wrapper" "${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper")
-                           "--lsp"))
+                           '(("haskell-language-server-wrapper" "--lsp")
+                             ("${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper" "--lsp"))))
                       ((html-mode sgml-mode mhtml-mode web-mode)
                         . ,(eglot-alternatives
-                            '("html-languageserver" "${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver")
-                            "--stdio"))
+                            '(("html-languageserver" "--stdio")
+                              ("${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver" "--stdio"))))
                       ((js-mode typescript-mode)
                         . ,(eglot-alternatives
                             '("javascript-typescript-stdio" "${pkgs.nodePackages.javascript-typescript-langserver}/bin/javascript-typescript-stdio")))
@@ -1111,8 +1149,8 @@ in
                        . ,(eglot-alternatives '("rust-analyzer" "${pkgs.rust-analyzer}/bin/rust-analyzer")))
                       (sh-mode
                        . ,(eglot-alternatives
-                           '("bash-language-server" "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server")
-                           "start"))))
+                           '(("bash-language-server" "start")
+                             ("${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start"))))))
             '';
           };
 
@@ -1866,8 +1904,8 @@ in
           notmuch = {
             enable = true;
             config = ''
-              (setq notmuch-search-oldest-first nil
-                    notmuch-archive-tags '("-inbox" "-unread")
+              (setq-default notmuch-search-oldest-first nil)
+              (setq notmuch-archive-tags '("-inbox" "-unread")
                     notmuch-crypto-gpg-program "${pkgs.gnupg}/bin/gpg2"
                     notmuch-command "${pkgs.notmuch}/bin/notmuch"
                     notmuch-address-save-filename "${config.xdg.cacheHome}/notmuch/address-cache"

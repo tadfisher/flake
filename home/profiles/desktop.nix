@@ -111,7 +111,7 @@ with lib;
       ];
     };
 
-    emacs.package = pkgs.emacsPgtkGcc;
+    emacs.package = pkgs.emacsCustom;
 
     firefox = {
       enable = true;
@@ -148,7 +148,9 @@ with lib;
     };
   };
 
-  services.gpg-agent.pinentryFlavor = "gnome3";
+  services = {
+    gpg-agent.pinentryFlavor = "gnome3";
+  };
 
   xdg.configFile."gtk-4.0/settings.ini".source = (pkgs.formats.ini { }).generate "settings.ini" {
     Settings = {
@@ -156,7 +158,6 @@ with lib;
       gtk-cursor-blink = false;
       gtk-font-name = "Roboto 9.75";
       gtk-icon-theme-name = "Paper";
-      gtk-im-module = "xim";
       gtk-theme-name = "Plata-Noir";
     };
   };

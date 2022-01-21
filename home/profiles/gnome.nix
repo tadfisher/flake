@@ -111,8 +111,8 @@ with lib;
       always-show-log-out = true;
       disable-user-extensions = false;
       enabled-extensions = with pkgs; [
-        cleaner-overview.uuid
-        dash-to-panel.uuid
+        gnomeExtensions.dash-to-panel.extensionUuid
+        gnomeExtensions.gsconnect.extensionUuid
         instant-workspace-switcher.uuid
         paperwm.uuid
         vertical-overview.uuid
@@ -173,11 +173,11 @@ with lib;
   };
 
   home.packages = with pkgs; [
-    cleaner-overview
-    dash-to-panel
-    gnome3.dconf-editor
-    gnome3.gnome-shell-extensions
-    gnome3.gnome-tweaks
+    gnome.dconf-editor
+    gnome.gnome-shell-extensions
+    gnome.gnome-tweaks
+    gnomeExtensions.dash-to-panel
+    gnomeExtensions.gsconnect
     instant-workspace-switcher
     paperwm
     roboto

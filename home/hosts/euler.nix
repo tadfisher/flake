@@ -11,13 +11,12 @@ with lib;
     ../profiles/development/jvm.nix
     ../profiles/development/nix.nix
     ../profiles/development/python.nix
-    ../profiles/services/mopidy.nix
     ../profiles/services/gpg-agent.nix
     ../profiles/services/kbfs.nix
     ../profiles/work.nix
   ];
 
-  accounts.email.accounts."tadfisher@gmail.com".primary = true;
+  accounts.email.accounts."tad@mercury.com".primary = true;
 
   android-sdk.packages = mkForce (sdk: with sdk; [
     cmdline-tools-latest
@@ -43,11 +42,15 @@ with lib;
         obs-websocket
       ];
     };
+    ssh.matchBlocks."10.0.99.2" = {
+      user = "tad";
+    };
   };
 
   services = {
-    gnirehtet.enable = true;
+    # gnirehtet.enable = true;
     lieer.enable = true;
-    mopidy.enable = true;
   };
+
+  # xdg.dataFile."java/jetbrains17".source = pkgs.jetbrains-jdk17.home;
 }

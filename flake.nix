@@ -23,9 +23,21 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
     };
+    jetbrains-jdk = {
+      url = "github:Jetbrains/JetBrainsRuntime/dc8888f2e085fcb387638994627c2e5e8e66bb33";
+      flake = false;
+    };
+    ligature-el = {
+      url = "github:mickeynp/ligature.el";
+      flake = false;
+    };
     naersk = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nmattia/naersk";
+    };
+    notmuch-notify = {
+      url = "git+https://git.celti.name/Celti/notmuch-notify?ref=trunk";
+      flake = false;
     };
     nix-dart = {
       inputs.nixpkgs.follows = "nixpkgs";
@@ -43,6 +55,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     paperwm = {
       url = "github:tadfisher/PaperWM/gtk4";
+      flake = false;
+    };
+    pass-audit = {
+      url = "github:roddhjav/pass-audit";
       flake = false;
     };
     portmod = {
@@ -148,6 +164,7 @@
             (import inputs.rycee { inherit pkgs; }).hmModules.emacs-init
             self.hmModules.programs.devhelp
             self.hmModules.programs.emacs-lsp
+            self.hmModules.programs.notmuch-notify
             self.hmModules.programs.pass-git-helper
             self.hmModules.services.adb
             self.hmModules.services.gnirehtet
@@ -185,6 +202,7 @@
           devhelp = import ./home/modules/programs/devhelp.nix;
           emacs-init = import ./home/modules/programs/emacs-init.nix;
           emacs-lsp = import ./home/modules/programs/emacs-lsp.nix;
+          notmuch-notify = import ./home/modules/programs/notmuch-notify.nix;
           pass-git-helper = import ./home/modules/programs/pass-git-helper.nix;
         };
 
@@ -243,7 +261,7 @@
       };
 
       overlays = {
-        overlay = final: prev: import ./pkgs/overlay.nix final prev;
+        overlay = final: prev: import ./pkgs/overlay.nix inputs final prev;
 
         pkgs = final: prev: self.packages.${prev.hostPlatform.system} or { };
       };

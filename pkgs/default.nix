@@ -11,6 +11,13 @@ in
 {
   cleaner-overview = callPackage ./cleaner-overview { };
 
+  emacsCustom = emacsPgtkGcc.override {
+    withXwidgets = true;
+    withXinput2 = true;
+  };
+
+  emacsPackagesCustom = emacsPackagesFor emacsCustom;
+
   dart-sass = callPackage ./dart-sass { };
 
   dash-to-panel = callPackage ./dash-to-panel { src = inputs.dash-to-panel; };
@@ -21,6 +28,32 @@ in
   };
 
   kotlin-native = callPackage ./kotlin-native/wrapper.nix { };
+
+  jetbrains-jdk17 = (openjdk17.overrideAttrs (attrs: {
+    pname = "jetbrains-jdk";
+    version = "unstable-17-0-1";
+    src = inputs.jetbrains-jdk;
+    patches = [];
+    meta = attrs.meta // {
+      longDescription = ''
+       JetBrains Runtime is a runtime environment for running IntelliJ Platform
+       based products on Windows, Mac OS X, and Linux. JetBrains Runtime is
+       based on OpenJDK project with some modifications. These modifications
+       include: Subpixel Anti-Aliasing, enhanced font rendering on Linux, HiDPI
+       support, ligatures, some fixes for native crashes not presented in
+       official build, and other small enhancements.
+
+       JetBrains Runtime is not a certified build of OpenJDK. Please, use at
+       your own risk.
+      '';
+      homepage = "https://confluence.jetbrains.com/display/JBR/JetBrains+Runtime";
+    };
+    passthru = attrs.passthru // {
+      home = "${jetbrains-jdk17}/lib/openjdk";
+    };
+  })).override {
+    enableJavaFX = false;
+  };
 
   gamescope = callPackage ./gamescope { src = inputs.gamescope; };
 
@@ -38,6 +71,10 @@ in
 
   mfc9130cw-cupswrapper = callPackage ./mfc9130cwcupswrapper { };
   mfc9130cwlpr = pkgsi686Linux.callPackage ./mfc9130cwlpr { };
+
+  notmuch-notify = callPackage ./notmuch-notify {
+    src = inputs.notmuch-notify;
+  };
 
   libcapsule = callPackage ./libcapsule { };
 

@@ -10,14 +10,26 @@ with lib;
       key = "tad@mercury.com";
       signByDefault = true;
     };
+    imapnotify = {
+      enable = true;
+      boxes = [ "Inbox" ];
+      onNotify = ''
+        ${config.programs.lieer.package}/bin/gmi sync -C ${
+          config.accounts.email.accounts."tad@mercury.com".maildir.absPath
+        }
+      '';
+      onNotifyPost = ''
+        ${config.programs.notmuch-notify.package}/bin/notmuch-notify
+      '';
+    };
     lieer = {
-      enable = false;
-      #settings.drop_non_existing_label = true;
-      #sync.enable = true;
+      enable = true;
+      settings.drop_non_existing_label = true;
+      sync.enable = true;
     };
     msmtp.enable = true;
     notmuch.enable = true;
-    passwordCommand = "pass show mail.google.com/tad@mercury.com | head -n 1";
+    passwordCommand = "${config.programs.password-store.package}/bin/pass show mail.google.com/tad@mercury.com";
     realName = "Tad Fisher";
     userName = "tad@mercury.com";
   };

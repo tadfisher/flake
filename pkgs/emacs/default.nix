@@ -1,4 +1,8 @@
-{ fetchgit }:
+{ inputs
+, lib
+, fetchgit
+, rustPlatform
+}:
 
 final: prev:
 
@@ -24,14 +28,27 @@ with final;
 
   gnome-shell-mode = callPackage ./gnome-shell-mode { };
 
-  ligature = callPackage ./ligature { };
+  ligature = callPackage ./ligature { src = inputs.ligature-el; };
 
   org-cv = callPackage ./org-cv { };
 
   pretty-tabs = callPackage ./pretty-tabs { };
 
-  tramp = prev.tramp.overrideAttrs (attrs: rec {
-    patches = [ ./tramp-detect-wrapped-gvfs.patch ] ++ (attrs.patches or [ ]);
+  tsc = prev.tsc.overrideAttrs (attrs: rec {
+    core = import ./tsc {
+      inherit lib rustPlatform;
+      inherit (attrs) version meta;
+      src = "${attrs.src}/core";
+    };
+
+    postInstall = ''
+      installDir=$out/share/emacs/site-lisp/elpa/${attrs.pname}-${attrs.version}
+      rm -r $installDir/src $installDir/Cargo.lock $installDir/Cargo.toml
+      ln -s ${core}/lib/libtsc_dyn.so $installDir/tsc-dyn.so
+      echo -n "LOCAL" > $installDir/DYN-VERSION
+    '' + (attrs.postInstall or "");
+
+    passthru.core = core;
   });
 
   yaml = prev.yaml.overrideAttrs (attrs: rec {
