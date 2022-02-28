@@ -11,7 +11,7 @@ with lib;
       signByDefault = true;
     };
     imapnotify = {
-      enable = true;
+      enable = false;
       boxes = [ "Inbox" ];
       onNotify = ''
         ${config.programs.lieer.package}/bin/gmi sync -C ${
@@ -37,6 +37,11 @@ with lib;
   home.packages = with pkgs; [
     zoom-us
   ];
+
+  programs.notmuch.extraConfig.query = {
+    "personal" = ''path:"tadfisher@gmail.com/**"'';
+    "work" = ''path:"tad@mercury.com/**"'';
+  };
 
   programs.git = {
     includes = [

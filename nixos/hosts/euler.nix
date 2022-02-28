@@ -60,8 +60,7 @@ in
 
   fileSystems = {
     "/boot" = {
-      # device = "/dev/disk/by-label/boot";
-      device = "/dev/disk/by-label/EFI";
+      device = "/dev/disk/by-label/boot";
       fsType = "vfat";
     };
     "/" = {
@@ -86,11 +85,11 @@ in
     };
   };
 
-  nix = {
-    binaryCaches = [ "https://cache.mercury.com/" ];
-    binaryCachePublicKeys = [ "cache.mercury.com:yhfFlgvqtv0cAxzflJ0aZW3mbulx4+5EOZm6k3oML+I=" ];
-    buildCores = 4;
-    maxJobs = 4;
+  nix.settings = {
+    cores = 8;
+    max-jobs = 4;
+    substituters = mkAfter [ "https://cache.mercury.com/" ];
+    trusted-public-keys = mkAfter [ "cache.mercury.com:yhfFlgvqtv0cAxzflJ0aZW3mbulx4+5EOZm6k3oML+I=" ];
   };
 
   powerManagement = {
@@ -144,6 +143,8 @@ in
       ENV{adb_user}=="yes", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="add", TAG+="systemd", SYMLINK="android adb/%s{serial}", ENV{SYSTEMD_USER_WANTS}+="adb@%s{serial}.target"
       ENV{adb_user}=="yes", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="remove", TAG+="systemd"
     '';
+
+    usbmuxd.enable = true;
 
     xserver.libinput.touchpad = {
       disableWhileTyping = true;

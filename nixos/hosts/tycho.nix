@@ -64,19 +64,10 @@ with lib;
     ];
   };
 
-  nix = {
-    maxJobs = 16;
-  };
+  nix.settings.max-jobs = 16;
 
   services = {
     openssh.enable = true;
-
-    udev.extraHwdb = ''
-      # Elecom HUGE TrackBall
-      mouse:usb:v056ep010d:name:ELECOM TrackBall Mouse HUGE TrackBall:
-      ID_INPUT_TRACKBALL=1
-      MOUSE_DPI=500@125 *1000@125 1500@125
-    '';
 
     # Issues with amdgpu reset
     xserver.displayManager.gdm.autoSuspend = false;

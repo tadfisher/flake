@@ -59,7 +59,6 @@ with lib;
 
     packages = with pkgs; [
       emacs-all-the-icons-fonts
-      gksu
       gparted
       gnome3.gnome-themes-extra
       jetbrains-mono
@@ -111,17 +110,21 @@ with lib;
       ];
     };
 
-    emacs.package = pkgs.emacsCustom;
+    emacs.package = pkgs.emacsPgtkGcc;
 
     firefox = {
       enable = true;
-      package = pkgs.firefox-wayland;
+      package = pkgs.firefox;
       profiles.default = {
         settings = {
           # "browser.tabs.drawInTitlebar" = true;
           # "browser.uidensity" = 0;
           "extensions.pocket.enabled" = false;
-          # "gfx.webrender.compositor" = true;
+          "gfx.webrender.all" = true;
+          "media.ffmpeg.vaapi.enabled" = true;
+          "media.ffvpx.enabled" = false;
+          "media.navigator.mediadataencoder_vpx_enabled" = true;
+          "media.rdd-ffmpeg.enabled" = true;
           "svg.context-properties.content.enabled" = true;
           # "toolkit.cosmeticAnimations.enabled" = false;
           # "toolkit.legacyUserProfileCustomizations.stylesheets" = true;

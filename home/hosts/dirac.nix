@@ -31,7 +31,7 @@
   programs = {
     devhelp = {
       enable = true;
-      packages = with pkgs.gnome; [
+      packages = with pkgs; [
         atk
         glib
         gobject-introspection

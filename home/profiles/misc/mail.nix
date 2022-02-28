@@ -74,7 +74,7 @@ in
         };
         folders.drafts = "drafts";
         imapnotify = {
-          enable = true;
+          enable = false;
           boxes = [ "Inbox" ];
           onNotify = ''
             ${config.programs.lieer.package}/bin/gmi sync -C ${
@@ -102,10 +102,14 @@ in
     programs = {
       notmuch = {
         enable = true;
-        new = { ignore = [ ".*.json" ]; };
+        new = {
+          ignore = [ ".*.json" ];
+          tags = [ ];
+        };
+        search.excludeTags = [ "trash" "spam" ];
       };
 
-      notmuch-notify.enable = true;
+      notmuch-notify.enable = false;
 
       emacs.init = {
         usePackage = {

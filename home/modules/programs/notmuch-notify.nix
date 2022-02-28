@@ -5,7 +5,7 @@ with lib;
 let
   cfg = config.programs.notmuch-notify;
 
-  configFile = (pkgs.formats.toml {}).generate "notmuch-notify.toml" {
+  configFile = (pkgs.formats.toml { }).generate "notmuch-notify.toml" {
     inherit (cfg) query command interval maildir;
   };
 

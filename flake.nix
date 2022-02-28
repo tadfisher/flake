@@ -2,6 +2,10 @@
   description = "Tad's Nix configurations";
 
   inputs = {
+    adw-gtk3 = {
+      url = "github:lassekongo83/adw-gtk3";
+      flake = false;
+    };
     android-nixpkgs = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/android-nixpkgs";

@@ -63,6 +63,8 @@ in
           (push '(menu-bar-lines . 0) default-frame-alist)
           (push '(tool-bar-lines . nil) default-frame-alist)
           (push '(vertical-scroll-bars . nil) default-frame-alist)
+          (push '(width . 120) default-frame-alist)
+          (push '(fullscreen . 'fullheight) default-frame-alist)
 
           ;; Set up fonts early.
           (set-face-attribute 'default
@@ -215,9 +217,9 @@ in
             };
             clojure = {
               modes = [ "clojure-mode" "clojurec-mode" "clojurescript-mode" ];
-              config = ''
-                (setq lsp-clojure-server-command '("${pkgs.clojure-lsp}/bin/clojure-lsp"))
-              '';
+              # config = ''
+              #   (setq lsp-clojure-server-command '("${pkgs.clojure-lsp}/bin/clojure-lsp"))
+              # '';
             };
             css = {
               modes = [ "css-mode" "less-css-mode" "sass-mode" "scss-mode" ];
@@ -382,10 +384,21 @@ in
             '';
           };
 
+          fish-mode.enable = true;
+
           flymake = {
             enable = true;
             package = "";
             hook = [ "(prog-mode . flymake-mode)" ];
+          };
+
+          flymake-shellcheck = {
+            enable = true;
+            command = [ "flymake-shellcheck-load" ];
+            hook = [ "(sh-mode . flymake-shellcheck-load)" ];
+            config = ''
+              (setq flymake-shellcheck-path "${pkgs.shellcheck}/bin/shellcheck")
+            '';
           };
 
           go-mode.enable = true;
@@ -550,6 +563,11 @@ in
           };
 
           tree-sitter.enable = true;
+
+          visual-fill-column = {
+            enable = true;
+            hook = [ "(visual-line-mode . visual-fill-column-mode)" ];
+          };
 
           wgrep = {
             enable = true;
@@ -1122,18 +1140,21 @@ in
                   sh-mode) . eglot-ensure)
               ''
             ];
+            # ((clojure-mode clojurec-mode clojurescript-mode)
+            #  . ,(eglot-alternatives '("clojure-lsp" "${pkgs.clojure-lsp}/bin/clojure-lsp")))
+
             config = ''
               (setq eglot-server-programs
                     `(((c-mode c++-mode)
                         . ,(eglot-alternatives '("clangd" "${pkgs.clang-tools}/bin/clangd")))
-                      ((clojure-mode clojurec-mode clojurescript-mode)
-                        . ,(eglot-alternatives '("clojure-lsp" "${pkgs.clojure-lsp}/bin/clojure-lsp")))
                       ((css-mode less-css-mode sass-mode scss-mode)
                         . ,(eglot-alternatives
                             '(("css-languageserver" "--stdio")
                               ("${pkgs.nodePackages.vscode-css-languageserver-bin}/bin/css-languageserver" "--stdio"))))
                       (go-mode
                        . ,(eglot-alternatives '("gopls" "${pkgs.gotools}/bin/gopls")))
+                      (kotlin-mode
+                       . ,(eglot-alternatives '("kotlin-language-server" "${pkgs.kotlin-language-server}/bin/kotlin-language-server")))
                       (haskell-mode
                        . ,(eglot-alternatives
                            '(("haskell-language-server-wrapper" "--lsp")
@@ -1905,7 +1926,7 @@ in
             enable = true;
             config = ''
               (setq-default notmuch-search-oldest-first nil)
-              (setq notmuch-archive-tags '("-inbox" "-unread")
+              (setq notmuch-archive-tags '("-inbox")
                     notmuch-crypto-gpg-program "${pkgs.gnupg}/bin/gpg2"
                     notmuch-command "${pkgs.notmuch}/bin/notmuch"
                     notmuch-address-save-filename "${config.xdg.cacheHome}/notmuch/address-cache"

@@ -98,7 +98,7 @@ with lib;
       dates = "weekly";
       options = "--delete-older-than 7d";
     };
-    maxJobs = 4;
+    settings.max-jobs = 4;
     optimise.automatic = true;
   };
 
@@ -120,7 +120,7 @@ with lib;
 
     unifi = {
       enable = true;
-      openPorts = true;
+      openFirewall = true;
       unifiPackage = pkgs.unifi6;
     };
   };

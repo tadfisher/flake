@@ -4,14 +4,16 @@ with lib;
 
 {
   environment.etc."systemd/networkd.conf.d/10-euler.conf".text =
-    generators.toINI {
-      listsAsDuplicateKeys = true;
-    } {
-      Network.RouteTable = [
-        "lan:10"
-        "mgmt:99"
-      ];
-    };
+    generators.toINI
+      {
+        listsAsDuplicateKeys = true;
+      }
+      {
+        Network.RouteTable = [
+          "lan:10"
+          "mgmt:99"
+        ];
+      };
 
   networking.networkmanager.unmanaged = [ "enp2s0f0" ];
 

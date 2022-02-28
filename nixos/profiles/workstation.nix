@@ -17,8 +17,11 @@ mkMerge [
         DefaultMemoryPressureDurationSec=20s
       '';
       systemPackages = with pkgs; [
+        adw-gtk3
         gnome3.adwaita-icon-theme
         gnome3.gnome-themes-extra
+        gst_all_1.gst-libav
+        gst_all_1.gst-vaapi
         paper-icon-theme
         plata-theme
       ];
@@ -49,7 +52,7 @@ mkMerge [
           enable = true;
           netDevices.brother = {
             model = "MFC-9130CW";
-            nodename = "brother";
+            ip = "192.168.0.17";
           };
         };
       };
@@ -194,6 +197,11 @@ mkMerge [
         ManagedOOMSwap = "kill";
       };
     };
+
+    systemd.services.bluetooth.serviceConfig.execStart = mkForce [
+      ""
+      "${config.hardware.bluetooth.package}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf --experimental"
+    ];
 
     users = {
       groups.systemd-oom.gid = 666;

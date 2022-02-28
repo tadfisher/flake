@@ -61,9 +61,9 @@ in
     };
   };
 
-  nix = {
-    buildCores = 4;
-    maxJobs = 2;
+  nix.settings = {
+    cores = 4;
+    max-jobs = 2;
   };
 
   powerManagement.cpuFreqGovernor = "conservative";
