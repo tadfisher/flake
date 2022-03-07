@@ -1930,7 +1930,9 @@ in
                     notmuch-crypto-gpg-program "${pkgs.gnupg}/bin/gpg2"
                     notmuch-command "${pkgs.notmuch}/bin/notmuch"
                     notmuch-address-save-filename "${config.xdg.cacheHome}/notmuch/address-cache"
-                    notmuch-mua-cite-function 'message-cite-original-without-signature)
+                    notmuch-mua-cite-function 'message-cite-original-without-signature
+                    notmuch-hello-thousands-separator ","
+                    notmuch-show-logo nil)
             '';
           };
 

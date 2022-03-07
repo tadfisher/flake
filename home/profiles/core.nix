@@ -16,12 +16,12 @@
       dosfstools
       file
       gnupg
+      inetutils
       jq
       lm_sensors
       p7zip
       ripgrep
       rw
-      telnet
       trash-cli
       tree
       unrar

@@ -22,12 +22,17 @@ in
 
   dash-to-panel = callPackage ./dash-to-panel { src = inputs.dash-to-panel; };
 
-  kotlin-native-unwrapped = callPackage ./kotlin-native {
-    jdk = openjdk_headless;
-    llvmPackages = llvmPackages_8;
-  };
+  gamescope = callPackage ./gamescope { src = inputs.gamescope; };
 
-  kotlin-native = callPackage ./kotlin-native/wrapper.nix { };
+  # gimp = callPackage ./gimp {
+  #   gegl = gegl_0_4;
+  #   lcms = lcms2;
+  #   inherit (darwin.apple_sdk.frameworks) AppKit Cocoa;
+  # };
+
+  instant-workspace-switcher = callPackage ./instant-workspace-switcher {
+    src = inputs.instant-workspace-switcher;
+  };
 
   jetbrains-jdk17 = (openjdk17.overrideAttrs (attrs: {
     pname = "jetbrains-jdk";
@@ -55,17 +60,12 @@ in
     enableJavaFX = false;
   };
 
-  gamescope = callPackage ./gamescope { src = inputs.gamescope; };
-
-  # gimp = callPackage ./gimp {
-  #   gegl = gegl_0_4;
-  #   lcms = lcms2;
-  #   inherit (darwin.apple_sdk.frameworks) AppKit Cocoa;
-  # };
-
-  instant-workspace-switcher = callPackage ./instant-workspace-switcher {
-    src = inputs.instant-workspace-switcher;
+  kotlin-native-unwrapped = callPackage ./kotlin-native {
+    jdk = openjdk_headless;
+    llvmPackages = llvmPackages_8;
   };
+
+  kotlin-native = callPackage ./kotlin-native/wrapper.nix { };
 
   maxflow = callPackage ./maxflow { };
 

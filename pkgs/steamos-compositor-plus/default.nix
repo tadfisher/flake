@@ -17,7 +17,7 @@
 , libXrender
 , libXt
 , libXxf86vm
-, libudev
+, udev
 , motif
 , pkg-config
 , pulseaudioFull
@@ -58,7 +58,7 @@ stdenv.mkDerivation rec {
     libXrender
     libXt
     libXxf86vm
-    libudev
+    udev
     motif
     SDL
     SDL_image

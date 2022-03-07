@@ -23,12 +23,20 @@
       url = "github:Plagman/gamescope";
       flake = false;
     };
+    hidviz = {
+      url = "github:ondrejbudai/hidviz";
+      flake = false;
+    };
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
     };
     jetbrains-jdk = {
       url = "github:Jetbrains/JetBrainsRuntime/dc8888f2e085fcb387638994627c2e5e8e66bb33";
+      flake = false;
+    };
+    libhidx = {
+      url = "github:ondrejbudai/libhidx";
       flake = false;
     };
     ligature-el = {
