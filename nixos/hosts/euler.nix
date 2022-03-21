@@ -55,7 +55,6 @@ in
         ta = ../../secrets/euler/vpn/mercury-tls-auth.pem;
       };
     };
-    sessionVariables.AMD_VULKAN_ICD = "radv";
   };
 
   fileSystems = {
