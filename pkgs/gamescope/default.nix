@@ -8,6 +8,7 @@
 , ninja
 , pixman
 , pkg-config
+, stb
 , vulkan-headers
 , wayland-protocols
 , libcap
@@ -15,24 +16,21 @@
 , libinput
 , libliftoff
 , libxkbcommon
+, pipewire
 , SDL2
 , vulkan-loader
 , wayland
+, wlroots
 , xorg
 , xwayland
 }:
-let
-  wlroots = callPackage ./wlroots.nix { };
 
-in
 stdenv.mkDerivation rec {
   name = "gamescope-unstable";
 
   inherit src;
 
-  postUnpack = ''
-    rm -rf $sourceRoot/subprojects
-  '';
+  patches = [ ./meson.patch ];
 
   nativeBuildInputs = [
     glslang
@@ -41,6 +39,7 @@ stdenv.mkDerivation rec {
     ninja
     pixman
     pkg-config
+    stb
     vulkan-headers
     wayland-protocols
   ];
@@ -52,6 +51,7 @@ stdenv.mkDerivation rec {
     libliftoff
     libxkbcommon
     SDL2
+    pipewire
     vulkan-loader
     wayland
     wlroots
@@ -71,6 +71,13 @@ stdenv.mkDerivation rec {
 
   dontUseCmakeConfigure = true;
 
+  mesonFlags = [
+    "--force-fallback-for="
+  ];
+
+  postPatch = ''
+    substituteInPlace meson.build --subst-var-by stb ${stb}
+  '';
 
   postInstall = ''
     wrapProgram $out/bin/gamescope --set WLR_XWAYLAND "${xwayland}/bin/Xwayland"
