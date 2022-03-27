@@ -112,7 +112,7 @@
             (inputs.emacs-overlay.overlay)
             (inputs.nix-dart.overlay)
             (inputs.nix-direnv.overlay)
-            (self.overlay)
+            (self.overlays.default)
           ];
         }
       );
@@ -272,17 +272,18 @@
         services.pia-vpn = ./nixos/modules/pia-vpn.nix;
       };
 
-      overlays = {
+      overlays = rec {
         overlay = final: prev: import ./pkgs/overlay.nix inputs final prev;
 
         pkgs = final: prev: self.packages.${prev.hostPlatform.system} or { };
+
+        # There's probably an easier way to merge attributes in `overlays' into a
+        # single function.
+        default = final: prev:
+          (self.overlays.pkgs final prev) //
+          (self.overlays.overlay final prev);
       };
 
-      # There's probably an easier way to merge attributes in `overlays' into a
-      # single function.
-      overlay = final: prev:
-        (self.overlays.pkgs final prev) //
-        (self.overlays.overlay final prev);
 
       packages = eachSystem (system:
         import ./pkgs { inherit inputs; pkgs = pkgsBySystem.${system}; } //
