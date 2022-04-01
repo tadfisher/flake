@@ -1,80 +1,115 @@
 { lib
-, stdenv
-, naersk-lib
 , src
-, bubblewrap
-, cacert
-, git
-, imagemagick
+, callPackage
 , python3Packages
+, fetchFromGitLab
+, cacert
+, rustPlatform
+, bubblewrap
+, git
+, perlPackages
+, imagemagick
+, fetchurl
+, fetchzip
+, jre
+, makeWrapper
 , tr-patcher
 , tes3cmd
+, openmw
 }:
 
 let
-  portmod-rust = naersk-lib.buildPackage {
-    inherit src;
-    buildInputs = [ python3Packages.python ];
-    copyLibs = true;
+  version = "2.3.2";
+
+  portmod-rust = rustPlatform.buildRustPackage rec {
+    inherit src version;
+    pname = "portmod-rust";
+
+    cargoHash = "sha256-Ro2kgwpP1h02j2Dhhf0O1ZcFzMe/Y6W44aqQ5c8wVSE=";
+
+    nativeBuildInputs = [ python3Packages.python ];
+
+    doCheck = false;
   };
 
-  bin-program = [
+  bin-programs = [
     bubblewrap
     git
     python3Packages.virtualenv
     tr-patcher
     tes3cmd
     imagemagick
+    openmw
   ];
 
 in
 python3Packages.buildPythonApplication rec {
-  inherit src;
+  inherit src version;
+
   pname = "portmod";
 
-  version = "git"; # TODO: dynamically find the version
+  SETUPTOOLS_SCM_PRETEND_VERSION = version;
 
+  # build the rust library independantly
   prePatch = ''
     substituteInPlace setup.py \
       --replace "from setuptools_rust import Binding, RustExtension" "" \
       --replace "RustExtension(\"portmodlib.portmod\", binding=Binding.PyO3, strip=True)" ""
   '';
 
-  SETUPTOOLS_SCM_PRETEND_VERSION = version;
-
   propagatedBuildInputs = with python3Packages; [
-    GitPython
-    appdirs
+    setuptools-scm
+    setuptools
+    requests
     chardet
     colorama
-    fasteners
-    packaging
-    patool
+    restrictedpython
+    appdirs
+    GitPython
     progressbar2
     python-sat
     redbaron
-    requests
-    restrictedpython
-    setuptools
-    setuptools_scm
+    patool
+    packaging
+    fasteners
   ];
 
-  nativeBuildInputs = bin-program ++ (with python3Packages; [ pytest black ]);
+  doCheck = false;
 
-  doCheck = false; # Tests require network access
+  checkInputs = with python3Packages; [
+    pytestCheckHook
+  ] ++ bin-programs;
 
+  preCheck = ''
+    cp ${portmod-rust}/lib/libportmod.so portmodlib/portmod.so
+    export HOME=$(mktemp -d)
+  '';
+
+  # some test require network access
+  disabledTests = [
+    "test_masters_esp"
+    "test_logging"
+    "test_execute_network_permissions"
+    "test_execute_permissions_bleed"
+    "test_git"
+    "test_sync"
+    "test_manifest"
+    "test_add_repo"
+
+  ];
+
+  # for some reason, installPhase doesn't copy the compiled binary
   postInstall = ''
-    cp ${portmod-rust}/lib/libportmod.so $(echo $out/lib/python*/*/portmod)/portmod.so
-    for script in $out/bin/*
-    do
-      wrapProgram $script \
-        --prefix PATH : ${lib.makeBinPath bin-program} \
-        --prefix GIT_SSL_CAINFO : ${cacert}/etc/ssl/certs/ca-bundle.crt
-    done
+    cp ${portmod-rust}/lib/libportmod.so $out/${python3Packages.python.sitePackages}/portmodlib/portmod.so
+
+    makeWrapperArgs+=("--prefix" "GIT_SSL_CAINFO" ":" "${cacert}/etc/ssl/certs/ca-bundle.crt" \
+      "--prefix" "PATH" ":" "${lib.makeBinPath bin-programs }")
   '';
 
-  shellHook = ''
-    cp ${portmod-rust}/lib/libportmod.so portmod/portmod.so
-    chmod +w portmod/portmod.so
-  '';
+  meta = {
+    description = "mod manager for openMW based on portage";
+    homepage = "https://gitlab.com/portmod/portmod";
+    license = lib.licenses.gpl3;
+    maintainers = with lib.maintainers; [ marius851000 ];
+  };
 }

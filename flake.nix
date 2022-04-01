@@ -47,10 +47,6 @@
       url = "github:mickeynp/ligature.el";
       flake = false;
     };
-    naersk = {
-      inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:nmattia/naersk";
-    };
     notmuch-notify = {
       url = "git+https://git.celti.name/Celti/notmuch-notify?ref=trunk";
       flake = false;
@@ -78,7 +74,7 @@
       flake = false;
     };
     portmod = {
-      url = "gitlab:portmod/portmod";
+      url = "gitlab:portmod/portmod/v2.3.2";
       flake = false;
     };
     rycee = {

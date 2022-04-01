@@ -4,10 +4,6 @@
 
 with pkgs;
 
-let
-  naersk-lib = inputs.naersk.lib.${stdenv.hostPlatform.system};
-
-in
 {
   adw-gtk3 = callPackage ./adw-gtk3 { src = inputs.adw-gtk3; };
 
@@ -87,10 +83,7 @@ in
   plex-plexpass = callPackage ./plex-plexpass { };
   plexRaw-plexpass = callPackage ./plex-plexpass/raw.nix { };
 
-  portmod = callPackage ./portmod {
-    inherit naersk-lib;
-    src = inputs.portmod;
-  };
+  portmod = callPackage ./portmod { src = inputs.portmod; };
 
   python-ips = python3.pkgs.callPackage ./python-ips { };
 

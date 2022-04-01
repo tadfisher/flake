@@ -298,26 +298,6 @@
         "type": "github"
       }
     },
-    "naersk": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1650101877,
-        "narHash": "sha256-IYxYc5Z1ZHQDTQbTWsOZ9HlZepsVjgV5oZwmbKzxSJs=",
-        "owner": "nmattia",
-        "repo": "naersk",
-        "rev": "8cc379478819e6a22ce7595a761fe1e17c8d7458",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nmattia",
-        "repo": "naersk",
-        "type": "github"
-      }
-    },
     "nix-dart": {
       "inputs": {
         "flake-utils": "flake-utils_3",
@@ -482,15 +462,16 @@
     "portmod": {
       "flake": false,
       "locked": {
-        "lastModified": 1648976284,
-        "narHash": "sha256-EiYnoTI6dd4K24t7VzEsNPX6Bd0t820E8K5hNf0s5MQ=",
+        "lastModified": 1648256570,
+        "narHash": "sha256-jqDwlKKXppt8lQu4BSOFSIPwe+4SWjs3er/NBaRXeEU=",
         "owner": "portmod",
         "repo": "portmod",
-        "rev": "2a54076f6ac446e36b8047c9576a1b95c58c4b5a",
+        "rev": "faf765682cf24c92710640719af8a9a93971f37e",
         "type": "gitlab"
       },
       "original": {
         "owner": "portmod",
+        "ref": "v2.3.2",
         "repo": "portmod",
         "type": "gitlab"
       }
@@ -525,7 +506,6 @@
         "jetbrains-jdk": "jetbrains-jdk",
         "libhidx": "libhidx",
         "ligature-el": "ligature-el",
-        "naersk": "naersk",
         "nix-dart": "nix-dart",
         "nix-direnv": "nix-direnv",
         "nix-prefetch-github": "nix-prefetch-github",
