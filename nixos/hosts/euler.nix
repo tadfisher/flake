@@ -7,7 +7,7 @@ in
 {
   imports = [
     ../profiles/core.nix
-    ../profiles/networks/euler.nix
+    # ../profiles/networks/euler.nix
     ../profiles/users/tad.nix
     ../profiles/uefi.nix
     ../profiles/virt-amd.nix

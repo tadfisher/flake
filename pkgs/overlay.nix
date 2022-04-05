@@ -8,6 +8,18 @@ with final;
   emacsPackagesFor = emacs:
     (prev.emacsPackagesFor emacs).overrideScope' (callPackage ./emacs { inherit inputs; });
 
+  gnome = prev.gnome.overrideScope' (final: prev: {
+    mutter = prev.mutter.overrideAttrs (attrs: {
+      patches = attrs.patches ++ [
+        # Triple-buffer patch
+        (fetchpatch {
+          url = "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441.diff";
+          hash = "sha256-V2xAhKVe0FmHP0S1kWbpkwzJqVsfhU3taG2cn9VwNIE=";
+        })
+      ];
+    });
+  });
+
   nix-direnv = prev.nix-direnv.overrideAttrs (attrs: {
     patches = (attrs.patches or [ ]) ++ [ ./nix-direnv/revert-flakes-dont-run-shellhook.patch ];
   });

@@ -70,7 +70,8 @@ mkMerge [
         connection.mdns=2
       '';
       wifi = {
-        backend = "iwd";
+        # TODO Not enabling device for some reason
+        # backend = "iwd";
         powersave = true;
       };
     };
@@ -117,7 +118,6 @@ mkMerge [
 
       gnome = {
         chrome-gnome-shell.enable = true;
-        experimental-features.realtime-scheduling = true;
       };
 
       pcscd.enable = true;
