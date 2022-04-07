@@ -20,10 +20,6 @@ with final;
     });
   });
 
-  nix-direnv = prev.nix-direnv.overrideAttrs (attrs: {
-    patches = (attrs.patches or [ ]) ++ [ ./nix-direnv/revert-flakes-dont-run-shellhook.patch ];
-  });
-
   paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {
     pname = "paper-icon-theme-unstable";
     version = "2020-03-12";
