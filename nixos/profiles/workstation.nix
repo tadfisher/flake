@@ -120,6 +120,8 @@ mkMerge [
         chrome-gnome-shell.enable = true;
       };
 
+      logind.killUserProcesses = true;
+
       pcscd.enable = true;
 
       pipewire = {
