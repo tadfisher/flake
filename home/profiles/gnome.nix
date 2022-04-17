@@ -22,7 +22,6 @@ with lib;
       clock-format = "12h";
       cursor-blink = false;
       cursor-size = 16;
-      cursor-theme = "Paper";
       document-font-name = "Noto Sans 9.75";
       gtk-im-module = "xim";
       gtk-key-theme = "Emacs";
@@ -111,12 +110,12 @@ with lib;
       always-show-log-out = true;
       disable-user-extensions = false;
       enabled-extensions = with pkgs; [
-        gnomeExtensions.dash-to-panel.extensionUuid
+        dash-to-panel.extensionUuid
         gnomeExtensions.gsconnect.extensionUuid
-        instant-workspace-switcher.uuid
-        paperwm.uuid
-        vertical-overview.uuid
-        "user-theme@gnome-shell-extensions.gcampax.github.com"
+        # instant-workspace-switcher.uuid
+        # paperwm.uuid
+        # vertical-overview.uuid
+        # "user-theme@gnome-shell-extensions.gcampax.github.com"
       ];
     };
 
@@ -176,7 +175,7 @@ with lib;
     gnome.dconf-editor
     gnome.gnome-shell-extensions
     gnome.gnome-tweaks
-    gnomeExtensions.dash-to-panel
+    dash-to-panel
     gnomeExtensions.gsconnect
     instant-workspace-switcher
     paperwm
@@ -206,6 +205,22 @@ with lib;
       "gphhapmejobijbbhgpjhcjognlahblep" # GNOME Shell integration
       # "jfnifeihccihocjbfcfhicmmgpjicaec" # GSConnect
     ];
+
+    firefox.profiles.default = {
+      settings = {
+        "browser.uidensity" = 0;
+        "gnomeTheme.hideSingleTab" = true;
+        "gnomeTheme.hideWebrtcIndicator" = true;
+        "layers.acceleration.force-enabled" = true;
+        "svg.context-properties.content.enabled" = true;
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        "ui.useOverlayScrollbars" = 1;
+      };
+
+      userChrome = ''
+        @import "${pkgs.firefox-gnome-theme}/share/firefox-gnome-theme/gnome-theme.css";
+      '';
+    };
 
     gnome-terminal.enable = true;
   };

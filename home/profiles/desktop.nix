@@ -16,13 +16,9 @@ with lib;
       name = "Roboto 9.75";
       package = pkgs.roboto;
     };
-    iconTheme = {
-      name = "Paper";
-      package = pkgs.paper-icon-theme;
-    };
     theme = {
-      name = "Plata-Noir";
-      package = pkgs.plata-theme;
+      name = "adw-gtk3-dark";
+      package = pkgs.adw-gtk3;
     };
     gtk2.extraConfig = ''
       gtk-cursor-blink = 0
@@ -58,6 +54,7 @@ with lib;
     keyboard.options = [ "ctrl:nocaps" "compose:prsc" ];
 
     packages = with pkgs; [
+      d-spy
       emacs-all-the-icons-fonts
       gparted
       gnome3.gnome-themes-extra
@@ -125,7 +122,6 @@ with lib;
           "media.ffvpx.enabled" = false;
           "media.navigator.mediadataencoder_vpx_enabled" = true;
           "media.rdd-ffmpeg.enabled" = true;
-          "svg.context-properties.content.enabled" = true;
           # "toolkit.cosmeticAnimations.enabled" = false;
           # "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
           "ui.key.menuAccessKey" = 0; # Hide access key underlining
@@ -160,8 +156,8 @@ with lib;
       gtk-application-prefer-dark-theme = 1;
       gtk-cursor-blink = false;
       gtk-font-name = "Roboto 9.75";
-      gtk-icon-theme-name = "Paper";
-      gtk-theme-name = "Plata-Noir";
     };
   };
+
+  xdg.dataFile."icc/Lenovo P32u-10 (DCI-P3 D65, 48%).icm".source = ../../data/icc + "/Lenovo P32u-10 (DCI-P3 D65, 48%).icm";
 }

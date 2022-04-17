@@ -11,12 +11,12 @@
       url = "github:tadfisher/android-nixpkgs";
     };
     dash-to-panel = {
-      url = "github:home-sweet-gnome/dash-to-panel";
+      url = "github:home-sweet-gnome/dash-to-panel/v46";
       flake = false;
     };
     emacs-overlay.url = "github:nix-community/emacs-overlay";
-    instant-workspace-switcher = {
-      url = "github:amalantony/gnome-shell-extension-instant-workspace-switcher";
+    firefox-gnome-theme = {
+      url = "github:rafaelmardojai/firefox-gnome-theme/libadwaita";
       flake = false;
     };
     gamescope = {
@@ -30,6 +30,10 @@
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
+    };
+    instant-workspace-switcher = {
+      url = "github:amalantony/gnome-shell-extension-instant-workspace-switcher";
+      flake = false;
     };
     jetbrains-jdk = {
       url = "github:Jetbrains/JetBrainsRuntime/dc8888f2e085fcb387638994627c2e5e8e66bb33";

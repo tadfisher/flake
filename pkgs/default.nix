@@ -22,6 +22,8 @@ in
 
   dash-to-panel = callPackage ./dash-to-panel { src = inputs.dash-to-panel; };
 
+  firefox-gnome-theme = callPackage ./firefox-gnome-theme { src = inputs.firefox-gnome-theme; };
+
   gamescope = callPackage ./gamescope { src = inputs.gamescope; };
 
   # gimp = callPackage ./gimp {

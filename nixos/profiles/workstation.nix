@@ -12,7 +12,7 @@ mkMerge [
     };
 
     environment = {
-      etc."systemd/oom.conf".text = ''
+      etc."systemd/oomd.conf".text = ''
         [OOM]
         DefaultMemoryPressureDurationSec=20s
       '';
@@ -155,8 +155,6 @@ mkMerge [
         '';
         packages = with pkgs; [
           android-udev-rules
-          # TODO https://github.com/NixOS/nixpkgs/pull/153501
-          libmtp.out
           openocd
           yubikey-personalization
         ];
@@ -179,17 +177,17 @@ mkMerge [
 
     systemd = {
       package = pkgs.systemd.override { withOomd = true; };
-      additionalUpstreamSystemUnits = [ "systemd-oomd.service" ];
+      additionalUpstreamSystemUnits = [
+        "dbus-org.freedesktop.oom1.service"
+        "systemd-oomd.service"
+        "systemd-oomd.socket"
+      ];
       extraConfig = ''
         DefaultMemoryAccounting=yes
         DefaultTasksAccounting=yes
       '';
       services = {
-        systemd-oomd = {
-          wantedBy = lib.mkIf (config.swapDevices != [ ]) [ "multi-user.target" ];
-          after = [ "swap.target" ];
-          aliases = [ "dbus-org.freedesktop.oom1.service" ];
-        };
+        systemd-oomd.wantedBy = [ "multi-user.target" ];
         "user@".serviceConfig = {
           ManagedOOMMemoryPressure = "kill";
           ManagedOOMMemoryPressureLimit = "50%";
