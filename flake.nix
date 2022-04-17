@@ -103,8 +103,10 @@
             let
               profiles = import ./nixpkgs { profiles = [ "games" ]; };
             in
-            { allowUnfree = true; } //
-            profiles.games;
+            {
+              allowBroken = true;
+              allowUnfree = true;
+            } // profiles.games;
 
 
           overlays = [

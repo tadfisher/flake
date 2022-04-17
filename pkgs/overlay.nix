@@ -14,7 +14,7 @@ with final;
         # Triple-buffer patch
         (fetchpatch {
           url = "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441.diff";
-          hash = "sha256-V2xAhKVe0FmHP0S1kWbpkwzJqVsfhU3taG2cn9VwNIE=";
+          hash = "sha256-0TABBYRbrrnruNZqTvZVzI7zGNnbB+J/QB58i3hYLIQ=";
         })
       ];
     });
