@@ -10,6 +10,7 @@ with final;
 
   gnome = prev.gnome.overrideScope' (final: prev: {
     mutter = prev.mutter.overrideAttrs (attrs: {
+      src = inputs.mutter;
       patches = attrs.patches ++ [
         # Triple-buffer patch
         (fetchpatch {
@@ -18,6 +19,15 @@ with final;
         })
       ];
     });
+  });
+
+  openmw = prev.openmw.overrideAttrs (attrs: {
+    patches = (attrs.patches or [ ]) ++ [
+      (fetchpatch {
+        url = "https://gitlab.com/OpenMW/openmw/-/merge_requests/1239.diff";
+        hash = "sha256-RhbIGeE6GyqnipisiMTwWjcFnIiR055hUPL8IkjPgZw=";
+      })
+    ];
   });
 
   paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {
@@ -29,6 +39,7 @@ with final;
       rev = "aa3e8af7a1f0831a51fd7e638a4acb077a1e5188";
       sha256 = "0x6qzch4rrc8firb1dcf926j93gpqxvd7h6dj5wwczxbvxi5bd77";
     };
+    meta = attrs.meta // { broken = false; };
   });
 
   plata-theme = prev.plata-theme.override { gtkNextSupport = true; };

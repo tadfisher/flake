@@ -47,6 +47,10 @@
       url = "github:mickeynp/ligature.el";
       flake = false;
     };
+    mutter = {
+      url = "git+https://gitlab.gnome.org/GNOME/mutter.git?ref=main";
+      flake = false;
+    };
     notmuch-notify = {
       url = "git+https://git.celti.name/Celti/notmuch-notify?ref=trunk";
       flake = false;
@@ -104,9 +108,9 @@
               profiles = import ./nixpkgs { profiles = [ "games" ]; };
             in
             {
-              allowBroken = true;
               allowUnfree = true;
-            } // profiles.games;
+            }
+            // profiles.games;
 
 
           overlays = [

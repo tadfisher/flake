@@ -298,6 +298,23 @@
         "type": "github"
       }
     },
+    "mutter": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1650092934,
+        "narHash": "sha256-hSIpQrXDEf3mJ3deh1UM5uh4Us1SIx+RYcQpdEP8djQ=",
+        "ref": "main",
+        "rev": "6a92997cbee54eadcb6479f57031c9fa3061514e",
+        "revCount": 28700,
+        "type": "git",
+        "url": "https://gitlab.gnome.org/GNOME/mutter.git"
+      },
+      "original": {
+        "ref": "main",
+        "type": "git",
+        "url": "https://gitlab.gnome.org/GNOME/mutter.git"
+      }
+    },
     "nix-dart": {
       "inputs": {
         "flake-utils": "flake-utils_3",
@@ -506,6 +523,7 @@
         "jetbrains-jdk": "jetbrains-jdk",
         "libhidx": "libhidx",
         "ligature-el": "ligature-el",
+        "mutter": "mutter",
         "nix-dart": "nix-dart",
         "nix-direnv": "nix-direnv",
         "nix-prefetch-github": "nix-prefetch-github",
