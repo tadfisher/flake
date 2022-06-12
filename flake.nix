@@ -16,7 +16,7 @@
     };
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     firefox-gnome-theme = {
-      url = "github:rafaelmardojai/firefox-gnome-theme/libadwaita";
+      url = "github:rafaelmardojai/firefox-gnome-theme";
       flake = false;
     };
     gamescope = {
@@ -47,8 +47,12 @@
       url = "github:mickeynp/ligature.el";
       flake = false;
     };
+    mopidy-ytmusic = {
+      url = "github:OzymandiasTheGreat/mopidy-ytmusic";
+      flake = false;
+    };
     mutter = {
-      url = "git+https://gitlab.gnome.org/GNOME/mutter.git?ref=main";
+      url = "git+https://gitlab.gnome.org/vanvugt/mutter.git?ref=triple-buffering-v4";
       flake = false;
     };
     notmuch-notify = {
@@ -83,6 +87,10 @@
     };
     rycee = {
       url = "gitlab:rycee/nur-expressions";
+      flake = false;
+    };
+    sedcli = {
+      url = "github:gjoyce-ibm/sedcli/do-not-pull";
       flake = false;
     };
     vertical-overview = {
@@ -135,6 +143,7 @@
             }
 
             self.nixosModules.boot.opal-unlock
+            self.nixosModules.boot.systemd-oomd
             self.nixosModules.hardware.pulseaudio
             self.nixosModules.services.pia-vpn
             self.nixosModules.programs.cardboard
@@ -186,7 +195,6 @@
             self.hmModules.programs.pass-git-helper
             self.hmModules.services.adb
             self.hmModules.services.gnirehtet
-            self.hmModules.services.mopidy
             homeConfig
           ];
 
@@ -227,7 +235,6 @@
         services = {
           adb = import ./home/modules/services/adb.nix;
           gnirehtet = import ./home/modules/services/gnirehtet.nix;
-          mopidy = import ./home/modules/services/mopidy.nix;
         };
       };
 
@@ -272,6 +279,7 @@
 
       nixosModules = {
         boot.opal-unlock = ./nixos/modules/opal-unlock.nix;
+        boot.systemd-oomd = ./nixos/modules/oomd.nix;
         hardware.pulseaudio = ./nixos/modules/pulseaudio.nix;
         programs.cardboard = ./nixos/modules/cardboard.nix;
         programs.steam = ./nixos/modules/steam.nix;

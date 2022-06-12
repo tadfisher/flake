@@ -11,14 +11,21 @@ with final;
   gnome = prev.gnome.overrideScope' (final: prev: {
     mutter = prev.mutter.overrideAttrs (attrs: {
       src = inputs.mutter;
-      patches = attrs.patches ++ [
-        # Triple-buffer patch
-        (fetchpatch {
-          url = "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441.diff";
-          hash = "sha256-0TABBYRbrrnruNZqTvZVzI7zGNnbB+J/QB58i3hYLIQ=";
-        })
-      ];
+      patches = [];
     });
+  });
+
+  mopidy-ytmusic = prev.mopidy-ytmusic.overrideAttrs (attrs: {
+    src = inputs.mopidy-ytmusic;
+
+    patches = (prev.patches or []) ++ [
+      (fetchpatch {
+        url = "https://github.com/OzymandiasTheGreat/mopidy-ytmusic/pull/57.diff";
+        hash = "sha256-ysku2UUmzy2ImUnDP904L88UpWsevLri3Y8QdA3HoW8=";
+      })
+    ];
+
+    postPatch = "";
   });
 
   openmw = prev.openmw.overrideAttrs (attrs: {
@@ -28,6 +35,8 @@ with final;
         hash = "sha256-RhbIGeE6GyqnipisiMTwWjcFnIiR055hUPL8IkjPgZw=";
       })
     ];
+
+    meta = attrs.meta // { broken = false; };
   });
 
   paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {
@@ -41,8 +50,6 @@ with final;
     };
     meta = attrs.meta // { broken = false; };
   });
-
-  plata-theme = prev.plata-theme.override { gtkNextSupport = true; };
 
   sedutil-fork = prev.sedutil.overrideAttrs (attrs: rec {
     version = "1.15-5ad84d8";
@@ -58,16 +65,5 @@ with final;
       homepage = "https://sedutil.com";
       maintainers = with lib.maintainers; [ tadfisher ];
     };
-  });
-
-  # TODO https://github.com/NixOS/nixpkgs/pull/156305
-  spice-gtk = prev.spice-gtk.overrideAttrs (attrs: {
-    postPatch = attrs.postPatch + ''
-      # https://gitlab.freedesktop.org/spice/spice-common/-/issues/5
-      substituteInPlace subprojects/spice-common/meson.build \
-        --replace \
-        "cmd = run_command(python, '-m', module)" \
-        "cmd = run_command(python, '-c', 'import @0@'.format(module))"
-    '';
   });
 }

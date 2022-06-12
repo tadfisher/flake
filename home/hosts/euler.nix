@@ -13,6 +13,7 @@ with lib;
     ../profiles/development/python.nix
     ../profiles/services/gpg-agent.nix
     ../profiles/services/kbfs.nix
+    ../profiles/services/mopidy.nix
     ../profiles/work.nix
   ];
 

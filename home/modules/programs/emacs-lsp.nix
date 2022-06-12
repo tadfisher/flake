@@ -7,6 +7,8 @@ let
 
   lspModule = types.submodule ({ name, config, ... }: {
     options = {
+      enable = mkEnableOption "the LSP client";
+
       require = mkOption {
         type = types.str;
         default = "lsp-${name}";
@@ -79,7 +81,7 @@ let
   mkUsePackages =
     let
       mkDeps =
-        mapAttrsToList (n: v: ''(lsp-dependency '${n} '(:system "${v}"))'');
+        mapAttrsToList (n: v: ''(lsp-dependency '${n} '(:nix "${v}"))'');
     in
     mapAttrsToList
       (n: c: {
@@ -93,7 +95,7 @@ let
           '';
         };
       })
-      cfg.clients;
+      (filterAttrs (n: v: v.enable) cfg.clients);
 
 in
 {
@@ -155,6 +157,13 @@ in
     programs.emacs.init = {
       lsp.config = ''
         (setq lsp-client-packages '(${requirePackages}))
+
+        (defun lsp--nix-path (path)
+          (or (executable-find (file-name-nondirectory path))
+              (lsp-resolve-value path)))
+
+        (setq lsp-deps-providers
+          (list :nix (list :path #'lsp--nix-path)))
       '';
       usePackage = mkMerge ([{
         lsp-mode = {

@@ -68,15 +68,17 @@ with lib;
       qt5.qtwayland
       roboto
       roboto-mono
+      signal-desktop
       simple-scan
       slack
       xorg.xhost
     ];
 
     sessionVariables = {
-      QT_QPA_PLATFORM = "wayland";
+      NIXOS_OZONE_WL = "1";
       MOZ_DBUS_REMOTE = "1";
       MOZ_ENABLE_WAYLAND = "1";
+      QT_QPA_PLATFORM = "wayland";
     };
   };
 
@@ -107,33 +109,21 @@ with lib;
       ];
     };
 
-    emacs.package = pkgs.emacsPgtkGcc;
+    emacs.package = pkgs.emacsPgtkNativeComp;
 
     firefox = {
       enable = true;
       package = pkgs.firefox;
       profiles.default = {
         settings = {
-          # "browser.tabs.drawInTitlebar" = true;
-          # "browser.uidensity" = 0;
           "extensions.pocket.enabled" = false;
           "gfx.webrender.all" = true;
           "media.ffmpeg.vaapi.enabled" = true;
           "media.ffvpx.enabled" = false;
           "media.navigator.mediadataencoder_vpx_enabled" = true;
           "media.rdd-ffmpeg.enabled" = true;
-          # "toolkit.cosmeticAnimations.enabled" = false;
-          # "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
           "ui.key.menuAccessKey" = 0; # Hide access key underlining
         };
-
-        # TODO package this
-        # userChrome = ''
-        #   @import "/home/tad/proj/firefox-plata-theme/result/plata-theme.css";
-        #   @import "/home/tad/proj/firefox-plata-theme/result/hide-single-tab.css";
-        #   @import "/home/tad/proj/firefox-plata-theme/result/system-icons.css";
-        #   @import "/home/tad/proj/firefox-plata-theme/result/drag-window-headerbar-buttons.css";
-        # '';
       };
     };
   };

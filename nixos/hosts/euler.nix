@@ -21,27 +21,24 @@ in
     initrd = {
       availableKernelModules = [
         "nvme"
-        "sd_mod"
-        "usbhid"
-        "usb_storage"
+        "ehci_pci"
         "xhci_pci"
+        "usbhid"
+        "rtsx_pci_sdmmc"
+        "sd_mod"
+        "usb_storage"
       ];
-      opal = {
-        enable = true;
-        drives.system = {
-          opalDevice = "/dev/nvme0";
-          blockDevice = "/dev/nvme0n1";
-        };
-        sedutilPackage = pkgs.sedutil-fork;
-      };
+      opal.sedutilPackage = pkgs.sedutil-fork;
+      systemd.enable = true;
     };
     kernelModules = [
       "kvm-amd"
     ];
     kernelParams = [
       "mitigations=off"
-      "iommu=pt"
+      "nvme_core.default_ps_max_latency_us=9000"
     ];
+    resumeDevice = "/dev/disk/by-label/swap";
   };
 
   environment = {
@@ -65,21 +62,25 @@ in
     "/" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
+      opalDevice = "/dev/nvme0";
       options = [ "subvol=root" "discard=async" "compress-force=zstd" ];
     };
     "/home" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
+      opalDevice = "/dev/nvme0";
       options = [ "subvol=home" "discard=async" "compress-force=zstd" ];
     };
     "/mnt/pool" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
+      opalDevice = "/dev/nvme0";
       options = [ "discard=async" "compress-force=zstd" ];
     };
     "/mnt/snap" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
+      opalDevice = "/dev/nvme0";
       options = [ "subvol=snap" "discard=async" "compress-force=zstd" ];
     };
   };
@@ -94,10 +95,16 @@ in
   powerManagement = {
     powerUpCommands = ''
       ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme0n1 ${../../secrets/euler/pool.hash}
+
       # Limit charging thresholds to 60-80%
       if [ -d "/sys/class/power_supply/BAT0" ]; then
         echo 80 > /sys/class/power_supply/BAT0/charge_control_end_threshold
         echo 60 > /sys/class/power_supply/BAT0/charge_control_start_threshold
+      fi
+
+      # See if disabling d3cold fixes nvme1 disappearing after resume
+      if [ -d "/sys/class/nvme/nvme1" ]; then
+        echo 0 > /sys/class/nvme/nvme1/device/d3cold_allowed
       fi
     '';
   };
@@ -111,8 +118,6 @@ in
       enable = true;
       fileSystems = [ "/dev/nvme0n1" ];
     };
-
-    fprintd.enable = true;
 
     postgresql =
       let

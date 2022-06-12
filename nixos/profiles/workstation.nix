@@ -7,8 +7,14 @@ mkMerge [
     boot = {
       consoleLogLevel = 0;
       initrd.verbose = false;
-      kernelParams = [ "quiet" "udev.log_priority=3" ];
-      plymouth.enable = true;
+      kernelParams = [
+        "quiet"
+        "boot.shell_on_fail"
+        "rd.systemd.show_status=false"
+        "rd.udev.log_priority=3"
+        "udev.log_priority=3"
+      ];
+      plymouth.enable = mkDefault true;
     };
 
     environment = {
@@ -23,7 +29,6 @@ mkMerge [
         gst_all_1.gst-libav
         gst_all_1.gst-vaapi
         paper-icon-theme
-        plata-theme
       ];
     };
 
@@ -120,7 +125,12 @@ mkMerge [
         chrome-gnome-shell.enable = true;
       };
 
-      logind.killUserProcesses = true;
+      logind = {
+        killUserProcesses = true;
+        lidSwitch = "suspend-then-hibernate";
+        lidSwitchDocked = "ignore";
+        lidSwitchExternalPower = "lock";
+      };
 
       pcscd.enable = true;
 
@@ -155,7 +165,6 @@ mkMerge [
         '';
         packages = with pkgs; [
           android-udev-rules
-          openocd
           yubikey-personalization
         ];
       };
@@ -177,31 +186,22 @@ mkMerge [
 
     systemd = {
       package = pkgs.systemd.override { withOomd = true; };
-      additionalUpstreamSystemUnits = [
-        "dbus-org.freedesktop.oom1.service"
-        "systemd-oomd.service"
-        "systemd-oomd.socket"
-      ];
-      extraConfig = ''
-        DefaultMemoryAccounting=yes
-        DefaultTasksAccounting=yes
-      '';
+      oomd = {
+        enable = true;
+        enableRootSlice = true;
+        enableUserServices = true;
+      };
       services = {
-        systemd-oomd.wantedBy = [ "multi-user.target" ];
-        "user@".serviceConfig = {
-          ManagedOOMMemoryPressure = "kill";
-          ManagedOOMMemoryPressureLimit = "50%";
-        };
+        bluetooth.serviceConfig.ExecStart = mkForce [
+          ""
+          "${config.hardware.bluetooth.package}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf --experimental"
+        ];
+        systemd-networkd-wait-online.enable = false;
       };
-      slices."-".sliceConfig = {
-        ManagedOOMSwap = "kill";
-      };
+      sleep.extraConfig = ''
+        HibernateDelaySec=1h
+      '';
     };
-
-    systemd.services.bluetooth.serviceConfig.execStart = mkForce [
-      ""
-      "${config.hardware.bluetooth.package}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf --experimental"
-    ];
 
     users = {
       groups.systemd-oom.gid = 666;

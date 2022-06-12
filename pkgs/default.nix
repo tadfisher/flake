@@ -9,9 +9,12 @@ with pkgs;
 
   cleaner-overview = callPackage ./cleaner-overview { };
 
-  emacsCustom = emacsPgtkGcc.override {
-    withXwidgets = true;
+  emacsCustom = emacsNativeComp.override {
+    withPgtk = true;
+    withSQLite3 = true;
     withXinput2 = true;
+    withXwidgets = true;
+    withWebP = true;
   };
 
   dart-sass = callPackage ./dart-sass { };
@@ -58,12 +61,9 @@ with pkgs;
     enableJavaFX = false;
   };
 
-  kotlin-native-unwrapped = callPackage ./kotlin-native {
-    jdk = openjdk_headless;
-    llvmPackages = llvmPackages_8;
-  };
+  kotlin-native = callPackage ./kotlin-native { };
 
-  kotlin-native = callPackage ./kotlin-native/wrapper.nix { };
+  # kotlin-native = callPackage ./kotlin-native/wrapper.nix { };
 
   maxflow = callPackage ./maxflow { };
 
@@ -88,6 +88,8 @@ with pkgs;
   python-ips = python3.pkgs.callPackage ./python-ips { };
 
   sed-opal-unlocker = callPackage ./sed-opal-unlocker { };
+
+  sedcli = callPackage ./sedcli { src = inputs.sedcli; };
 
   steamos-compositor-plus = callPackage ./steamos-compositor-plus { };
 

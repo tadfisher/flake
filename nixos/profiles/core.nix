@@ -10,10 +10,12 @@ with lib;
   };
 
   console = {
-    earlySetup = true;
+    earlySetup = false;
     font = "Lat2-Terminus16";
     keyMap = "emacs2";
   };
+
+  documentation.nixos.enable = false;
 
   environment.systemPackages = with pkgs; [
     btrfs-progs

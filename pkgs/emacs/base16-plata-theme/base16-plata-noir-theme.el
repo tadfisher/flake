@@ -11,7 +11,7 @@
 
 (require 'base16-theme)
 
-(defconst base16-plata-noir-colors
+(defconst base16-plata-noir-theme-colors
   '(:base00 "#111111"
     :base01 "#1d1d1d"
     :base02 "#3f51b5"
@@ -34,11 +34,11 @@
 (deftheme base16-plata-noir)
 
 ;; Add all the faces to the theme
-(base16-theme-define 'base16-plata-noir base16-plata-noir-colors)
+(base16-theme-define 'base16-plata-noir base16-plata-noir-theme-colors)
 
-(base16-set-faces
+(base16-theme-set-faces
  'base16-plata-noir
- base16-plata-noir-colors
+ base16-plata-noir-theme-colors
  '((doom-modeline-bar-inactive :background base03)
    (font-lock-comment-face :foreground base03 :slant italic)
    (font-lock-doc-face :foreground base0B)

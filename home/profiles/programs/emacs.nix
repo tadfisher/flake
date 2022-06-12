@@ -117,9 +117,6 @@ in
           (setq make-backup-files nil
                 auto-save-default nil)
 
-          ;; Default is 4k, which is too low for LSP.
-          (setq read-process-output-max (* 1024 1024))
-
           ;; Always show line and column number in the mode line.
           (line-number-mode)
           (column-number-mode)
@@ -201,27 +198,30 @@ in
         '';
 
         lsp = {
-          # Trying out eglot instead
-          enable = false;
+          enable = true;
           clients = {
             bash = {
+              enable = true;
               modes = [ "sh-mode" ];
               executables.bash-language-server =
                 "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server";
             };
             clangd = {
+              enable = true;
               modes = [ "c-mode" "c++mode" "objc-mode" ];
               config = ''
                 (setq lsp-clients-clangd-executable "${pkgs.clang-tools}/bin/clangd")
               '';
             };
             clojure = {
+              enable = false;
               modes = [ "clojure-mode" "clojurec-mode" "clojurescript-mode" ];
               # config = ''
               #   (setq lsp-clojure-server-command '("${pkgs.clojure-lsp}/bin/clojure-lsp"))
               # '';
             };
             css = {
+              enable = true;
               modes = [ "css-mode" "less-css-mode" "sass-mode" "scss-mode" ];
               executables.css-languageserver =
                 "${pkgs.nodePackages.vscode-css-languageserver-bin}/bin/css-languageserver";
@@ -231,29 +231,34 @@ in
             #   packages = [ pkgs.haskellPackages.dhall-lsp-server ];
             # };
             go = {
+              enable = true;
               modes = [ "go-mode" ];
               config = ''
                 (setq lsp-gopls-server-path "${pkgs.gotools}/bin/gopls")
               '';
             };
             haskell = {
+              enable = true;
               modes = [ "haskell-mode" ];
               config = ''
                 (setq lsp-haskell-server-path "${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper")
               '';
             };
             html = {
+              enable = true;
               modes = [ "html-mode" "sgml-mode" "mhtml-mode" "web-mode" ];
               executables.html-language-server =
                 "${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver";
             };
             javascript-typescript = {
+              enable = true;
               require = "lsp-javascript";
               modes = [ "typescript-mode" ];
               executables.javascript-typescript-langserver =
                 "${pkgs.nodePackages.javascript-typescript-langserver}/bin/javascript-typescript-stdio";
             };
             metals = {
+              enable = false;
               modes = [ "scala-mode" ];
               config = ''
                 (setq lsp-metals-server-command "${pkgs.metals}/bin/metals-emacs"
@@ -265,6 +270,7 @@ in
               '';
             };
             rust = {
+              enable = true;
               modes = [ "rust-mode" ];
               config = ''
                 (setq lsp-rust-analyzer-server-command '("${pkgs.rust-analyzer}/bin/rust-analyzer"))
@@ -273,8 +279,9 @@ in
               '';
             };
           };
-          init = ''
+          config = ''
             (setq lsp-eldoc-render-all nil
+                  lsp-lens-enable nil
                   lsp-keymap-prefix "M-SPC l")
           '';
         };
@@ -440,6 +447,10 @@ in
                     image-dired-external-viewer "${pkgs.xdg_utils}/bin/xdg-open"
                     image-dired-main-image-directory "${config.xdg.userDirs.pictures}/")
             '';
+          };
+
+          journalctl-mode = {
+            enable = true;
           };
 
           jq-mode = {
@@ -1056,7 +1067,8 @@ in
             diminish = [ "undo-tree-mode" ];
             command = [ "global-undo-tree-mode" ];
             config = ''
-              (setq undo-tree-visualizer-relative-timestamps t
+              (setq undo-tree-history-directory-alist `("." . ,(expand-file-name ".cache/undo-tree" user-emacs-directory))
+                    undo-tree-visualizer-relative-timestamps t
                     undo-tree-visualizer-timestamps t)
               (global-undo-tree-mode)
             '';
@@ -1126,7 +1138,7 @@ in
           };
 
           eglot = {
-            enable = true;
+            enable = false;
             hook = [
               ''
                 ((c-mode c++-mode
@@ -1738,7 +1750,7 @@ in
           };
 
           php-mode = {
-            enable = true;
+            enable = false;
             mode = [ ''"\\.php\\'"'' ];
             hook = [ "ggtags-mode" ];
           };

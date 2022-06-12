@@ -163,8 +163,6 @@ with lib;
       toggle-scratch-layer = [ "<Super>s" ];
     };
 
-    "org/gnome/shell/extensions/user-theme".name = "Plata-Noir";
-
     "org/gnome/shell/keybindings" = {
       focus-active-notification = [ "" ];
       toggle-overview = [ "" ];
@@ -184,19 +182,6 @@ with lib;
     virtmanager
   ];
 
-  # programs.gnome-shell = {
-  #   enable = true;
-  #   extensions = [
-  #     { package = pkgs.dash-to-panel; }
-  #     { package = pkgs.paperwm; }
-  #     { package = pkgs.vertical-overview; }
-  #   ];
-  #   theme = {
-  #     name = "Plata-Noir";
-  #     package = pkgs.plata-theme;
-  #   };
-  # };
-
   # Prevent clobbering SSH_AUTH_SOCK
   pam.sessionVariables = { GSM_SKIP_SSH_AGENT_WORKAROUND = "1"; };
 
@@ -209,12 +194,15 @@ with lib;
     firefox.profiles.default = {
       settings = {
         "browser.uidensity" = 0;
+        "gnomeTheme.activeTabContrast" = true;
+        "gnomeTheme.bookmarksToolbarUnderTabs" = true;
         "gnomeTheme.hideSingleTab" = true;
         "gnomeTheme.hideWebrtcIndicator" = true;
+        "gnomeTheme.spinner" = true;
         "layers.acceleration.force-enabled" = true;
         "svg.context-properties.content.enabled" = true;
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-        "ui.useOverlayScrollbars" = 1;
+        "widget.gtk.overlay-scrollbars.enabled" = true;
       };
 
       userChrome = ''

@@ -14,8 +14,7 @@ in
       mopidy-mpd
       mopidy-mpris
       mopidy-somafm
-      mopidy-spotify
-      mopidy-youtube
+      mopidy-ytmusic
     ];
 
     settings = {
@@ -25,14 +24,8 @@ in
         enabled = true;
         hostname = "127.0.0.1";
       };
-      spotify = {
-        client_id = secrets.spotify.clientId;
-        client_secret = secrets.spotify.clientSecret;
-      };
-      youtube = {
-        api_enabled = true;
-        autoplay_enabled = true;
-        youtube_api_key = secrets.youtube.apiKey;
+      ytmusic = {
+        auth_json = "${../../../secrets/mopidy-ytmusic.auth.json}";
       };
     };
   };

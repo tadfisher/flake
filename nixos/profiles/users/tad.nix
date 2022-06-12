@@ -13,6 +13,7 @@
       "media"
       "networkmanager"
       "scanner"
+      "tss"
       "vboxusers"
       "video"
       "wheel"
