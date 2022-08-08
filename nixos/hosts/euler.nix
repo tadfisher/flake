@@ -36,7 +36,6 @@ in
     ];
     kernelParams = [
       "mitigations=off"
-      "nvme_core.default_ps_max_latency_us=9000"
     ];
     resumeDevice = "/dev/disk/by-label/swap";
   };
@@ -101,11 +100,6 @@ in
         echo 80 > /sys/class/power_supply/BAT0/charge_control_end_threshold
         echo 60 > /sys/class/power_supply/BAT0/charge_control_start_threshold
       fi
-
-      # See if disabling d3cold fixes nvme1 disappearing after resume
-      if [ -d "/sys/class/nvme/nvme1" ]; then
-        echo 0 > /sys/class/nvme/nvme1/device/d3cold_allowed
-      fi
     '';
   };
 
@@ -159,4 +153,9 @@ in
   swapDevices = [{ label = "swap"; }];
 
   system.stateVersion = "21.03";
+
+  virtualisation.libvirtd.qemu = {
+    ovmf.packages = [ pkgs.OVMFFull ];
+    swtpm.enable = true;
+  };
 }

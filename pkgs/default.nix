@@ -31,8 +31,26 @@ with pkgs;
   #   inherit (darwin.apple_sdk.frameworks) AppKit Cocoa;
   # };
 
+  idea-community-eap = callPackage ./idea-community-eap {
+    inherit (inputs) nixpkgs;
+    vmopts = config.jetbrains.vmopts or null;
+    jdk = jetbrains.jdk;
+  };
+
   instant-workspace-switcher = callPackage ./instant-workspace-switcher {
     src = inputs.instant-workspace-switcher;
+  };
+
+  jcef = jcef17;
+
+  cefDist = callPackage ./jcef/cef.nix { };
+
+  jcef11 = callPackage ./jcef {
+    jdk = jdk11;
+  };
+
+  jcef17 = callPackage ./jcef {
+    jdk = jdk17;
   };
 
   jetbrains-jdk17 = (openjdk17.overrideAttrs (attrs: {

@@ -1,0 +1,71 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 06d4b8f..bfa77c4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -276,34 +276,6 @@ endif()
+ # make_readme.py script.
+ file(COPY "${CEF_ROOT}/README.txt" DESTINATION "${CMAKE_BINARY_DIR}")
+
+-# Download clang-format from Google Storage.
+-if(OS_WINDOWS)
+-  set(GS_PLATFORM "win32")
+-  set(GS_HASHPATH "win/clang-format.exe.sha1")
+-elseif(OS_MACOSX)
+-  set(GS_PLATFORM "darwin")
+-  set(GS_HASHPATH "mac/clang-format.sha1")
+-elseif(OS_LINUX)
+-  set(GS_PLATFORM "linux*")
+-  set(GS_HASHPATH "linux64/clang-format.sha1")
+-endif()
+-
+-message(STATUS "Downloading clang-format from Google Storage...")
+-execute_process(
+-  COMMAND "${PYTHON_EXECUTABLE}"
+-          "tools/buildtools/download_from_google_storage.py"
+-          "--no_resume"
+-          "--platform=${GS_PLATFORM}"
+-          "--no_auth"
+-          "--bucket" "chromium-clang-format"
+-          "-s" "tools/buildtools/${GS_HASHPATH}"
+-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+-  RESULT_VARIABLE EXECUTE_RV
+-  )
+-if(NOT EXECUTE_RV STREQUAL "0")
+-  message(FATAL_ERROR "Execution failed with unexpected result: ${EXECUTE_RV}")
+-endif()
+-
+
+ #
+ # Include target subdirectories.
+diff --git a/tools/clang_util.py b/tools/clang_util.py
+index 90632d5..eb1aa6e 100644
+--- a/tools/clang_util.py
++++ b/tools/clang_util.py
+@@ -9,25 +9,11 @@ import os
+ import sys
+
+ # Script directory.
+-script_dir = os.path.dirname(__file__)
+-root_dir = os.path.join(script_dir, os.pardir)
+-
+-if sys.platform == 'win32':
+-  clang_format_exe = 'buildtools/win/clang-format.exe'
+-elif sys.platform == 'darwin':
+-  clang_format_exe = 'buildtools/mac/clang-format'
+-elif sys.platform.startswith('linux'):
+-  clang_format_exe = 'buildtools/linux64/clang-format'
+-else:
+-  raise Exception("Unsupported platform: %s" % sys.platform)
+-
+-
+ def clang_format(file_name, file_contents):
+   # -assume-filename is necessary to find the .clang-format file and determine
+   # the language when specifying contents via stdin.
+-  result = exec_cmd("%s -assume-filename=%s" %
+-                    (os.path.join(script_dir, clang_format_exe),
+-                     file_name), root_dir, file_contents.encode('utf-8'))
++  result = exec_cmd("@clangFormat@ -assume-filename=%s" % (file_name),
++                    root_dir, file_contents.encode('utf-8'))
+   if result['err'] != '':
+     print("clang-format error: %s" % result['err'])
+   if result['out'] != '':

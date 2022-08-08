@@ -2,7 +2,12 @@
 
 {
   home = {
-    packages = with pkgs; [ gradle gradle-completion jetbrains.idea-community ];
+    packages = with pkgs; [
+      gradle
+      gradle-completion
+      idea-community-eap
+      jetbrains.idea-community
+    ];
 
     sessionVariables = { JAVA_HOME = "${pkgs.openjdk.home}"; };
   };

@@ -9,6 +9,14 @@ let
     options = {
       enable = mkEnableOption "the LSP client";
 
+      defer = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Defer LSP server start until a workspace buffer is visible.
+        '';
+      };
+
       require = mkOption {
         type = types.str;
         default = "lsp-${name}";
@@ -76,7 +84,7 @@ let
   requirePackages =
     concatStringsSep " " (map (c: c.require) (attrValues cfg.clients));
 
-  mkModes = c: map (m: "(${m} . lsp)") c.modes;
+  mkModes = c: map (m: "(${m} . ${if c.defer then "lsp-deferred" else "lsp"})") c.modes;
 
   mkUsePackages =
     let

@@ -221,7 +221,7 @@ let
         [ -z "$max" ] && max=3
 
         for i in $(seq 1 $max); do
-          pass="$(${systemd}/bin/systemd-ask-password --id="opal-unlock:${opalDevice}" "Enter passphrase for ${opalDevice} ($i/$max)")"
+          pass="$(${systemd}/bin/systemd-ask-password --timeout=0 --id="opal-unlock:${opalDevice}" "Enter passphrase for ${opalDevice} ($i/$max)")"
           [ $locked == true ] && opal_sedutil --setLockingRange 0 RW "$pass" "${opalDevice}" && locked=false
           [ $shadowed == true ] && opal_sedutil --setMBRDone on "$pass" "${opalDevice}" && shadowed=false
           if [ $locked != true ] && [ $shadowed != true ]; then

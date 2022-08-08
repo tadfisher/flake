@@ -10,7 +10,7 @@ with lib;
   };
 
   console = {
-    earlySetup = false;
+    earlySetup = true;
     font = "Lat2-Terminus16";
     keyMap = "emacs2";
   };

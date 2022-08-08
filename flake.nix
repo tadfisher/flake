@@ -51,10 +51,6 @@
       url = "github:OzymandiasTheGreat/mopidy-ytmusic";
       flake = false;
     };
-    mutter = {
-      url = "git+https://gitlab.gnome.org/vanvugt/mutter.git?ref=triple-buffering-v4";
-      flake = false;
-    };
     notmuch-notify = {
       url = "git+https://git.celti.name/Celti/notmuch-notify?ref=trunk";
       flake = false;
@@ -74,7 +70,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     paperwm = {
-      url = "github:tadfisher/PaperWM/gtk4";
+      url = "github:tadfisher/PaperWM/gnome-42";
       flake = false;
     };
     pass-audit = {
@@ -122,7 +118,7 @@
 
 
           overlays = [
-            (inputs.android-nixpkgs.overlay)
+            (inputs.android-nixpkgs.overlays.default)
             (inputs.emacs-overlay.overlay)
             (inputs.nix-dart.overlay)
             (inputs.nix-direnv.overlay)
@@ -303,7 +299,7 @@
         import ./pkgs { inherit inputs; pkgs = pkgsBySystem.${system}; } //
         inputs.nix-dart.packages.${system} //
         {
-          nix-prefetch-github = inputs.nix-prefetch-github.defaultPackage.${system};
+          nix-prefetch-github = inputs.nix-prefetch-github.packages.${system}.default;
           nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
           nixUnstable = inputs.nixpkgs.legacyPackages.${system}.nixUnstable;
           nixos-rebuild = inputs.nixpkgs.legacyPackages.${system}.nixos-rebuild.override {

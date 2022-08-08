@@ -4,7 +4,7 @@
 
 in {
   options.systemd.oomd = {
-    enable = lib.mkEnableOption "the systemd-oomd OOM killer" // { default = true; };
+    enable = lib.mkEnableOption "the systemd-oomd OOM killer";
 
     # Fedora enables the first and third option by default. See the 10-oomd-* files here:
     # https://src.fedoraproject.org/rpms/systemd/tree/acb90c49c42276b06375a66c73673ac351025597
@@ -27,7 +27,6 @@ in {
     systemd.additionalUpstreamSystemUnits = [
       "systemd-oomd.service"
       "systemd-oomd.socket"
-      "dbus-org.freedesktop.oom1.service"
     ];
     systemd.services.systemd-oomd.wantedBy = [ "multi-user.target" ];
 

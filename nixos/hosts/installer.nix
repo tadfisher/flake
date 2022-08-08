@@ -7,7 +7,7 @@ with lib;
     ../profiles/core.nix
   ];
 
-  boot.supportedFilesystems = mkForce [ "btrfs" "reiserfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
+  boot.supportedFilesystems = mkForce [ "btrfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
 
   environment.systemPackages = with pkgs; [
     sedutil-fork

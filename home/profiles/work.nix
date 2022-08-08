@@ -38,20 +38,24 @@ with lib;
     zoom-us
   ];
 
-  programs.notmuch.extraConfig.query = {
-    "personal" = ''path:"tadfisher@gmail.com/**"'';
-    "work" = ''path:"tad@mercury.com/**"'';
-  };
+  programs = {
+    git = {
+      includes = [
+        {
+          condition = "gitdir:${config.home.homeDirectory}/work/";
+          contents.user = {
+            email = "tad@mercury.com";
+            signingKey = "tad@mercury.com";
+          };
+        }
+      ];
+    };
 
-  programs.git = {
-    includes = [
-      {
-        condition = "gitdir:${config.home.homeDirectory}/work/";
-        contents.user = {
-          email = "tad@mercury.com";
-          signingKey = "tad@mercury.com";
-        };
-      }
-    ];
+    notmuch.extraConfig.query = {
+      "personal" = ''path:"tadfisher@gmail.com/**"'';
+      "work" = ''path:"tad@mercury.com/**"'';
+    };
+
+    ssh.matchBlocks."*.internal.mercury.com".forwardAgent = true;
   };
 }

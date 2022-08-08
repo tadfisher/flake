@@ -22,6 +22,7 @@ in
     roboto
     roboto-mono
     silver-searcher
+    sqlite
   ];
 
   programs = {
@@ -53,7 +54,7 @@ in
 
       init = {
         enable = true;
-        packageQuickstart = false;
+        # packageQuickstart = false;
         recommendedGcSettings = true;
         usePackageVerbose = false;
 
@@ -193,6 +194,10 @@ in
           ;; Unbind M-SPC, which I use as a prefix key.
           (global-unset-key (kbd "M-SPC"))
 
+          ;; Unbind C-z and C-x C-z, because I never want to leave Emacs.
+          (global-unset-key (kbd "C-z"))
+          (global-unset-key (kbd "C-x C-z"))
+
           ;; Set user info.
           (setq user-mail-address "${config.accounts.email.primaryAccount.address}")
         '';
@@ -239,7 +244,7 @@ in
             };
             haskell = {
               enable = true;
-              modes = [ "haskell-mode" ];
+              modes = [ "haskell-mode" "haskell-literate-mode" ];
               config = ''
                 (setq lsp-haskell-server-path "${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper")
               '';
@@ -567,8 +572,10 @@ in
 
           tramp = {
             enable = true;
+            defer = true;
             config = ''
-              (setq tramp-shell-prompt-pattern
+              (setq tramp-auto-save-directory "~/.cache/emacs/tramp"
+                    tramp-shell-prompt-pattern
                     "\\(?:^\\|\\)[^]#$%>\n]*#?[]#$%>].* *\\(\\[[[:digit:];]*[[:alpha:]] *\\)*")
             '';
           };
@@ -769,9 +776,8 @@ in
             '';
           };
 
-          # TODO This causes an unholy amount of lag in Emacs 29 (at least with PGTK).
           ligature = {
-            enable = false;
+            enable = true;
             # Specific to JetBrains Mono font
             # See https://www.jetbrains.com/lp/mono/#key-features
             config = ''
@@ -1067,7 +1073,7 @@ in
             diminish = [ "undo-tree-mode" ];
             command = [ "global-undo-tree-mode" ];
             config = ''
-              (setq undo-tree-history-directory-alist `("." . ,(expand-file-name ".cache/undo-tree" user-emacs-directory))
+              (setq undo-tree-history-directory-alist `(("." . ,(expand-file-name ".cache/undo-tree" user-emacs-directory)))
                     undo-tree-visualizer-relative-timestamps t
                     undo-tree-visualizer-timestamps t)
               (global-undo-tree-mode)
@@ -1188,22 +1194,22 @@ in
           };
 
           lsp-modeline = {
-            enable = false;
+            enable = true;
             package = "lsp-mode";
           };
 
           lsp-ui = {
-            enable = false;
+            enable = true;
             command = [ "lsp-ui-mode" ];
           };
 
           lsp-ivy = {
-            enable = false;
+            enable = true;
             command = [ "lsp-ivy-workspace-symbol" ];
           };
 
           lsp-treemacs = {
-            enable = false;
+            enable = true;
             command = [ "lsp-treemacs-errors-list" ];
           };
 

@@ -86,6 +86,7 @@ with lib;
 
     "org/gnome/mutter" = {
       auto-maximize = false;
+      edge-tiling = false;
       experimental-features = [
         "autoclose-xwayland"
         "dma-buf-screen-sharing"
@@ -113,15 +114,14 @@ with lib;
         dash-to-panel.extensionUuid
         gnomeExtensions.gsconnect.extensionUuid
         # instant-workspace-switcher.uuid
-        # paperwm.uuid
-        # vertical-overview.uuid
+        paperwm.uuid
+        vertical-overview.uuid
         # "user-theme@gnome-shell-extensions.gcampax.github.com"
       ];
     };
 
     "org/gnome/shell/overrides" = {
       attach-modal-dialogs = false;
-      edge-tiling = false;
       workspaces-only-on-primary = false;
     };
 

@@ -8,12 +8,35 @@ with final;
   emacsPackagesFor = emacs:
     (prev.emacsPackagesFor emacs).overrideScope' (callPackage ./emacs { inherit inputs; });
 
-  gnome = prev.gnome.overrideScope' (final: prev: {
-    mutter = prev.mutter.overrideAttrs (attrs: {
-      src = inputs.mutter;
-      patches = [];
-    });
-  });
+  # spidermonkey_91-debug = prev.spidermonkey_91.overrideAttrs (attrs: {
+  #   separateDebugInfo = true;
+  # });
+
+  # gjs-debug = (prev.gjs.override {
+  #   spidermonkey_91 = spidermonkey_91-debug;
+  # }).overrideAttrs (attrs: rec {
+  #   inherit (attrs) pname;
+  #   version = "1.73.1";
+
+  #   src = fetchurl {
+  #     url = "mirror://gnome/sources/gjs/${lib.versions.majorMinor version}/${pname}-${version}.tar.xz";
+  #     sha256 = "sha256-k/XuvxCLrR8uHb6sPBf9NHGs2o7acfQecMhdkDNR8As=";
+  #   };
+
+  #   separateDebugInfo = true;
+  # });
+
+  # gnome = prev.gnome.overrideScope' (final': prev': {
+  #   gnome-shell = (prev'.gnome-shell.override {
+  #     gjs = gjs-debug;
+  #   }).overrideAttrs (attrs: {
+  #     separateDebugInfo = true;
+  #   });
+
+  #   mutter = prev'.mutter.overrideAttrs (attrs: {
+  #     separateDebugInfo = true;
+  #   });
+  # });
 
   mopidy-ytmusic = prev.mopidy-ytmusic.overrideAttrs (attrs: {
     src = inputs.mopidy-ytmusic;
@@ -66,4 +89,13 @@ with final;
       maintainers = with lib.maintainers; [ tadfisher ];
     };
   });
+
+  # https://github.com/NixOS/nixpkgs/pull/183798
+  python3 = prev.python3.override {
+    packageOverrides = final': prev': {
+      tpm2-pytss = prev'.tpm2-pytss.overridePythonAttrs (attrs: {
+        propagatedBuildInputs = attrs.propagatedBuildInputs ++ [ final'.pyyaml final'.setuptools-scm ];
+      });
+    };
+  };
 }

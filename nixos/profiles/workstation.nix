@@ -6,7 +6,10 @@ mkMerge [
   {
     boot = {
       consoleLogLevel = 0;
-      initrd.verbose = false;
+      initrd = {
+        verbose = false;
+
+      };
       kernelParams = [
         "quiet"
         "boot.shell_on_fail"
@@ -18,6 +21,7 @@ mkMerge [
     };
 
     environment = {
+      enableDebugInfo = true;
       etc."systemd/oomd.conf".text = ''
         [OOM]
         DefaultMemoryPressureDurationSec=20s
@@ -75,7 +79,6 @@ mkMerge [
         connection.mdns=2
       '';
       wifi = {
-        # TODO Not enabling device for some reason
         # backend = "iwd";
         powersave = true;
       };
@@ -222,23 +225,4 @@ mkMerge [
       gnome3.gnome-boxes
     ];
   })
-
-  # TODO https://github.com/NixOS/nixpkgs/issues/121121
-  {
-    security.polkit.extraConfig = ''
-      polkit.addRule(function(action, subject) {
-        if (action.id == "org.debian.pcsc-lite.access_card" &&
-            subject.isInGroup("wheel")) {
-          return polkit.Result.YES;
-        }
-      });
-
-      polkit.addRule(function(action, subject) {
-        if (action.id == "org.debian.pcsc-lite.access_pcsc" &&
-            subject.isInGroup("wheel")) {
-          return polkit.Result.YES;
-        }
-      });
-    '';
-  }
 ]
