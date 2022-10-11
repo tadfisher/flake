@@ -203,7 +203,7 @@ in
         '';
 
         lsp = {
-          enable = true;
+          enable = false;
           clients = {
             bash = {
               enable = true;
@@ -298,9 +298,30 @@ in
             command = [ "abbrev-mode" ];
           };
 
+          ace-window = {
+            enable = true;
+            extraConfig = ''
+              :bind* (("C-c w" . ace-window)
+                      ("M-o" . ace-window))
+            '';
+          };
+
+          adaptive-wrap = {
+            enable = true;
+            command = [ "adaptive-wrap-prefix-mode" ];
+          };
+
           adoc-mode = {
             enable = true;
-            mode = [ ''"\\.txt\\'"'' ''"\\.adoc\\'"'' ];
+            mode = [ ''"\\.adoc\\'"'' ];
+            hook = [''
+              (adoc-mode . (lambda ()
+                            (visual-line-mode)
+                            (buffer-face-mode)))
+            ''];
+            config = ''
+              (set-face-background 'markup-verbatim-face nil)
+            '';
           };
 
           all-the-icons = {
@@ -324,9 +345,22 @@ in
             '';
           };
 
+          all-the-icons-dired = {
+            enable = true;
+            hook = [ "(dired-mode . all-the-icons-dired-mode)" ];
+          };
+
           ansi-color = {
             enable = true;
             command = [ "ansi-color-apply-on-region" ];
+          };
+
+          auth-source-pass = {
+            enable = true;
+            config = ''
+              (setq auth-source-pass-filename "${config.programs.password-store.settings.PASSWORD_STORE_DIR}")
+              (auth-source-pass-enable)
+            '';
           };
 
           auto-rename-tag = {
@@ -341,6 +375,13 @@ in
             command = [ "auto-revert-mode" ];
           };
 
+          avy = {
+            enable = true;
+            extraConfig = ''
+              :bind* ("C-c SPC" . avy-goto-word-or-subword-1)
+            '';
+          };
+
           arc-mode = {
             enable = true;
             package = "";
@@ -353,9 +394,93 @@ in
                     archive-zip-expunge '("${pkgs.zip}/bin/zip" "-d" "-q")
                     archive-zip-update '("${pkgs.unzip}/bin/zip" "-q")
                     archive-zip-update-case '("${pkgs.unzip}/bin/zip" "-q" "-k")
-                    archive-7z-program '("${pkgs.p7zip}/bin/7z")
+                    archive-7z-program '("${pkgs._7zz}/bin/7zz")
                     archive-squashfs-extract '("${pkgs.squashfs-tools-ng}/bin/rdsquashfs" "-c"))
             '';
+          };
+
+          back-button = {
+            enable = true;
+            defer = 2;
+            command = [ "back-button-mode" ];
+            config = ''
+              (back-button-mode 1)
+
+              ;; Make mark ring larger.
+              (setq global-mark-ring-max 50)
+            '';
+          };
+
+          base16-theme.enable = true;
+
+          base16-plata-noir-theme = {
+            enable = true;
+            package = "base16-plata-theme";
+            after = [ "base16-theme" ];
+            config = ''
+              (when-let* ((dir (file-name-directory
+                                (locate-file "base16-plata-noir-theme"
+                                             load-path
+                                             (get-load-suffixes)))))
+                (add-to-list 'custom-theme-load-path dir)
+                (if (daemonp)
+                    (progn
+                      (require 'server)
+                      (add-hook 'server-after-make-frame-hook
+                                (lambda ()
+                                  (if (member 'base16-plata-noir custom-known-themes)
+                                      (enable-theme 'base16-plata-noir)
+                                    (load-theme 'base16-plata-noir t)))))
+                  (load-theme 'base16-plata-noir t)))
+            '';
+          };
+
+          bindings = {
+            enable = true;
+            package = "";
+            bind = {
+              "M-SPC g g" = "goto-line";
+            };
+          };
+
+          browse-at-remote = { command = [ "browse-at-remote" ]; };
+
+          buffer-move = {
+            enable = true;
+            bind = {
+              "C-S-<up>" = "buf-move-up";
+              "C-S-<down>" = "buf-move-down";
+              "C-S-<left>" = "buf-move-left";
+              "C-S-<right>" = "buf-move-right";
+            };
+          };
+
+          cape = {
+            enable = true;
+            init = ''
+              (add-to-list 'completion-at-point-functions #'cape-abbrev)
+              (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+              (add-to-list 'completion-at-point-functions #'cape-dict)
+              (add-to-list 'completion-at-point-functions #'cape-file)
+              (add-to-list 'completion-at-point-functions #'cape-history)
+              (add-to-list 'completion-at-point-functions #'cape-ispell)
+              (add-to-list 'completion-at-point-functions #'cape-keyword)
+              (add-to-list 'completion-at-point-functions #'cape-line)
+              (add-to-list 'completion-at-point-functions #'cape-rfc1345)
+              (add-to-list 'completion-at-point-functions #'cape-sgml)
+              (add-to-list 'completion-at-point-functions #'cape-symbol)
+              (add-to-list 'completion-at-point-functions #'cape-tex)
+            '';
+          };
+
+          cc-mode = {
+            enable = true;
+            defer = true;
+            hook = [''
+              (c-mode-common . (lambda ()
+                                (subword-mode)
+                                (c-set-offset 'arglist-intro '++)))
+            ''];
           };
 
           cmake-mode = {
@@ -365,11 +490,231 @@ in
             '';
           };
 
-          counsel-flymake = {
+          company = {
+            enable = false;
+            command = [ "company-mode" "company-doc-buffer" "global-company-mode" ];
+            defer = 1;
+            extraConfig = ''
+              :bind (:map company-mode-map
+                          ([remap completion-at-point] . company-complete-common)
+                          ([remap complete-symbol] . company-complete-common))
+            '';
+            config = ''
+              (setq company-idle-delay 0.3
+                    company-show-quick-access t
+                    company-tooltip-maximum-width 100
+                    company-tooltip-minimum-width 20
+                    ; Allow me to keep typing even if company disapproves.
+                    company-require-match nil)
+
+              (global-company-mode)
+            '';
+          };
+
+          company-dabbrev = {
+            enable = cfg.init.usePackage.company.enable;
+            after = [ "company" ];
+            command = [ "company-dabbrev" ];
+            config = ''
+              (setq company-dabbrev-downcase nil
+                    company-dabbrev-ignore-case t)
+            '';
+          };
+
+          company-cabal = {
+            enable = cfg.init.usePackage.company.enable;
+            after = [ "company" ];
+            command = [ "company-cabal" ];
+            config = ''
+              (add-to-list 'company-backends 'company-cabal)
+            '';
+          };
+
+          company-posframe = {
+            enable = cfg.init.usePackage.company.enable;
+            hook = [ "(company-mode . company-posframe-mode)" ];
+          };
+
+          company-quickhelp = {
+            enable = cfg.init.usePackage.company.enable;
+            after = [ "company" ];
+            command = [ "company-quickhelp-mode" ];
+            config = ''
+              (company-quickhelp-mode 1)
+            '';
+          };
+
+          company-restclient = {
+            enable = cfg.init.usePackage.company.enable;
+            after = [ "company" "restclient" ];
+            command = [ "company-restclient" ];
+            config = ''
+              (add-to-list 'company-backends 'company-restclient)
+            '';
+          };
+
+          company-yasnippet = {
+            enable = cfg.init.usePackage.company.enable;
+            after = [ "company" "yasnippet" ];
+            bind = { "M-/" = "company-yasnippet"; };
+          };
+
+          # From https://github.com/mlb-/emacs.d/blob/a818e80f7790dffa4f6a775987c88691c4113d11/init.el#L472-L482
+          compile = {
             enable = true;
+            package = ""; # built-in
+            defer = true;
+            after = [ "ansi-color" ];
+            hook = [
+              ''
+                (compilation-filter . (lambda ()
+                                        (when (eq major-mode 'compilation-mode)
+                                          (ansi-color-apply-on-region compilation-filter-start (point-max)))))
+              ''
+              ''
+                (compilation-start . (lambda (process)
+                                       (bury-buffer)
+                                       (delete-windows-on (get-buffer-create "*compilation*"))))
+              ''
+            ];
+            config = ''
+              (add-hook 'compilation-finish-functions
+                        (lambda (buf status)
+                          (when (not (and (equal status "finished\n")
+                                          (zerop compilation-num-errors-found)))
+                            (display-buffer buf '(nil (allow-no-window . t))))))
+            '';
+          };
+
+          consult = {
+            enable = true;
+            bind = {
+              "C-s" = "consult-line";
+              "C-x b" = "consult-buffer";
+              "M-g M-g" = "consult-goto-line";
+              "M-g g" = "consult-goto-line";
+              "M-s f" = "consult-find";
+              "M-s r" = "consult-ripgrep";
+              "M-y" = "consult-yank-pop";
+            };
+            command = [ "consult-completing-read-multiple" ];
+            config = ''
+              (defvar tad/consult-line-map
+                (let ((map (make-sparse-keymap)))
+                  (define-key map "\C-s" #'vertico-next)
+                  map))
+
+              (advice-add #'completing-read-multiple
+                          :override #'consult-completing-read-multiple)
+
+              (consult-customize
+                consult-line
+                  :history t ;; disable history
+                  :keymap tad/consult-line-map
+                consult-buffer consult-find consult-ripgrep
+                  :preview-key (kbd "M-.")
+                consult-theme
+                  :preview-key '(:debounce 1 any)
+              )
+            '';
+          };
+
+          consult-xref = {
+            enable = true;
+            after = [ "consult" "xref" ];
+            command = [ "consult-xref" ];
+            init = ''
+              (setq xref-show-definitions-function #'consult-xref
+                    xref-show-xrefs-function #'consult-xref)
+            '';
+          };
+
+          consult-yasnippet = {
+            enable = true;
+            command = [ "consult-yasnippet" ];
+          };
+
+          copy-as-format = {
+            enable = true;
+            command = [
+              "copy-as-format"
+              "copy-as-format-asciidoc"
+              "copy-as-format-bitbucket"
+              "copy-as-format-disqus"
+              "copy-as-format-github"
+              "copy-as-format-gitlab"
+              "copy-as-format-hipchat"
+              "copy-as-format-html"
+              "copy-as-format-jira"
+              "copy-as-format-markdown"
+              "copy-as-format-mediawiki"
+              "copy-as-format-org-mode"
+              "copy-as-format-pod"
+              "copy-as-format-rst"
+              "copy-as-format-slack"
+            ];
+          };
+
+          corfu = {
+            enable = true;
+            init = ''
+              (global-corfu-mode)
+            '';
+          };
+
+          css-mode = {
+            enable = true;
+            package = ""; # built-in
+            defer = true;
+            config = ''
+              (setq css-fontify-colors nil)
+            '';
           };
 
           csv-mode.enable = true;
+
+          dap-mode = {
+            # FIXME fails with (void-function "dap-ui-mode")
+            enable = false;
+            hook = [
+              "(dap-stopped . (lambda (arg) (call-interactively #'dap-hydra)))"
+            ];
+          };
+
+          dap-lldb = {
+            # FIXME fails with (void-function "dap-ui-mode")
+            enable = false;
+            package = "dap-mode";
+            config = ''
+              (setq dap-lldb-debug-program "${pkgs.vscode-extensions.llvm-org.lldb-vscode}/bin/lldb-vscode")
+            '';
+          };
+
+          dhall-mode = {
+            enable = true;
+            mode = [ ''"\\.dhall\\'"'' ];
+          };
+
+          dired = {
+            enable = true;
+            command = [ "dired" "dired-jump" ];
+            config = ''
+              (put 'dired-find-alternate-file 'disabled nil)
+              (setq delete-by-moving-to-trash t
+                    dired-dwim-target t
+                    dired-listing-switches "-alvh --group-directories-first")
+            '';
+          };
+
+          dired-x = {
+            enable = true;
+            hook = [ "(dired-mode . dired-omit-mode)" ];
+            bindLocal.dired-mode-map = { "." = "dired-omit-mode"; };
+            config = ''
+              (setq dired-omit-verbose nil
+                    dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+            '';
+          };
 
           display-fill-column-indicator = {
             enable = true;
@@ -383,8 +728,161 @@ in
             '';
           };
 
+          dockerfile-mode = {
+            enable = true;
+            mode = [ ''"Dockerfile\\'"'' ];
+          };
+
+          doom-modeline = {
+            enable = true;
+            extraConfig = ''
+              :functions doom-modeline-mode
+            '';
+            config = ''
+              (setq doom-modeline-buffer-file-name-style 'truncate-except-project)
+              (if (daemonp)
+                  (add-hook 'server-after-make-frame-hook
+                            (lambda ()
+                              (doom-modeline-mode)
+                              (custom-reevaluate-setting 'doom-modeline-icon)))
+                (doom-modeline-mode))
+            '';
+          };
+
+          drag-stuff = {
+            enable = true;
+            bind = {
+              "M-<up>" = "drag-stuff-up";
+              "M-<down>" = "drag-stuff-down";
+            };
+          };
+
           dts-mode = {
             enable = true;
+          };
+
+          # Setup ebib, my chosen bibliography manager.
+          ebib = {
+            enable = true;
+            command = [ "ebib" ];
+            hook = [
+              # Highlighting of trailing whitespace is a bit annoying in ebib.
+              ''
+                (ebib-index-mode-hook
+                 . (lambda ()
+                     (setq show-trailing-whitespace nil)))
+              ''
+
+              ''
+                (ebib-entry-mode-hook
+                 . (lambda ()
+                     (setq show-trailing-whitespace nil)))
+              ''
+            ];
+            config = ''
+              (setq ebib-latex-preamble '("\\usepackage{a4}"
+                                          "\\bibliographystyle{amsplain}")
+                    ebib-print-preamble '("\\usepackage{a4}")
+                    ebib-print-tempfile "/tmp/ebib.tex"
+                    ebib-extra-fields '(crossref
+                                        url
+                                        annote
+                                        abstract
+                                        keywords
+                                        file
+                                        timestamp
+                                        doi))
+            '';
+          };
+
+          ediff = {
+            enable = true;
+            defer = true;
+            config = ''
+              (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+            '';
+          };
+
+          eglot = {
+            enable = true;
+            hook = [
+              ''
+                ((c-mode c++-mode
+                  css-mode less-css-mode sass-mode scss-mode
+                  go-mode
+                  haskell-mode
+                  html-mode sgml-mode mhtml-mode web-mode
+                  js-mode typescript-mode
+                  rust-mode
+                  sh-mode) . eglot-ensure)
+              ''
+            ];
+            config = ''
+              (setq eglot-server-programs
+                    `(((c-mode c++-mode)
+                        . ,(eglot-alternatives '("clangd" "${pkgs.clang-tools}/bin/clangd")))
+                      ((css-mode less-css-mode sass-mode scss-mode)
+                        . ,(eglot-alternatives
+                            '(("css-languageserver" "--stdio")
+                              ("${pkgs.nodePackages.vscode-css-languageserver-bin}/bin/css-languageserver" "--stdio"))))
+                      (go-mode
+                       . ,(eglot-alternatives '("gopls" "${pkgs.gotools}/bin/gopls")))
+                      (kotlin-mode
+                       . ,(eglot-alternatives '("kotlin-language-server" "${pkgs.kotlin-language-server}/bin/kotlin-language-server")))
+                      (haskell-mode
+                       . ,(eglot-alternatives
+                           '(("haskell-language-server-wrapper" "--lsp")
+                             ("${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper" "--lsp"))))
+                      ((html-mode sgml-mode mhtml-mode web-mode)
+                        . ,(eglot-alternatives
+                            '(("html-languageserver" "--stdio")
+                              ("${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver" "--stdio"))))
+                      ((js-mode typescript-mode)
+                        . ,(eglot-alternatives
+                            '("javascript-typescript-stdio" "${pkgs.nodePackages.javascript-typescript-langserver}/bin/javascript-typescript-stdio")))
+                      (rust-mode
+                       . ,(eglot-alternatives '("rust-analyzer" "${pkgs.rust-analyzer}/bin/rust-analyzer")))
+                      (sh-mode
+                       . ,(eglot-alternatives
+                           '(("bash-language-server" "start")
+                             ("${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start"))))))
+            '';
+          };
+
+          eldoc = {
+            enable = true;
+            diminish = [ "eldoc-mode" ];
+            command = [ "eldoc-mode" ];
+          };
+
+          # Enable Electric Indent mode to do automatic indentation on RET.
+          electric = {
+            enable = true;
+            command = [ "electric-indent-local-mode" ];
+            hook = [ "(prog-mode . electric-indent-mode)" ];
+          };
+
+          embark = {
+            enable = true;
+            command = [ "embark-prefix-help-command" ];
+            bind = {
+              "C-." = "embark-act";
+              "M-." = "embark-dwim";
+              "C-h B" = "embark-bindings";
+            };
+            init = ''
+              (setq prefix-help-command #'embark-prefix-help-command)
+            '';
+            config = ''
+              (setq embark-indicators '(embark-minimal-indicator
+                                        embark-highlight-indicator
+                                        embark-isearch-highlight-indicator))
+            '';
+          };
+
+          embark-consult = {
+            enable = true;
+            after = [ "embark" "consult" ];
           };
 
           envrc = {
@@ -394,6 +892,13 @@ in
             config = ''
               (envrc-global-mode)
             '';
+          };
+
+          etags = {
+            enable = true;
+            defer = true;
+            # Avoid spamming reload requests of TAGS files.
+            config = "(setq tags-revert-without-query t)";
           };
 
           fish-mode.enable = true;
@@ -413,7 +918,132 @@ in
             '';
           };
 
+          flyspell = {
+            enable = true;
+            diminish = [ "flyspell-mode" ];
+            command = [ "flyspell-mode" "flyspell-prog-mode" ];
+            bindLocal = {
+              flyspell-mode-map = { "C-;" = "flyspell-auto-correct-word"; };
+            };
+            hook = [
+              # Spell check in text and programming mode.
+              "(text-mode . flyspell-mode)"
+              "(prog-mode . flyspell-prog-mode)"
+            ];
+            init = ''
+              ;; Completely override flyspell's own keymap.
+              (setq flyspell-mode-map (make-sparse-keymap))
+            '';
+            config = ''
+              ;; In flyspell I typically do not want meta-tab expansion
+              ;; since it often conflicts with the major mode. Also,
+              ;; make it a bit less verbose.
+              (setq flyspell-issue-message-flag nil
+                    flyspell-issue-welcome-flag nil
+                    flyspell-use-meta-tab nil)
+            '';
+          };
+
+          forge = {
+            enable = true;
+            after = [ "magit" ];
+            config = ''
+              (transient-append-suffix 'forge-dispatch '(0)
+               ["Edit"
+                ("e a" "assignees" forge-edit-topic-assignees)
+                ("e r" "reviewers" forge-edit-topic-review-requests)])
+            '';
+          };
+
+          gcmh = {
+            enable = true;
+            defer = 1;
+            command = [ "gcmh-mode" ];
+            config = ''
+              (setq gcmh-idle-delay 'auto)
+              (gcmh-mode)
+            '';
+          };
+
+          ggtags = {
+            enable = true;
+            diminish = [ "ggtags-mode" ];
+            command = [ "ggtags-mode" ];
+            hook = [
+              ''
+                (c-mode-common-hook
+                 . (lambda ()
+                     (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+                       (ggtags-mode 1))))
+              ''
+            ];
+          };
+
+          git-messenger = {
+            enable = true;
+            bind = { "C-x v p" = "git-messenger:popup-message"; };
+          };
+
+          gnome-shell-mode = {
+            enable = true;
+            command = [ "gnome-shell-mode" ];
+          };
+
           go-mode.enable = true;
+
+          groovy-mode = {
+            enable = true;
+            mode =
+              [ ''"\\.gradle\\'"'' ''"\\.groovy\\'"'' ''"Jenkinsfile\\'"'' ];
+          };
+
+          haskell-mode = {
+            enable = true;
+            command = [
+              "haskell-decl-scan-mode"
+              "haskell-doc-mode"
+              "haskell-indentation-mode"
+              "interactive-haskell-mode"
+            ];
+            mode = [
+              ''("\\.hs\\'" . haskell-mode)''
+              ''("\\.hsc\\'" . haskell-mode)''
+              ''("\\.c2hs\\'" . haskell-mode)''
+              ''("\\.cpphs\\'" . haskell-mode)''
+              ''("\\.lhs\\'" . haskell-literate-mode)''
+            ];
+            hook = [''
+              (haskell-mode . subword-mode)
+            ''];
+            bindLocal = {
+              haskell-mode-map = {
+                "C-c C-l" = "haskell-interactive-bring";
+              };
+            };
+            config = ''
+              (setq tab-width 2)
+
+              (setq haskell-process-log t
+                    haskell-notify-p t)
+
+              (setq haskell-process-args-cabal-repl
+                    '("--ghc-options=+RTS -M500m -RTS -ferror-spans -fshow-loaded-modules"))
+            '';
+          };
+
+          haskell-cabal = {
+            enable = true;
+            mode = [ ''("\\.cabal\\'" . haskell-cabal-mode)'' ];
+            bindLocal = {
+              haskell-cabal-mode-map = {
+                "C-c C-c" = "haskell-process-cabal-build";
+                "C-c c" = "haskell-process-cabal";
+                "C-c C-b" = "haskell-interactive-bring";
+              };
+            };
+          };
+
+          hide-mode-line.enable = true;
 
           hideshow = {
             enable = true;
@@ -454,13 +1084,37 @@ in
             '';
           };
 
-          journalctl-mode = {
+          indent = {
             enable = true;
+            package = "";
+            config = ''
+              (setq tab-always-indent 'complete)
+            '';
           };
+
+          ispell = {
+            enable = true;
+            defer = 1;
+          };
+
+          janet-mode = {
+            enable = true;
+            mode = [ ''"\\.janet\\'"'' ];
+          };
+
+          journalctl-mode.enable = true;
 
           jq-mode = {
             enable = true;
             mode = [ ''"\\.jq\\'"'' ];
+          };
+
+          js = {
+            enable = true;
+            mode = [ ''("\\.js\\'" . js-mode)'' ''("\\.json\\'" . js-mode)'' ];
+            config = ''
+              (setq js-indent-level 2)
+            '';
           };
 
           json-mode = {
@@ -476,620 +1130,10 @@ in
             enable = true;
           };
 
-          rainbow-mode = {
-            enable = true;
-            hook = [ "css-mode" "scss-mode" ];
-          };
-
-          simple = {
-            enable = true;
-            package = "";
-            defer = true;
-            hook = [
-              "(before-save . delete-trailing-whitespace)"
-              "(prog-mode . (lambda () (toggle-truncate-lines 1)))"
-            ];
-            config = ''
-              (defun save-buffer-preserve-whitespace (&optional arg)
-                "Save the current buffer, preserving trailing whitespace."
-                (interactive "p")
-                (let ((before-save-hook (remove 'delete-trailing-whitespace before-save-hook)))
-                  (save-buffer arg)))
-
-              (define-minor-mode tad/show-trailing-whitespace-mode
-                "Enable `show-trailing-whitespace' for the current buffer."
-                (setq show-trailing-whitespace tad/show-trailing-whitespace-mode))
-
-              (defun tad/show-trailing-whitespace--turn-on ()
-                "Turn on `tad/show-trailing-whitespace-mode'."
-                (unless (or (minibufferp)
-                            (and (daemonp) (null (frame-parameter 'nil 'client))))
-                  (tad/show-trailing-whitespace-mode)))
-
-              (define-globalized-minor-mode tad/global-show-trailing-whitespace-mode
-                tad/show-trailing-whitespace-mode tad/show-trailing-whitespace--turn-on
-                :predicate `((not ,@tad/read-only-modes) t))
-
-              (tad/global-show-trailing-whitespace-mode)
-              (defun save-buffer-preserve-whitespace (&optional arg)
-                "Save the current buffer, preserving trailing whitespace."
-                (interactive "p")
-                (let ((before-save-hook (remove 'delete-trailing-whitespace before-save-hook)))
-                  (save-buffer arg)))
-
-              (define-minor-mode tad/show-trailing-whitespace-mode
-                "Enable `show-trailing-whitespace' for the current buffer."
-                (setq show-trailing-whitespace tad/show-trailing-whitespace-mode))
-
-              (defun tad/show-trailing-whitespace--turn-on ()
-                "Turn on `tad/show-trailing-whitespace-mode'."
-                (unless (or (minibufferp)
-                            (and (daemonp) (null (frame-parameter 'nil 'client))))
-                  (tad/show-trailing-whitespace-mode)))
-
-              (define-globalized-minor-mode tad/global-show-trailing-whitespace-mode
-                tad/show-trailing-whitespace-mode tad/show-trailing-whitespace--turn-on
-                :predicate `((not ,@tad/read-only-modes) t))
-
-              (tad/global-show-trailing-whitespace-mode)
-            '';
-          };
-
-          pretty-tabs = {
-            enable = true;
-            after = [ "tab-bar" "all-the-icons" ];
-            extraConfig = ''
-              :functions pretty-tabs-mode
-            '';
-            config = ''
-              (if (daemonp)
-                  (progn
-                    (require 'server)
-                    (add-hook 'server-after-make-frame-hook
-                              'pretty-tabs-mode))
-                (pretty-tabs-mode))
-            '';
-          };
-
-          prog-mode = {
-            enable = true;
-            package = "";
-            defer = true;
-          };
-
-          tab-bar = {
-            enable = true;
-            after = [ "all-the-icons" ];
-            extraConfig = ''
-              :functions all-the-icons-material
-            '';
-            config = ''
-              (setq tab-bar-close-button
-                    (propertize (all-the-icons-material "close" :face 'tab-bar-tab)
-                                'close-tab t
-                                :help "Close tab")
-                    tab-bar-new-button
-                    (all-the-icons-material "add" :face 'tab-bar))
-            '';
-          };
-
-          tramp = {
-            enable = true;
-            init = ''
-              (autoload 'tramp-register-crypt-file-name-handler "tramp-autoloads" "\
-              Add crypt file name handler to `file-name-handler-alist'." nil nil)
-            '';
-            config = ''
-              (setq tramp-auto-save-directory "~/.cache/emacs/tramp"
-                    tramp-shell-prompt-pattern
-                    "\\(?:^\\|\\)[^]#$%>\n]*#?[]#$%>].* *\\(\\[[[:digit:];]*[[:alpha:]] *\\)*")
-            '';
-          };
-
-          tree-sitter.enable = true;
-
-          visual-fill-column = {
-            enable = true;
-            hook = [ "(visual-line-mode . visual-fill-column-mode)" ];
-          };
-
-          wgrep = {
-            enable = true;
-          };
-
-          xref = {
-            enable = true;
-            package = "";
-            after = [ "prog-mode" ];
-            bindLocal = {
-              prog-mode-map = {
-                "M-SPC g a" = "xref-find-apropos";
-                "M-SPC g d" = "xref-find-definitions";
-                "M-SPC g r" = "xref-find-references";
-              };
-            };
-          };
-
-          base16-theme.enable = true;
-
-          base16-plata-noir-theme = {
-            enable = true;
-            package = "base16-plata-theme";
-            after = [ "base16-theme" ];
-            config = ''
-              (when-let* ((dir (file-name-directory
-                                (locate-file "base16-plata-noir-theme"
-                                             load-path
-                                             (get-load-suffixes)))))
-                (add-to-list 'custom-theme-load-path dir)
-                (if (daemonp)
-                    (progn
-                      (require 'server)
-                      (add-hook 'server-after-make-frame-hook
-                                (lambda ()
-                                  (if (member 'base16-plata-noir custom-known-themes)
-                                      (enable-theme 'base16-plata-noir)
-                                    (load-theme 'base16-plata-noir t)))))
-                  (load-theme 'base16-plata-noir t)))
-            '';
-          };
-
-          bindings = {
-            enable = true;
-            package = "";
-            bind = {
-              "M-SPC g g" = "goto-line";
-            };
-          };
-
-          # From https://github.com/mlb-/emacs.d/blob/a818e80f7790dffa4f6a775987c88691c4113d11/init.el#L472-L482
-          compile = {
-            enable = true;
-            package = ""; # built-in
-            defer = true;
-            after = [ "ansi-color" ];
-            hook = [
-              ''
-                (compilation-filter . (lambda ()
-                                        (when (eq major-mode 'compilation-mode)
-                                          (ansi-color-apply-on-region compilation-filter-start (point-max)))))
-              ''
-              ''
-                (compilation-start . (lambda (process)
-                                       (bury-buffer)
-                                       (delete-windows-on (get-buffer-create "*compilation*"))))
-              ''
-            ];
-            config = ''
-              (add-hook 'compilation-finish-functions
-                        (lambda (buf status)
-                          (when (not (and (equal status "finished\n")
-                                          (zerop compilation-num-errors-found)))
-                            (display-buffer buf '(nil (allow-no-window . t))))))
-            '';
-          };
-
-          cc-mode = {
-            enable = true;
-            defer = true;
-            hook = [
-              ''
-                (c-mode-common . (lambda ()
-                                   (subword-mode)
-
-                                   (c-set-offset 'arglist-intro '++)))
-              ''
-            ];
-          };
-
-          coffee-mode = {
-            enable = true;
-            mode = [ ''"\\.coffee\\'"'' ];
-          };
-
-          dhall-mode = {
-            enable = true;
-            mode = [ ''"\\.dhall\\'"'' ];
-          };
-
-          dockerfile-mode = {
-            enable = true;
-            mode = [ ''"Dockerfile\\'"'' ];
-          };
-
-          doom-modeline = {
-            enable = true;
-            extraConfig = ''
-              :functions doom-modeline-mode
-            '';
-            config = ''
-              (setq doom-modeline-buffer-file-name-style 'truncate-except-project)
-              (if (daemonp)
-                  (add-hook 'server-after-make-frame-hook
-                            (lambda ()
-                              (doom-modeline-mode)
-                              (custom-reevaluate-setting 'doom-modeline-icon)))
-                (doom-modeline-mode))
-            '';
-          };
-
-          drag-stuff = {
-            enable = true;
-            bind = {
-              "M-<up>" = "drag-stuff-up";
-              "M-<down>" = "drag-stuff-down";
-            };
-          };
-
-          ediff = {
-            enable = true;
-            defer = true;
-            config = ''
-              (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-            '';
-          };
-
-          eldoc = {
-            enable = true;
-            diminish = [ "eldoc-mode" ];
-            command = [ "eldoc-mode" ];
-          };
-
-          # Enable Electric Indent mode to do automatic indentation on RET.
-          electric = {
-            enable = true;
-            command = [ "electric-indent-local-mode" ];
-            hook = [ "(prog-mode . electric-indent-mode)" ];
-          };
-
-          etags = {
-            enable = true;
-            defer = true;
-            # Avoid spamming reload requests of TAGS files.
-            config = "(setq tags-revert-without-query t)";
-          };
-
-          ggtags = {
-            enable = true;
-            diminish = [ "ggtags-mode" ];
-            command = [ "ggtags-mode" ];
-            hook = [
-              ''
-                (c-mode-common-hook
-                 . (lambda ()
-                     (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-                       (ggtags-mode 1))))
-              ''
-            ];
-          };
-
-          groovy-mode = {
-            enable = true;
-            mode =
-              [ ''"\\.gradle\\'"'' ''"\\.groovy\\'"'' ''"Jenkinsfile\\'"'' ];
-          };
-
-          ispell = {
-            enable = true;
-            defer = 1;
-          };
-
-          js = {
-            enable = true;
-            mode = [ ''("\\.js\\'" . js-mode)'' ''("\\.json\\'" . js-mode)'' ];
-            config = ''
-              (setq js-indent-level 2)
-            '';
-          };
-
-          ligature = {
-            enable = true;
-            # Specific to JetBrains Mono font
-            # See https://www.jetbrains.com/lp/mono/#key-features
-            config = ''
-              (ligature-set-ligatures 'prog-mode
-                                      '("--" "---" "==" "===" "!=" "!==" "=!=" "=:=" "=/=" "<=" ">=" "&&"
-                                        "&&&" "&=" "++" "+++" "***" ";;" "!!" "??" "?:" "?." "?=" "<:" ":<"
-                                        ":>" ">:" "<>" "<<<" ">>>" "<<" ">>" "||" "-|" "_|_" "|-" "||-"
-                                        "|=" "||=" "##" "###" "####" "#{" "#[" "]#" "#(" "#?" "#_" "#_("
-                                        "#:" "#!" "#=" "^=" "<$>" "<$" "$>" "<+>" "<+" "+>" "<*>" "<*" "*>"
-                                        "</" "</>" "/>" "<!--" "<#--" "-->" "->" "->>" "<<-" "<-" "<=<"
-                                        "=<<" "<<=" "<==" "<=>" "<==>" "==>" "=>" "=>>" ">=>" ">>="
-                                        ">>-" ">-" ">--" "-<" "-<<" ">->" "<-<" "<-|" "<=|" "|=>" "|->"
-                                        "<->" "<~~" "<~" "<~>" "~~" "~~>" "~>" "~-" "-~" "~@" "[||]" "|]"
-                                        "[|" "|}" "{|" "[<" ">]" "|>" "<|" "||>" "<||" "|||>" "<|||"
-                                        "<|>" "..." ".." ".=" ".-" "..<" ".?" "::" ":::" ":=" "::=" ":?"
-                                        ":?>" "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__"))
-              (global-ligature-mode t)
-            '';
-          };
-
-          scala-mode = { enable = true; };
-
-          sass-mode.enable = true;
-
-          flyspell = {
-            enable = true;
-            diminish = [ "flyspell-mode" ];
-            command = [ "flyspell-mode" "flyspell-prog-mode" ];
-            hook = [
-              # Spell check in text and programming mode.
-              "(text-mode . flyspell-mode)"
-              "(prog-mode . flyspell-prog-mode)"
-            ];
-            config = ''
-              ;; In flyspell I typically do not want meta-tab expansion
-              ;; since it often conflicts with the major mode. Also,
-              ;; make it a bit less verbose.
-              (setq flyspell-issue-message-flag nil
-                    flyspell-issue-welcome-flag nil
-                    flyspell-use-meta-tab nil)
-            '';
-          };
-
-          # Remember where we where in a previously visited file. Built-in.
-          saveplace = {
-            enable = true;
-            config = ''
-              (setq-default save-place t)
-              (setq save-place-file (locate-user-emacs-file "places"))
-            '';
-          };
-
-          # More helpful buffer names. Built-in.
-          uniquify = {
-            enable = true;
-            config = ''
-              (setq uniquify-buffer-name-style 'post-forward)
-            '';
-          };
-
-          # Hook up hippie expand.
-          hippie-exp = {
-            enable = true;
-            bind = { "M-?" = "hippie-expand"; };
-          };
-
-          which-key = {
-            enable = true;
-            command = [ "which-key-mode" ];
-            diminish = [ "which-key-mode" ];
-            defer = 2;
-            config =
-              let
-                descriptions = { "M-SPC p" = "project"; };
-                replacements = optionalString (descriptions != { }) ''
-                  (which-key-add-key-based-replacements
-                    ${
-                      concatStringsSep "\n  "
-                      (mapAttrsToList (k: d: ''"${k}" "${d}"'') descriptions)
-                    })
-                '';
-
-              in
-              ''
-                ${replacements}
-
-                (which-key-mode)
-              '';
-          };
-
-          # Enable winner mode. This global minor mode allows you to
-          # undo/redo changes to the window configuration. Uses the
-          # commands C-c <left> and C-c <right>.
-          winner = {
-            enable = true;
-            config = "(winner-mode 1)";
-          };
-
-          writeroom-mode = {
-            enable = true;
-            command = [ "writeroom-mode" ];
-            bind = {
-              "M-[" = "writeroom-decrease-width";
-              "M-]" = "writeroom-increase-width";
-            };
-            hook = [ "(writeroom-mode . visual-line-mode)" ];
-          };
-
-          buffer-move = {
-            enable = true;
-            bind = {
-              "C-S-<up>" = "buf-move-up";
-              "C-S-<down>" = "buf-move-down";
-              "C-S-<left>" = "buf-move-left";
-              "C-S-<right>" = "buf-move-right";
-            };
-          };
-
-          ivy = {
-            enable = true;
-            demand = true;
-            diminish = [ "ivy-mode" ];
-            command = [ "ivy-mode" ];
-            config = ''
-              (setq ivy-use-virtual-buffers t
-                    ivy-count-format "%d/%d "
-                    ivy-virtual-abbreviate 'full
-                    ivy-initial-inputs-alist '((counsel-package . "^+ ")
-                                               (org-refile . "^")
-                                               (org-agenda-refile . "^")
-                                               (org-capture-refile . "^")
-                                               (counsel-describe-function . "^")
-                                               (counsel-describe-variable . "^")
-                                               (counsel-org-capture . "^")
-                                               (Man-completion-table . "^")
-                                               (woman . "^")))
-
-              (ivy-mode 1)
-            '';
-          };
-
-          ivy-hydra = { enable = true; };
-
-          ivy-prescient = {
-            enable = false;
-            after = [ "ivy" ];
-            config = ''
-              (ivy-prescient-mode 1)
-            '';
-          };
-
-          ivy-xref = {
-            enable = true;
-            after = [ "ivy" "xref" ];
-            command = [ "ivy-xref-show-xrefs" ];
-            config = ''
-              (setq xref-show-xrefs-function #'ivy-xref-show-xrefs)
-            '';
-          };
-
-          swiper = {
-            enable = true;
-            command = [ "swiper" "swiper-all" "swiper-isearch" ];
-            bind = { "C-s" = "swiper-isearch"; };
-          };
-
-          # Lets counsel do prioritization. A fork of smex.
-          amx = {
-            enable = true;
-            command = [ "amx-initialize" ];
-          };
-
-          help = {
-            enable = true;
-            package = "";
-            bind = { "M-SPC h" = "help-command"; };
-          };
-
-          counsel = {
-            enable = true;
-            bind = {
-              "C-x d" = "counsel-dired";
-              "C-x C-f" = "counsel-find-file";
-              "C-x C-r" = "counsel-recentf";
-              "M-SPC b b" = "counsel-switch-buffer";
-              "M-SPC b o" = "counsel-switch-buffer-other-window";
-              "M-SPC f d" = "counsel-dired";
-              "M-SPC f f" = "counsel-find-file";
-              "M-SPC f l" = "counsel-find-library";
-              "M-SPC h F" = "counsel-describe-face";
-              "M-SPC h f" = "counsel-describe-function";
-              "M-SPC h s" = "counsel-describe-symbol";
-              "M-SPC h v" = "counsel-describe-variable";
-              "M-SPC s r" = "counsel-rg";
-              "M-x" = "counsel-M-x";
-              "M-y" = "counsel-yank-pop";
-            };
-            diminish = [ "counsel-mode" ];
-            config = ''
-              (counsel-mode)
-            '';
-          };
-
-          counsel-projectile = {
-            enable = true;
-            demand = true;
-            after = [ "projectile" ];
-            config = ''
-              (counsel-projectile-mode 1)
-            '';
-          };
-
-          nyan-mode = {
-            enable = true;
-            command = [ "nyan-mode" ];
-            config = ''
-              (setq nyan-wavy-trail t)
-            '';
-          };
-
-          string-inflection = {
-            enable = true;
-            bind = { "C-c C-u" = "string-inflection-all-cycle"; };
-          };
-
-          swift-mode = {
-            enable = true;
-            mode = [ ''("\\.swift\\'" . swift-mode)'' ];
-          };
-
-          # Configure magit, a nice mode for the git SCM.
-          magit = {
-            enable = true;
-            config = ''
-              (setq magit-completing-read-function 'ivy-completing-read
-                    magit-diff-highlight-indentation nil
-                    magit-diff-highlight-trailing nil
-                    magit-diff-paint-whitespace nil
-                    magit-diff-highlight-hunk-body nil
-                    magit-diff-refine-hunk nil
-                    magit-git-executable "${config.programs.git.package}/bin/git")
-              (add-to-list 'git-commit-style-convention-checks
-                           'overlong-summary-line)
-              (remove-hook 'server-switch-hook 'magit-commit-diff)
-            '';
-          };
-
-          magit-delta = {
-            enable = false;
-            after = [ "magit" ];
-            config = ''
-              (setq magit-delta-delta-executable "${pkgs.gitAndTools.delta}/bin/delta")
-              (magit-delta-mode)
-            '';
-          };
-
-          forge = {
-            enable = true;
-            after = [ "magit" ];
-            config = ''
-              (transient-append-suffix 'forge-dispatch '(0)
-               ["Edit"
-                ("e a" "assignees" forge-edit-topic-assignees)
-                ("e r" "reviewers" forge-edit-topic-review-requests)])
-            '';
-          };
-
-          git-messenger = {
-            enable = true;
-            bind = { "C-x v p" = "git-messenger:popup-message"; };
-          };
-
-          multiple-cursors = {
-            enable = true;
-            bind = {
-              "C-S-c C-S-c" = "mc/edit-lines";
-              "C-c m" = "mc/mark-all-like-this";
-              "C->" = "mc/mark-next-like-this";
-              "C-<" = "mc/mark-previous-like-this";
-            };
-          };
-
-          avy = {
-            enable = true;
-            extraConfig = ''
-              :bind* ("C-c SPC" . avy-goto-word-or-subword-1)
-            '';
-          };
-
-          undo-tree = {
-            enable = true;
-            demand = true;
-            diminish = [ "undo-tree-mode" ];
-            command = [ "global-undo-tree-mode" ];
-            config = ''
-              (setq undo-tree-history-directory-alist `(("." . ,(expand-file-name ".cache/undo-tree" user-emacs-directory)))
-                    undo-tree-visualizer-relative-timestamps t
-                    undo-tree-visualizer-timestamps t)
-              (global-undo-tree-mode)
-            '';
-          };
-
           # Configure AUCTeX.
           latex = {
-            enable = false;
-            package = "auctex";
+            enable = true;
+            package = epkgs: epkgs.auctex;
             mode = [ ''("\\.tex\\'" . latex-mode)'' ];
             hook = [
               ''
@@ -1122,193 +1166,72 @@ in
             '';
           };
 
-          direnv = {
-            enable = false;
-            demand = true;
-            hook = [ "(lsp-before-initialize . direnv-update-environment)" ];
-            config = ''
-              (setq direnv-always-show-summary nil)
-              (direnv-mode 1)
-            '';
-          };
-
-          mpdel = {
+          ligature = {
             enable = true;
-            diminish = [ "mpdel-mode" ];
-            init = ''
-              (setq mpdel-prefix-key (kbd "C-c z"))
-            '';
+            # Specific to JetBrains Mono font
+            # See https://www.jetbrains.com/lp/mono/#key-features
             config = ''
-              (mpdel-mode 1)
-            '';
-          };
-
-          ivy-mpdel = {
-            enable = true;
-            demand = true;
-            after = [ "mpdel" ];
-          };
-
-          eglot = {
-            enable = false;
-            hook = [
-              ''
-                ((c-mode c++-mode
-                  clojure-mode clojurec-mode clojurescript-mode
-                  css-mode less-css-mode sass-mode scss-mode
-                  go-mode
-                  haskell-mode
-                  html-mode sgml-mode mhtml-mode web-mode
-                  js-mode typescript-mode
-                  rust-mode
-                  sh-mode) . eglot-ensure)
-              ''
-            ];
-            # ((clojure-mode clojurec-mode clojurescript-mode)
-            #  . ,(eglot-alternatives '("clojure-lsp" "${pkgs.clojure-lsp}/bin/clojure-lsp")))
-
-            config = ''
-              (setq eglot-server-programs
-                    `(((c-mode c++-mode)
-                        . ,(eglot-alternatives '("clangd" "${pkgs.clang-tools}/bin/clangd")))
-                      ((css-mode less-css-mode sass-mode scss-mode)
-                        . ,(eglot-alternatives
-                            '(("css-languageserver" "--stdio")
-                              ("${pkgs.nodePackages.vscode-css-languageserver-bin}/bin/css-languageserver" "--stdio"))))
-                      (go-mode
-                       . ,(eglot-alternatives '("gopls" "${pkgs.gotools}/bin/gopls")))
-                      (kotlin-mode
-                       . ,(eglot-alternatives '("kotlin-language-server" "${pkgs.kotlin-language-server}/bin/kotlin-language-server")))
-                      (haskell-mode
-                       . ,(eglot-alternatives
-                           '(("haskell-language-server-wrapper" "--lsp")
-                             ("${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper" "--lsp"))))
-                      ((html-mode sgml-mode mhtml-mode web-mode)
-                        . ,(eglot-alternatives
-                            '(("html-languageserver" "--stdio")
-                              ("${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver" "--stdio"))))
-                      ((js-mode typescript-mode)
-                        . ,(eglot-alternatives
-                            '("javascript-typescript-stdio" "${pkgs.nodePackages.javascript-typescript-langserver}/bin/javascript-typescript-stdio")))
-                      (rust-mode
-                       . ,(eglot-alternatives '("rust-analyzer" "${pkgs.rust-analyzer}/bin/rust-analyzer")))
-                      (sh-mode
-                       . ,(eglot-alternatives
-                           '(("bash-language-server" "start")
-                             ("${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start"))))))
+              (ligature-set-ligatures 'prog-mode
+                                      '("--" "---" "==" "===" "!=" "!==" "=!=" "=:=" "=/=" "<=" ">=" "&&"
+                                        "&&&" "&=" "++" "+++" "***" ";;" "!!" "??" "?:" "?." "?=" "<:" ":<"
+                                        ":>" ">:" "<>" "<<<" ">>>" "<<" ">>" "||" "-|" "_|_" "|-" "||-"
+                                        "|=" "||=" "##" "###" "####" "#{" "#[" "]#" "#(" "#?" "#_" "#_("
+                                        "#:" "#!" "#=" "^=" "<$>" "<$" "$>" "<+>" "<+" "+>" "<*>" "<*" "*>"
+                                        "</" "</>" "/>" "<!--" "<#--" "-->" "->" "->>" "<<-" "<-" "<=<"
+                                        "=<<" "<<=" "<==" "<=>" "<==>" "==>" "=>" "=>>" ">=>" ">>="
+                                        ">>-" ">-" ">--" "-<" "-<<" ">->" "<-<" "<-|" "<=|" "|=>" "|->"
+                                        "<->" "<~~" "<~" "<~>" "~~" "~~>" "~>" "~-" "-~" "~@" "[||]" "|]"
+                                        "[|" "|}" "{|" "[<" ">]" "|>" "<|" "||>" "<||" "|||>" "<|||"
+                                        "<|>" "..." ".." ".=" ".-" "..<" ".?" "::" ":::" ":=" "::=" ":?"
+                                        ":?>" "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__"))
+              (global-ligature-mode t)
             '';
           };
 
           lsp-modeline = {
-            enable = true;
+            enable = cfg.init.lsp.enable;
             package = "lsp-mode";
           };
 
           lsp-ui = {
-            enable = true;
+            enable = cfg.init.lsp.enable;
             command = [ "lsp-ui-mode" ];
           };
 
-          lsp-ivy = {
-            enable = true;
-            command = [ "lsp-ivy-workspace-symbol" ];
-          };
-
           lsp-treemacs = {
-            enable = true;
+            enable = cfg.init.lsp.enable;
             command = [ "lsp-treemacs-errors-list" ];
           };
 
-          posframe = {
+          # Configure magit, a nice mode for the git SCM.
+          magit = {
             enable = true;
-          };
-
-          # dap-mode = {
-          #   # FIXME fails with (void-function "dap-ui-mode")
-          #   enable = false;
-          #   hook = [
-          #     "(dap-stopped . (lambda (arg) (call-interactively #'dap-hydra)))"
-          #   ];
-          # };
-
-          # dap-lldb = {
-          #   # FIXME fails with (void-function "dap-ui-mode")
-          #   enable = false;
-          #   package = "dap-mode";
-          #   config = ''
-          #     (setq dap-lldb-debug-program "${pkgs.vscode-extensions.llvm-org.lldb-vscode}/bin/lldb-vscode")
-          #   '';
-          # };
-
-          #  Setup RefTeX.
-          reftex = {
-            enable = true;
-            defer = true;
+            command = [ "magit-project-status" ];
+            bind = { "C-c g" = "magit-status"; };
             config = ''
-              (setq reftex-default-bibliography '("~/research/bibliographies/main.bib")
-                    reftex-cite-format 'natbib
-                    reftex-plug-into-AUCTeX t)
+              (setq magit-diff-highlight-indentation nil
+                    magit-diff-highlight-trailing nil
+                    magit-diff-paint-whitespace nil
+                    magit-diff-highlight-hunk-body nil
+                    magit-diff-refine-hunk nil
+                    magit-git-executable "${config.programs.git.package}/bin/git")
+              (add-to-list 'git-commit-style-convention-checks
+                           'overlong-summary-line)
+              (remove-hook 'server-switch-hook 'magit-commit-diff)
             '';
           };
 
-          haskell-mode = {
+          magit-extras = {
             enable = true;
-            command = [
-              "haskell-decl-scan-mode"
-              "haskell-doc-mode"
-              "haskell-indentation-mode"
-              "interactive-haskell-mode"
-            ];
-            mode = [
-              ''("\\.hs\\'" . haskell-mode)''
-              ''("\\.hsc\\'" . haskell-mode)''
-              ''("\\.c2hs\\'" . haskell-mode)''
-              ''("\\.cpphs\\'" . haskell-mode)''
-              ''("\\.lhs\\'" . haskell-literate-mode)''
-            ];
-            hook = [
-              ''
-                (haskell-mode
-                 . (lambda ()
-                     (subword-mode +1)
-                     (interactive-haskell-mode +1)
-                     (haskell-doc-mode +1)
-                     (haskell-indentation-mode +1)
-                     (haskell-decl-scan-mode +1)))
-              ''
-            ];
-            bindLocal = {
-              haskell-mode-map = {
-                "C-c h i" = "haskell-navigate-imports";
-                "C-c r o" = "haskell-mode-format-imports";
-                "C-<right>" = "haskell-move-nested-right";
-                "C-<left>" = "haskell-move-nested-left";
-              };
-            };
-            config = ''
-              (require 'haskell)
-              (require 'haskell-doc)
-
-              (setq haskell-process-auto-import-loaded-modules t
-                    haskell-process-suggest-remove-import-lines t
-                    haskell-process-log t
-                    haskell-notify-p t)
-
-              (setq haskell-process-args-cabal-repl
-                    '("--ghc-options=+RTS -M500m -RTS -ferror-spans -fshow-loaded-modules"))
-            '';
+            package = epkgs: epkgs.magit;
           };
 
-          haskell-cabal = {
+          marginalia = {
             enable = true;
-            mode = [ ''("\\.cabal\\'" . haskell-cabal-mode)'' ];
-            bindLocal = {
-              haskell-cabal-mode-map = {
-                "C-c C-c" = "haskell-process-cabal-build";
-                "C-c c" = "haskell-process-cabal";
-                "C-c C-b" = "haskell-interactive-bring";
-              };
-            };
+            command = [ "marginalia-mode" ];
+            after = [ "vertico" ];
+            defer = 1;
+            config = "(marginalia-mode)";
           };
 
           markdown-mode = {
@@ -1324,21 +1247,47 @@ in
             '';
           };
 
-          pandoc-mode = {
-            enable = true;
-            after = [ "markdown-mode" ];
-            hook = [ "markdown-mode" ];
-            bindLocal = {
-              markdown-mode-map = { "C-c C-c" = "pandoc-run-pandoc"; };
-            };
-            config = ''
-              (setq pandoc-binary "${pkgs.pandoc}/bin/pandoc")
-            '';
-          };
-
           meson-mode = {
             enable = true;
             mode = [ ''"/meson\\(\\.build\\|_options\\.txt\\)\\'"'' ];
+          };
+
+          minibuffer = {
+            enable = true;
+            package = "";
+            config = ''
+              (setq completion-cycle-threshold 3)
+            '';
+          };
+
+          mml-sec = {
+            enable = true;
+            defer = true;
+            config = ''
+              (setq mml-secure-openpgp-encrypt-to-self t
+                    mml-secure-openpgp-sign-with-sender t)
+            '';
+          };
+
+          mpdel = {
+            enable = true;
+            diminish = [ "mpdel-mode" ];
+            init = ''
+              (setq mpdel-prefix-key (kbd "C-c z"))
+            '';
+            config = ''
+              (mpdel-mode 1)
+            '';
+          };
+
+          multiple-cursors = {
+            enable = true;
+            bind = {
+              "C-S-c C-S-c" = "mc/edit-lines";
+              "C-c m" = "mc/mark-all-like-this";
+              "C->" = "mc/mark-next-like-this";
+              "C-<" = "mc/mark-previous-like-this";
+            };
           };
 
           nix-mode = {
@@ -1367,13 +1316,79 @@ in
 
           nix-shell = { enable = true; };
 
-          # Use ripgrep for fast text search in projects. I usually use
-          # this through Projectile.
-          ripgrep = {
+          notmuch = {
             enable = true;
-            command = [ "ripgrep-regexp" ];
             config = ''
-              (setq ripgrep-executable "${pkgs.ripgrep}/bin/rg")
+              (setq-default notmuch-search-oldest-first nil)
+              (setq notmuch-archive-tags '("-inbox")
+                    notmuch-crypto-gpg-program "${pkgs.gnupg}/bin/gpg2"
+                    notmuch-command "${pkgs.notmuch}/bin/notmuch"
+                    notmuch-address-save-filename "${config.xdg.cacheHome}/notmuch/address-cache"
+                    notmuch-mua-cite-function 'message-cite-original-without-signature
+                    notmuch-hello-thousands-separator ","
+                    notmuch-show-logo nil)
+            '';
+          };
+
+          nxml-mode = {
+            enable = true;
+            mode = [ ''"\\.xml\\'"'' ];
+            config = ''
+              (setq nxml-slash-auto-complete-flag t)
+              (add-to-list 'rng-schema-locating-files
+                           "~/.emacs.d/nxml-schemas/schemas.xml")
+            '';
+          };
+
+          posframe.enable = true;
+
+          pretty-tabs = {
+            enable = true;
+            after = [ "tab-bar" "all-the-icons" ];
+            extraConfig = ''
+              :functions pretty-tabs-mode
+            '';
+            config = ''
+              (if (daemonp)
+                  (progn
+                    (require 'server)
+                    (add-hook 'server-after-make-frame-hook
+                              'pretty-tabs-mode))
+                (pretty-tabs-mode))
+            '';
+          };
+
+          prog-mode = {
+            enable = true;
+            package = "";
+            defer = true;
+          };
+
+          ob-http = {
+            enable = true;
+            after = [ "org" ];
+            defer = true;
+          };
+
+          ob-plantuml = {
+            enable = true;
+            after = [ "org" ];
+            defer = true;
+            config = ''
+              (setq org-plantuml-jar-path "${pkgs.plantuml}/lib/plantuml.jar")
+            '';
+          };
+
+          ol-notmuch = {
+            enable = cfg.init.usePackage.org.enable && cfg.init.usePackage.notmuch.enable;
+            after = [ "notmuch" "org" ];
+          };
+
+          orderless = {
+            enable = true;
+            extraConfig = ''
+              :custom (completion-styles '(orderless basic))
+                      (completion-category-overrides '((file (styles basic partial-completion))))
             '';
           };
 
@@ -1460,30 +1475,40 @@ in
             '';
           };
 
+          org-bullets = {
+            enable = true;
+            hook = [ "(org-mode . org-bullets-mode)" ];
+          };
+
+          org-capture = {
+            enable = true;
+            after = [ "org" ];
+            config = ''
+              ;; (setq org-capture-templates rah-org-capture-templates)
+            '';
+          };
+
+          org-clock = {
+            enable = true;
+            after = [ "org" ];
+            config = ''
+              (setq org-clock-rounding-minutes 5
+                    org-clock-out-remove-zero-time-clocks t)
+            '';
+          };
+
+          org-duration = {
+            enable = true;
+            after = [ "org" ];
+            config = ''
+              ;; I always want clock tables and such to be in hours, not days.
+              (setq org-duration-format (quote h:mm))
+            '';
+          };
+
           org-protocol = {
             enable = true;
             demand = true;
-          };
-
-          # org-mobile = {
-          #   enable = true;
-          #   after = [ "org" ];
-          #   defer = true;
-          # };
-
-          ob-http = {
-            enable = true;
-            after = [ "org" ];
-            defer = true;
-          };
-
-          ob-plantuml = {
-            enable = true;
-            after = [ "org" ];
-            defer = true;
-            config = ''
-              (setq org-plantuml-jar-path "${pkgs.plantuml}/lib/plantuml.jar")
-            '';
           };
 
           org-ql = { enable = true; };
@@ -1523,119 +1548,133 @@ in
             '';
           };
 
-          org-capture = {
-            enable = true;
-            after = [ "org" ];
-            config = ''
-              ;; (setq org-capture-templates rah-org-capture-templates)
-            '';
-          };
-
-          org-clock = {
-            enable = true;
-            after = [ "org" ];
-            config = ''
-              (setq org-clock-rounding-minutes 5
-                    org-clock-out-remove-zero-time-clocks t)
-            '';
-          };
-
-          org-duration = {
-            enable = true;
-            after = [ "org" ];
-            config = ''
-              ;; I always want clock tables and such to be in hours, not days.
-              (setq org-duration-format (quote h:mm))
-            '';
-          };
-
-          org-bullets = {
-            enable = true;
-            hook = [ "(org-mode . org-bullets-mode)" ];
-          };
-
           org-tree-slide = {
             enable = true;
             command = [ "org-tree-slide-mode" ];
           };
 
-          # Set up yasnippet. Defer it for a while since I don't generally
-          # need it immediately.
-          yasnippet = {
+          plantuml-mode = {
             enable = true;
-            defer = 1;
-            diminish = [ "yas-minor-mode" ];
-            command = [ "yas-global-mode" "yas-minor-mode" ];
-            hook = [
-              # Yasnippet interferes with tab completion in ansi-term.
-              "(term-mode . (lambda () (yas-minor-mode -1)))"
-            ];
-            config = "(yas-global-mode 1)";
-          };
-
-          # Doesn't seem to work, complains about # in go snippets.
-          yasnippet-snippets = {
-            enable = false;
-            after = [ "yasnippet" ];
-          };
-
-          # Setup the cperl-mode, which I prefer over the default Perl
-          # mode.
-          cperl-mode = {
-            enable = true;
-            defer = true;
-            hook = [ "ggtags-mode" ];
-            command = [ "cperl-set-style" ];
+            mode = [ ''"\\.puml\\'"'' ];
             config = ''
-              (setq ggtags-executable-directory "${pkgs.global}/bin")
-
-              ;; Avoid deep indentation when putting function across several
-              ;; lines.
-              (setq cperl-indent-parens-as-block t)
-
-              ;; Use cperl-mode instead of the default perl-mode
-              (defalias 'perl-mode 'cperl-mode)
-              (cperl-set-style "PerlStyle")
+              (setq plantuml-jar-path "${pkgs.plantuml}/lib/plantuml.jar")
             '';
           };
 
-          # Setup ebib, my chosen bibliography manager.
-          ebib = {
+          project = {
             enable = true;
-            command = [ "ebib" ];
-            hook = [
-              # Highlighting of trailing whitespace is a bit annoying in ebib.
-              ''
-                (ebib-index-mode-hook
-                 . (lambda ()
-                     (setq show-trailing-whitespace nil)))
-              ''
+            package = "";
+            bindKeyMap = {
+              "M-SPC p" = "project-prefix-map";
+            };
+          };
 
-              ''
-                (ebib-entry-mode-hook
-                 . (lambda ()
-                     (setq show-trailing-whitespace nil)))
-              ''
+          protobuf-mode = {
+            enable = true;
+            mode = [ ''"'\\.proto\\'"'' ];
+          };
+
+          python = {
+            enable = true;
+            mode = [ ''("\\.py\\'" . python-mode)'' ];
+            hook = [ "ggtags-mode" ];
+          };
+
+          rainbow-mode = {
+            enable = true;
+            hook = [ "css-mode" "scss-mode" ];
+          };
+
+          recentf = {
+            enable = true;
+            defer = 1;
+            config = ''
+              (setq recentf-save-file (locate-user-emacs-file "recentf")
+                    recentf-max-menu-items 20
+                    recentf-max-saved-items 500
+                    recentf-exclude '("COMMIT_MSG"
+                                      "COMMIT_EDITMSG"
+                                      "^/\\(?:ssh\\|su\\|sudo\\)?:"))
+              (recentf-mode 1)
+            '';
+          };
+
+          #  Setup RefTeX.
+          reftex = {
+            enable = true;
+            defer = true;
+            config = ''
+              (setq reftex-default-bibliography '("~/research/bibliographies/main.bib")
+                    reftex-cite-format 'natbib
+                    reftex-plug-into-AUCTeX t)
+            '';
+          };
+
+          restclient = {
+            enable = true;
+            mode = [ ''("\\.http\\'" . restclient-mode)'' ];
+          };
+
+          # Use ripgrep for fast text search in projects. I usually use
+          # this through Projectile.
+          ripgrep = {
+            enable = true;
+            command = [ "ripgrep-regexp" ];
+            config = ''
+              (setq ripgrep-executable "${pkgs.ripgrep}/bin/rg")
+            '';
+          };
+
+          rust-mode = {
+            enable = true;
+            mode = [ ''"\\.rs\\'"'' ];
+          };
+
+          sass-mode.enable = true;
+
+          # Remember where we where in a previously visited file. Built-in.
+          saveplace = {
+            enable = true;
+            defer = 1;
+            config = ''
+              (setq-default save-place t)
+              (setq save-place-file (locate-user-emacs-file "places"))
+            '';
+          };
+
+          scala-mode.enable = true;
+
+          shr = {
+            enable = true;
+            defer = true;
+            config = ''
+              (setq shr-bullet "• "
+                    shr-use-colors nil)
+            '';
+          };
+
+          simple = {
+            enable = true;
+            package = "";
+            defer = true;
+            hook = [
+              "(before-save . delete-trailing-whitespace)"
+              "(prog-mode . (lambda () (toggle-truncate-lines 1)))"
             ];
             config = ''
-              (setq ebib-latex-preamble '("\\usepackage{a4}"
-                                          "\\bibliographystyle{amsplain}")
-                    ebib-print-preamble '("\\usepackage{a4}")
-                    ebib-print-tempfile "/tmp/ebib.tex"
-                    ebib-extra-fields '(crossref
-                                        url
-                                        annote
-                                        abstract
-                                        keywords
-                                        file
-                                        timestamp
-                                        doi))
+              (defun save-buffer-preserve-whitespace (&optional arg)
+                "Save the current buffer, preserving trailing whitespace."
+                (interactive "p")
+                (let ((before-save-hook (remove 'delete-trailing-whitespace before-save-hook)))
+                  (save-buffer arg)))
+
+              (setq read-extended-command-predicate #'command-completion-default-include-p)
             '';
           };
 
           smartparens = {
-            enable = false;
-            defer = 1;
+            enable = true;
+            defer = 3;
             diminish = [ "smartparens-mode" ];
             command =
               [ "smartparens-global-mode" "show-smartparens-global-mode" ];
@@ -1652,141 +1691,76 @@ in
             '';
           };
 
-          flycheck = {
-            enable = false; # Trying out flymake
-            diminish = [ "flycheck-mode" ];
-            command = [ "global-flycheck-mode" ];
-            defer = 1;
-            config = ''
-              ;; Only check buffer when mode is enabled or buffer is saved.
-              (setq flycheck-check-syntax-automatically '(mode-enabled save))
+          string-inflection = {
+            enable = true;
+            bind = { "C-c C-u" = "string-inflection-all-cycle"; };
+          };
 
-              ;; Enable flycheck in all eligible buffers.
-              (global-flycheck-mode)
+          # Auto-save buffers
+          super-save = {
+            enable = true;
+            config = ''
+              (super-save-mode 1)
+              (setq super-save-auto-save-when-idle t)
             '';
           };
 
-          flycheck-haskell = {
-            enable = false;
-            hook = [ "(flycheck-mode . flycheck-haskell-setup)" ];
-          };
-
-          flycheck-plantuml = {
-            enable = false;
-            hook = [ "(flycheck-mode . flycheck-plantuml-setup)" ];
-          };
-
-          projectile = {
+          swift-mode = {
             enable = true;
-            diminish = [ "projectile-mode" ];
-            command = [ "projectile-mode" ];
-            bindKeyMap = { "M-SPC p" = "projectile-command-map"; };
-            config = ''
-              (setq projectile-enable-caching t
-                    projectile-completion-system 'ivy)
-              (projectile-mode 1)
-            '';
+            mode = [ ''("\\.swift\\'" . swift-mode)'' ];
           };
 
-          plantuml-mode = {
+          systemd = {
             enable = true;
-            mode = [ ''"\\.puml\\'"'' ];
-            config = ''
-              (setq plantuml-jar-path "${pkgs.plantuml}/lib/plantuml.jar")
-            '';
+            defer = true;
           };
 
-          ace-window = {
+          tab-bar = {
             enable = true;
+            after = [ "all-the-icons" ];
             extraConfig = ''
-              :bind* (("C-c w" . ace-window))
-            '';
-          };
-
-          company = {
-            enable = true;
-            diminish = [ "company-mode" ];
-            hook = [ "(after-init . global-company-mode)" ];
-            extraConfig = ''
-              :bind (:map company-mode-map
-                          ([remap completion-at-point] . company-complete-common)
-                          ([remap complete-symbol] . company-complete-common))
+              :functions all-the-icons-material
             '';
             config = ''
-              (setq company-minimum-prefix-length 1
-                    company-idle-delay 0.0
-                    company-show-numbers t)
+              (setq tab-bar-close-button
+                    (propertize (all-the-icons-material "close" :face 'tab-bar-tab)
+                                'close-tab t
+                                :help "Close tab")
+                    tab-bar-new-button
+                    (all-the-icons-material "add" :face 'tab-bar))
             '';
           };
 
-          company-yasnippet = {
+          tramp = {
             enable = true;
-            bind = { "M-/" = "company-yasnippet"; };
-          };
-
-          company-dabbrev = {
-            enable = true;
-            after = [ "company" ];
-            command = [ "company-dabbrev" ];
+            init = ''
+              (autoload 'tramp-register-crypt-file-name-handler "tramp-autoloads" "\
+              Add crypt file name handler to `file-name-handler-alist'." nil nil)
+            '';
             config = ''
-              (setq company-dabbrev-downcase nil
-                    company-dabbrev-ignore-case t)
+              (setq tramp-auto-save-directory "~/.cache/emacs/tramp"
+                    tramp-shell-prompt-pattern
+                    "\\(?:^\\|\\)[^]#$%>\n]*#?[]#$%>].* *\\(\\[[[:digit:];]*[[:alpha:]] *\\)*")
             '';
-          };
-
-          company-quickhelp = {
-            enable = true;
-            after = [ "company" ];
-            command = [ "company-quickhelp-mode" ];
-            config = ''
-              (company-quickhelp-mode 1)
-            '';
-          };
-
-          company-cabal = {
-            enable = true;
-            after = [ "company" ];
-            command = [ "company-cabal" ];
-            config = ''
-              (add-to-list 'company-backends 'company-cabal)
-            '';
-          };
-
-          company-restclient = {
-            enable = true;
-            after = [ "company" "restclient" ];
-            command = [ "company-restclient" ];
-            config = ''
-              (add-to-list 'company-backends 'company-restclient)
-            '';
-          };
-
-          php-mode = {
-            enable = false;
-            mode = [ ''"\\.php\\'"'' ];
-            hook = [ "ggtags-mode" ];
-          };
-
-          protobuf-mode = {
-            enable = true;
-            mode = [ ''"'\\.proto\\'"'' ];
-          };
-
-          python = {
-            enable = true;
-            mode = [ ''("\\.py\\'" . python-mode)'' ];
-            hook = [ "ggtags-mode" ];
-          };
-
-          restclient = {
-            enable = true;
-            mode = [ ''("\\.http\\'" . restclient-mode)'' ];
           };
 
           transpose-frame = {
             enable = true;
             bind = { "C-c f t" = "transpose-frame"; };
           };
+
+          treemacs = {
+            enable = true;
+            bind = {
+              "C-c t f" = "treemacs-find-file";
+              "C-c t t" = "treemacs";
+            };
+            init = ''
+              (setq treemacs-python-executable "${pkgs.python3}/bin/python")
+            '';
+          };
+
+          tree-sitter.enable = true;
 
           tt-mode = {
             enable = true;
@@ -1795,56 +1769,97 @@ in
 
           typescript-mode = { enable = true; };
 
-          smart-tabs-mode = {
-            enable = false;
+          undo-tree = {
+            enable = true;
+            defer = 1;
+            diminish = [ "undo-tree-mode" ];
+            command = [ "global-undo-tree-mode" ];
             config = ''
-              (smart-tabs-insinuate 'c 'c++ 'cperl 'java)
+              (setq undo-tree-history-directory-alist `(("." . ,(expand-file-name ".cache/undo-tree" user-emacs-directory)))
+                    undo-tree-enable-undo-in-region t
+                    undo-tree-visualizer-relative-timestamps t
+                    undo-tree-visualizer-timestamps t)
+              (global-undo-tree-mode)
             '';
           };
 
-          octave = {
+          # More helpful buffer names. Built-in.
+          uniquify = {
             enable = true;
-            mode = [ ''("\\.m\\'" . octave-mode)'' ];
+            defer = 5;
+            config = ''
+              (setq uniquify-buffer-name-style 'post-forward)
+            '';
           };
 
-          yaml-mode = {
+          vertico = {
             enable = true;
-            mode = [ ''"\\.yaml\\'"'' ];
+            command = [ "vertico-mode" "vertico-next" ];
+            init = "(vertico-mode)";
+          };
+
+          visual-fill-column = {
+            enable = true;
+            hook = [ "(visual-line-mode . visual-fill-column-mode)" ];
+          };
+
+          vterm = {
+            enable = true;
+            command = [ "vterm" ];
+            bindLocal = {
+              project-prefix-map = {
+                "t" = "project-vterm";
+              };
+            };
+            hook = [''
+              (vterm . (lambda ()
+                         (blink-cursor-mode -1)
+                         (setq-local confirm-kill-processes nil
+                                     global-hl-line-mode nil)
+                         (hl-line-mode -1)))
+            ''];
+            init = ''
+              (add-to-list 'project-switch-commands '(project-vterm "Vterm") t)
+              (add-to-list 'project-kill-buffer-conditions '(major-mode . vterm-mode))
+            '';
+            config = ''
+              (setq vterm-buffer-name-string "vterm %s"
+                    vterm-copy-exclude-prompt t
+                    vterm-kill-buffer-on-exit t
+                    vterm-max-scrollback 100000)
+            '';
+            extraConfig = ''
+              :preface
+              (defun project-vterm (&optional arg)
+                "Create an interactive Vterm buffer.
+              Start a new Vterm session for the current project root, or switch
+              to an already active session. Return the buffer selected (or created).
+
+              With a nonnumeric prefix ARG, create a new session.
+
+              With a string prefix arg, create a new session with arg as buffer name.
+
+              With a numeric prefix arg (as in `C-u 42 M-x vterm RET'), switch
+              to the session with that number, or create it if it doesn't
+              already exist.
+
+              The buffer name used for Vterm sessions is determined by the
+              value of `vterm-buffer-name'."
+                (interactive "P")
+                (defvar vterm-buffer-name)
+                (when-let ((project (project-current t)))
+                  (let* ((default-directory (project-root project))
+                         (vterm-buffer-name (project-prefixed-buffer-name "vterm"))
+                         (vterm-buffer-name-string nil)
+                         (vterm-buffer (vterm arg)))
+                    (setq-local vterm-buffer-name-string nil)
+                    vterm-buffer)))
+            '';
           };
 
           wc-mode = {
             enable = true;
             command = [ "wc-mode" ];
-          };
-
-          # web-mode = {
-          #   enable = true;
-          #   mode = [
-          #     ''"\\.html\\'"''
-          #     ''"\\.jsx?\\'"''
-          #   ];
-          #   config = ''
-          #     (setq web-mode-attr-indent-offset 4
-          #           web-mode-code-indent-offset 2
-          #           web-mode-markup-indent-offset 2)
-
-          #     (add-to-list 'web-mode-content-types '("jsx" . "\\.jsx?\\'"))
-          #   '';
-          # };
-
-          dired = {
-            enable = true;
-            defer = true;
-            hook = [ "(dired-mode . dired-hide-details-mode)" ];
-            init = ''
-              (setq dired-listing-switches "-al --group-directories-first")
-            '';
-            config = ''
-              (put 'dired-find-alternate-file 'disabled nil)
-              (setq dired-target-dwim t)
-              ;; Use the system trash can.
-              (setq delete-by-moving-to-trash t)
-            '';
           };
 
           wdired = {
@@ -1859,159 +1874,111 @@ in
             '';
           };
 
-          dired-x = {
+          web-mode = {
             enable = true;
-            hook = [ "(dired-mode . dired-omit-mode)" ];
+            mode = [
+              ''"\\.html\\'"''
+              ''"\\.jsx?\\'"''
+            ];
+            config = ''
+              (setq web-mode-attr-indent-offset 4
+                    web-mode-code-indent-offset 2
+                    web-mode-markup-indent-offset 2)
+
+              (add-to-list 'web-mode-content-types '("jsx" . "\\.jsx?\\'"))
+            '';
           };
 
-          dired-hide-dotfiles = {
+          wgrep = {
             enable = true;
-            hook = [ "(dired-mode . dired-hide-dotfiles-mode)" ];
+          };
+
+          which-key = {
+            enable = true;
+            command = [ "which-key-mode" ];
+            diminish = [ "which-key-mode" ];
+            defer = 2;
+            config =
+              let
+                descriptions = { "M-SPC p" = "project"; };
+                replacements = optionalString (descriptions != { }) ''
+                  (which-key-add-key-based-replacements
+                    ${
+                      concatStringsSep "\n  "
+                      (mapAttrsToList (k: d: ''"${k}" "${d}"'') descriptions)
+                    })
+                '';
+
+              in
+              ''
+                ${replacements}
+
+                (which-key-mode)
+              '';
+          };
+
+          # Enable winner mode. This global minor mode allows you to
+          # undo/redo changes to the window configuration. Uses the
+          # commands C-c <left> and C-c <right>.
+          winner = {
+            enable = true;
+            defer = 2;
+            config = "(winner-mode 1)";
+          };
+
+          writeroom-mode = {
+            enable = true;
+            command = [ "writeroom-mode" ];
             bindLocal = {
-              dired-mode-map = { "C-c C-." = "dired-hide-dotfiles-mode"; };
+              writeroom-mode-map = {
+                "M-[" = "writeroom-decrease-width";
+                "M-]" = "writeroom-increase-width";
+                "M-'" = "writeroom-toggle-mode-line";
+              };
             };
-          };
-
-          all-the-icons-dired = {
-            enable = true;
-            hook = [ "(dired-mode . all-the-icons-dired-mode)" ];
-          };
-
-          recentf = {
-            enable = true;
-            command = [ "recentf-mode" ];
+            hook = [ "(writeroom-mode . visual-line-mode)" ];
             config = ''
-              (setq recentf-save-file (locate-user-emacs-file "recentf")
-                    recentf-max-menu-items 20
-                    recentf-max-saved-items 500
-                    recentf-exclude '("COMMIT_MSG"
-                                      "COMMIT_EDITMSG"
-                                      "^/\\(?:ssh\\|su\\|sudo\\)?:"))
+              (setq writeroom-bottom-divider-width 0)
             '';
           };
 
-          nxml-mode = {
+          xref = {
             enable = true;
-            mode = [ ''"\\.xml\\'"'' ];
-            config = ''
-              (setq nxml-slash-auto-complete-flag t)
-              (add-to-list 'rng-schema-locating-files
-                           "~/.emacs.d/nxml-schemas/schemas.xml")
-            '';
-          };
-
-          systemd = {
-            enable = true;
-            defer = true;
-          };
-
-          treemacs = {
-            enable = true;
-            bind = {
-              "C-c t f" = "treemacs-find-file";
-              "C-c t t" = "treemacs";
+            package = "";
+            bindLocal = {
+              prog-mode-map = {
+                "M-SPC g a" = "xref-find-apropos";
+                "M-SPC g d" = "xref-find-definitions";
+                "M-SPC g r" = "xref-find-references";
+              };
             };
-            init = ''
-              (setq treemacs-python-executable "${pkgs.python3}/bin/python")
+            extraConfig = ''
+              :custom (xref-search-program . ripgrep)
             '';
           };
 
-          treemacs-projectile = {
+          yaml-mode = {
             enable = true;
-            after = [ "treemacs" "projectile" ];
+            mode = [ ''"\\.yaml\\'"'' ];
           };
 
-          hide-mode-line = { enable = true; };
-
-          vterm = {
+          # Set up yasnippet. Defer it for a while since I don't generally
+          # need it immediately.
+          yasnippet = {
             enable = true;
-            init = ''
-              (defvar vterm-current-title)
-            '';
-            config = ''
-              (setq vterm-buffer-name-string "vterm %s")
-              (add-hook 'vterm-mode-hook (lambda ()
-                                           (blink-cursor-mode -1)
-                                           (setq-local confirm-kill-processes nil
-                                                       global-hl-line-mode nil)
-                                           (hl-line-mode -1)))
-            '';
+            defer = 1;
+            diminish = [ "yas-minor-mode" ];
+            command = [ "yas-global-mode" "yas-minor-mode" ];
+            hook = [
+              # Yasnippet interferes with tab completion in ansi-term.
+              "(term-mode . (lambda () (yas-minor-mode -1)))"
+            ];
+            config = "(yas-global-mode 1)";
           };
 
-          auth-source-pass = {
+          yasnippet-snippets = {
             enable = true;
-            config = ''
-              (setq auth-source-pass-filename "${config.programs.password-store.settings.PASSWORD_STORE_DIR}")
-              (auth-source-pass-enable)
-            '';
-          };
-
-          notmuch = {
-            enable = true;
-            config = ''
-              (setq-default notmuch-search-oldest-first nil)
-              (setq notmuch-archive-tags '("-inbox")
-                    notmuch-crypto-gpg-program "${pkgs.gnupg}/bin/gpg2"
-                    notmuch-command "${pkgs.notmuch}/bin/notmuch"
-                    notmuch-address-save-filename "${config.xdg.cacheHome}/notmuch/address-cache"
-                    notmuch-mua-cite-function 'message-cite-original-without-signature
-                    notmuch-hello-thousands-separator ","
-                    notmuch-show-logo nil)
-            '';
-          };
-
-          shr = {
-            enable = true;
-            defer = true;
-            config = ''
-              (setq shr-bullet "• "
-                    shr-use-colors nil)
-            '';
-          };
-
-          janet-mode = {
-            enable = true;
-            mode = [ ''"\\.janet\\'"'' ];
-          };
-
-          rust-mode = {
-            enable = true;
-            mode = [ ''"\\.rs\\'"'' ];
-          };
-
-          gnome-shell-mode = {
-            enable = true;
-            command = [ "gnome-shell-mode" ];
-            # modeHydra = {
-            #   gnome-shell-mode = {
-            #     heads = {
-            #       Send = {
-            #         b = {
-            #           command = "gnome-shell-send-buffer";
-            #           hint = "buffer";
-            #         };
-            #       };
-            #     };
-            #   };
-            # };
-          };
-
-          css-mode = {
-            enable = true;
-            package = ""; # built-in
-            defer = true;
-            config = ''
-              (setq css-fontify-colors nil)
-            '';
-          };
-
-          # Auto-save buffers
-          super-save = {
-            enable = true;
-            config = ''
-              (super-save-mode 1)
-              (setq super-save-auto-save-when-idle t)
-            '';
+            after = [ "yasnippet" ];
           };
         };
       };
