@@ -57,7 +57,7 @@ with lib;
       d-spy
       emacs-all-the-icons-fonts
       gparted
-      gnome3.gnome-themes-extra
+      gnome.gnome-themes-extra
       jetbrains-mono
       keybase
       material-icons
@@ -126,6 +126,8 @@ with lib;
         };
       };
     };
+
+    password-store.package = pkgs.pass-wayland.withExtensions (e: with e; [ pass-audit pass-otp ]);
   };
 
   qt = {

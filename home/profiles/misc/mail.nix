@@ -17,6 +17,8 @@ let
     ${pkgs.lieer}/bin/gmi send ''${args[@]}
   '';
 
+  lieerAccounts = filter (a: a.lieer.enable) (attrValues cfgEmail.accounts);
+
   notmuchAccounts = filter (a: a.notmuch.enable) (attrValues cfgEmail.accounts);
 
   primaryAccount = builtins.head (filter (a: a.primary) notmuchAccounts);
@@ -49,6 +51,10 @@ let
     account:
     concatMapStrings (mkAddressEntry account.maildir account.folders)
       ([ account.address ] ++ account.aliases);
+
+  preNewHook = concatMapStringsSep "\n" (a: ''
+    ${config.programs.lieer.package}/bin/gmi sync -C ${a.maildir.absPath}
+  '') lieerAccounts;
 
 in
 {
@@ -102,6 +108,7 @@ in
     programs = {
       notmuch = {
         enable = true;
+        hooks.preNew = preNewHook;
         new = {
           ignore = [ ".*.json" ];
           tags = [ ];

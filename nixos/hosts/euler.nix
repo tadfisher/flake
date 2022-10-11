@@ -8,6 +8,7 @@ in
   imports = [
     ../profiles/core.nix
     # ../profiles/networks/euler.nix
+    ../profiles/services/sshd.nix
     ../profiles/users/tad.nix
     ../profiles/uefi.nix
     ../profiles/virt-amd.nix
@@ -135,6 +136,8 @@ in
           full_page_writes = false;
         };
       };
+
+    openssh.passwordAuthentication = true;
 
     udev.extraRules = ''
       # Enable systemd device units for android devices

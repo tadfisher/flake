@@ -112,6 +112,7 @@
               profiles = import ./nixpkgs { profiles = [ "games" ]; };
             in
             {
+              allowAliases = true;
               allowUnfree = true;
             }
             // profiles.games;
@@ -139,7 +140,6 @@
             }
 
             self.nixosModules.boot.opal-unlock
-            self.nixosModules.boot.systemd-oomd
             self.nixosModules.hardware.pulseaudio
             self.nixosModules.services.pia-vpn
             self.nixosModules.programs.cardboard
@@ -275,7 +275,6 @@
 
       nixosModules = {
         boot.opal-unlock = ./nixos/modules/opal-unlock.nix;
-        boot.systemd-oomd = ./nixos/modules/oomd.nix;
         hardware.pulseaudio = ./nixos/modules/pulseaudio.nix;
         programs.cardboard = ./nixos/modules/cardboard.nix;
         programs.steam = ./nixos/modules/steam.nix;

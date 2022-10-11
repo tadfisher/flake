@@ -4,6 +4,13 @@
 
 with pkgs;
 
+let
+  ideaPackages = callPackage ./idea-community-eap {
+    inherit (inputs) nixpkgs;
+    vmopts = config.jetbrains.vmopts or null;
+    jdk = jetbrains-jdk17;
+  };
+in
 {
   adw-gtk3 = callPackage ./adw-gtk3 { src = inputs.adw-gtk3; };
 
@@ -31,11 +38,7 @@ with pkgs;
   #   inherit (darwin.apple_sdk.frameworks) AppKit Cocoa;
   # };
 
-  idea-community-eap = callPackage ./idea-community-eap {
-    inherit (inputs) nixpkgs;
-    vmopts = config.jetbrains.vmopts or null;
-    jdk = jetbrains.jdk;
-  };
+  inherit (ideaPackages) idea-community idea-community-eap;
 
   instant-workspace-switcher = callPackage ./instant-workspace-switcher {
     src = inputs.instant-workspace-switcher;

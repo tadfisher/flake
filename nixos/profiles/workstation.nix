@@ -8,7 +8,6 @@ mkMerge [
       consoleLogLevel = 0;
       initrd = {
         verbose = false;
-
       };
       kernelParams = [
         "quiet"
@@ -21,15 +20,14 @@ mkMerge [
     };
 
     environment = {
-      enableDebugInfo = true;
       etc."systemd/oomd.conf".text = ''
         [OOM]
         DefaultMemoryPressureDurationSec=20s
       '';
       systemPackages = with pkgs; [
         adw-gtk3
-        gnome3.adwaita-icon-theme
-        gnome3.gnome-themes-extra
+        gnome.adwaita-icon-theme
+        gnome.gnome-themes-extra
         gst_all_1.gst-libav
         gst_all_1.gst-vaapi
         paper-icon-theme
@@ -48,7 +46,7 @@ mkMerge [
     hardware = {
       bluetooth = {
         enable = true;
-        package = pkgs.bluezFull;
+        package = pkgs.bluez;
       };
 
       opengl.enable = true;
@@ -190,7 +188,6 @@ mkMerge [
     systemd = {
       package = pkgs.systemd.override { withOomd = true; };
       oomd = {
-        enable = true;
         enableRootSlice = true;
         enableUserServices = true;
       };
@@ -222,7 +219,7 @@ mkMerge [
 
   (mkIf config.virtualisation.libvirtd.enable {
     environment.systemPackages = with pkgs; [
-      gnome3.gnome-boxes
+      gnome.gnome-boxes
     ];
   })
 ]

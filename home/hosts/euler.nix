@@ -24,13 +24,16 @@ with lib;
   ]);
 
   home.packages = with pkgs; [
-    aws
+    awscli2
     inkscape
     gimp
   ];
 
   programs = {
-    lieer.enable = true;
+    lieer = {
+      enable = true;
+      package = pkgs.lieer;
+    };
     git.passGitHelper.mapping."github.com" = {
       target = "github.com/euler";
       skip_username = 6;

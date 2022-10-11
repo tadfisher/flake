@@ -47,17 +47,32 @@ let
       };
     });
 
-in
-buildIdea rec {
-  pname = "idea-community-eap";
-  product = "IntelliJ IDEA CE (EAP)";
-  version = products.idea-community-eap.version;
-  description = "Integrated Development Environment (IDE) by Jetbrains, community edition (Early-Access Preview)";
-  license = lib.licenses.asl20;
-  src = fetchurl {
-    url = products.idea-community-eap.url;
-    sha256 = products.idea-community-eap.sha256;
+in {
+  idea-community = buildIdea rec {
+    pname = "idea-community";
+    product = "IntelliJ IDEA CE";
+    version = products.idea-community.version;
+    description = "Integrated Development Environment (IDE) by Jetbrains, community edition";
+    license = lib.licenses.asl20;
+    src = fetchurl {
+      url = products.idea-community.url;
+      sha256 = products.idea-community.sha256;
+    };
+    wmClass = "jetbrains-idea-ce";
+    update-channel = products.idea-community.update-channel;
   };
-  wmClass = "jetbrains-idea-ce";
-  update-channel = products.idea-community-eap.update-channel;
+
+  idea-community-eap = buildIdea rec {
+    pname = "idea-community-eap";
+    product = "IntelliJ IDEA CE (EAP)";
+    version = products.idea-community-eap.version;
+    description = "Integrated Development Environment (IDE) by Jetbrains, community edition (Early-Access Preview)";
+    license = lib.licenses.asl20;
+    src = fetchurl {
+      url = products.idea-community-eap.url;
+      sha256 = products.idea-community-eap.sha256;
+    };
+    wmClass = "jetbrains-idea-ce";
+    update-channel = products.idea-community-eap.update-channel;
+  };
 }

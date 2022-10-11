@@ -1,15 +1,35 @@
 { pkgs, ... }:
 
+let
+  gradleWithToolchains = with pkgs; callPackage gradle-packages.gradle_7 {
+    javaToolchains = [
+      openjdk8
+      openjdk11
+      openjdk17
+    ];
+  };
+
+in
 {
   home = {
+    file.".gradle/gradle.properties".text = ''
+      org.gradle.java.installations.auto-download=false
+      org.gradle.java.installations.fromEnv=JDK8,JDK11,JDK17
+    '';
+
     packages = with pkgs; [
-      gradle
+      gradleWithToolchains
       gradle-completion
+      idea-community
       idea-community-eap
-      jetbrains.idea-community
     ];
 
-    sessionVariables = { JAVA_HOME = "${pkgs.openjdk.home}"; };
+    sessionVariables = {
+      JAVA_HOME = "${pkgs.openjdk.home}";
+      JDK8 = "${pkgs.openjdk8}";
+      JDK11 = "${pkgs.openjdk11}";
+      JDK17 = "${pkgs.openjdk17}";
+    };
   };
 
   xdg.dataFile = {

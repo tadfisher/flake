@@ -51,6 +51,14 @@ with final;
     postPatch = "";
   });
 
+  nix-direnv = prev.nix-direnv.overrideAttrs (attrs: {
+    postPatch = ''
+      sed -i "2iNIX_BIN_PREFIX=${nix}/bin/" direnvrc
+      substituteInPlace direnvrc \
+        --replace "grep" "${gnugrep}/bin/grep"
+    '';
+  });
+
   openmw = prev.openmw.overrideAttrs (attrs: {
     patches = (attrs.patches or [ ]) ++ [
       (fetchpatch {

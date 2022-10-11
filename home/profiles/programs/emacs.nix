@@ -54,7 +54,7 @@ in
 
       init = {
         enable = true;
-        # packageQuickstart = false;
+        packageQuickstart = false;
         recommendedGcSettings = true;
         usePackageVerbose = false;
 
@@ -259,8 +259,8 @@ in
               enable = true;
               require = "lsp-javascript";
               modes = [ "typescript-mode" ];
-              executables.javascript-typescript-langserver =
-                "${pkgs.nodePackages.javascript-typescript-langserver}/bin/javascript-typescript-stdio";
+              executables.typescript-language-server =
+                "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
             };
             metals = {
               enable = false;
@@ -449,7 +449,7 @@ in
                     image-dired-cmd-write-exif-data-program "${pkgs.exiftool}/bin/exiftool"
                     image-dired-cmd-read-exif-data-program "${pkgs.exiftool}/bin/exiftool"
                     image-dired-thumb-relief 0
-                    image-dired-external-viewer "${pkgs.xdg_utils}/bin/xdg-open"
+                    image-dired-external-viewer "${pkgs.xdg-utils}/bin/xdg-open"
                     image-dired-main-image-directory "${config.xdg.userDirs.pictures}/")
             '';
           };
@@ -485,7 +485,10 @@ in
             enable = true;
             package = "";
             defer = true;
-            hook = [ "(before-save . delete-trailing-whitespace)" ];
+            hook = [
+              "(before-save . delete-trailing-whitespace)"
+              "(prog-mode . (lambda () (toggle-truncate-lines 1)))"
+            ];
             config = ''
               (defun save-buffer-preserve-whitespace (&optional arg)
                 "Save the current buffer, preserving trailing whitespace."
@@ -572,7 +575,10 @@ in
 
           tramp = {
             enable = true;
-            defer = true;
+            init = ''
+              (autoload 'tramp-register-crypt-file-name-handler "tramp-autoloads" "\
+              Add crypt file name handler to `file-name-handler-alist'." nil nil)
+            '';
             config = ''
               (setq tramp-auto-save-directory "~/.cache/emacs/tramp"
                     tramp-shell-prompt-pattern

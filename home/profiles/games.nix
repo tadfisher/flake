@@ -2,7 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    gnome3.gnome-chess
+    gnome.gnome-chess
     enyo-doom
     gzdoom
     openmw

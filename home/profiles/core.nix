@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
 
+with lib;
+
 {
   imports = [
     ./misc/mail.nix
@@ -55,7 +57,7 @@
     };
     password-store = {
       enable = true;
-      package = pkgs.pass.withExtensions (e: [ e.pass-audit e.pass-otp ]);
+      package = mkDefault (pkgs.pass.withExtensions (e: with e; [ pass-audit pass-otp ]));
     };
     ssh = {
       enable = true;

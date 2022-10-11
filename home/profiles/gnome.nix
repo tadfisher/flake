@@ -112,6 +112,7 @@ with lib;
       disable-user-extensions = false;
       enabled-extensions = with pkgs; [
         dash-to-panel.extensionUuid
+        gnomeExtensions.bluetooth-quick-connect.extensionUuid
         gnomeExtensions.gsconnect.extensionUuid
         # instant-workspace-switcher.uuid
         paperwm.uuid
@@ -174,12 +175,13 @@ with lib;
     gnome.gnome-shell-extensions
     gnome.gnome-tweaks
     dash-to-panel
+    gnomeExtensions.bluetooth-quick-connect
     gnomeExtensions.gsconnect
     instant-workspace-switcher
     paperwm
     roboto
     vertical-overview
-    virtmanager
+    virt-manager
   ];
 
   # Prevent clobbering SSH_AUTH_SOCK
@@ -217,7 +219,7 @@ with lib;
   xdg.configFile = {
     "autostart/gnome-keyring-ssh.desktop".text = ''
       ${lib.fileContents
-      "${pkgs.gnome3.gnome-keyring}/etc/xdg/autostart/gnome-keyring-ssh.desktop"}
+      "${pkgs.gnome.gnome-keyring}/etc/xdg/autostart/gnome-keyring-ssh.desktop"}
       Hidden=true
     '';
   };

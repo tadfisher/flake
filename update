@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 nix flake update
 ./pkgs/dart-sass/update.sh
+./pkgs/idea-community-eap/update.py
 ./pkgs/plex-plexpass/update.sh

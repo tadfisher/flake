@@ -61,7 +61,7 @@
 , openexr
 , xvfb_run
 , dbus
-, gnome3
+, gnome
 , hicolor-icon-theme
 , webkitgtk
 , alsaLib
@@ -186,7 +186,7 @@ stdenv.mkDerivation rec {
     libmypaint
     mypaint-brushes1
     webkitgtk
-    gnome3.adwaita-icon-theme
+    gnome.adwaita-icon-theme
     (luajit.withPackages (pp: [ pp.lgi ]))
   ] ++ lib.optionals (!stdenv.isDarwin) [
     alsaLib
