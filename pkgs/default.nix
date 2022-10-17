@@ -30,6 +30,8 @@ in
 
   firefox-gnome-theme = callPackage ./firefox-gnome-theme { src = inputs.firefox-gnome-theme; };
 
+  fleet = callPackage ./fleet { };
+
   gamescope = callPackage ./gamescope { src = inputs.gamescope; };
 
   # gimp = callPackage ./gimp {

@@ -123,7 +123,7 @@ mkMerge [
       fwupd.enable = true;
 
       gnome = {
-        chrome-gnome-shell.enable = true;
+        gnome-browser-connector.enable = true;
       };
 
       logind = {
