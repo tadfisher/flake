@@ -17,6 +17,8 @@
     };
   };
 
+  security.polkit.enable = true;
+
   users.users.tad.extraGroups = [
     config.users.groups.qemu-libvirtd.name
   ];

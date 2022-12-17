@@ -8,25 +8,14 @@ let
   ideaPackages = callPackage ./idea-community-eap {
     inherit (inputs) nixpkgs;
     vmopts = config.jetbrains.vmopts or null;
-    jdk = jetbrains-jdk17;
   };
 in
-{
+rec {
   adw-gtk3 = callPackage ./adw-gtk3 { src = inputs.adw-gtk3; };
 
   cleaner-overview = callPackage ./cleaner-overview { };
 
-  emacsCustom = emacsNativeComp.override {
-    withPgtk = true;
-    withSQLite3 = true;
-    withXinput2 = true;
-    withXwidgets = true;
-    withWebP = true;
-  };
-
   dart-sass = callPackage ./dart-sass { };
-
-  dash-to-panel = callPackage ./dash-to-panel { src = inputs.dash-to-panel; };
 
   firefox-gnome-theme = callPackage ./firefox-gnome-theme { src = inputs.firefox-gnome-theme; };
 
@@ -34,61 +23,11 @@ in
 
   gamescope = callPackage ./gamescope { src = inputs.gamescope; };
 
-  # gimp = callPackage ./gimp {
-  #   gegl = gegl_0_4;
-  #   lcms = lcms2;
-  #   inherit (darwin.apple_sdk.frameworks) AppKit Cocoa;
-  # };
-
   inherit (ideaPackages) idea-community idea-community-eap;
 
-  instant-workspace-switcher = callPackage ./instant-workspace-switcher {
-    src = inputs.instant-workspace-switcher;
-  };
+  jetbrains-toolbox = callPackage ./jetbrains-toolbox { };
 
-  jcef = jcef17;
-
-  cefDist = callPackage ./jcef/cef.nix { };
-
-  jcef11 = callPackage ./jcef {
-    jdk = jdk11;
-  };
-
-  jcef17 = callPackage ./jcef {
-    jdk = jdk17;
-  };
-
-  jetbrains-jdk17 = (openjdk17.overrideAttrs (attrs: {
-    pname = "jetbrains-jdk";
-    version = "unstable-17-0-1";
-    src = inputs.jetbrains-jdk;
-    patches = [ ];
-    meta = attrs.meta // {
-      longDescription = ''
-        JetBrains Runtime is a runtime environment for running IntelliJ Platform
-        based products on Windows, Mac OS X, and Linux. JetBrains Runtime is
-        based on OpenJDK project with some modifications. These modifications
-        include: Subpixel Anti-Aliasing, enhanced font rendering on Linux, HiDPI
-        support, ligatures, some fixes for native crashes not presented in
-        official build, and other small enhancements.
-
-        JetBrains Runtime is not a certified build of OpenJDK. Please, use at
-        your own risk.
-      '';
-      homepage = "https://confluence.jetbrains.com/display/JBR/JetBrains+Runtime";
-    };
-    passthru = attrs.passthru // {
-      home = "${jetbrains-jdk17}/lib/openjdk";
-    };
-  })).override {
-    enableJavaFX = false;
-  };
-
-  kotlin-native = callPackage ./kotlin-native { };
-
-  # kotlin-native = callPackage ./kotlin-native/wrapper.nix { };
-
-  maxflow = callPackage ./maxflow { };
+  jextract = callPackage ./jextract { src = inputs.jextract; };
 
   mfc9130cw-cupswrapper = callPackage ./mfc9130cwcupswrapper { };
   mfc9130cwlpr = pkgsi686Linux.callPackage ./mfc9130cwlpr { };

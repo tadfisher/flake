@@ -1,8 +1,8 @@
 { lib, stdenv, fetchFromGitHub, fetchpatch, src }:
 
 stdenv.mkDerivation rec {
-  pname = "paperwm-unstable";
-  version = "40.0";
+  pname = "paperwm";
+  version = "unstable";
 
   inherit src;
 

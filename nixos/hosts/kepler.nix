@@ -102,6 +102,8 @@ with lib;
     optimise.automatic = true;
   };
 
+  security.polkit.enable = true;
+
   services = {
     btrfs.autoScrub = {
       enable = true;

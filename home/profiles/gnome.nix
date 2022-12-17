@@ -111,8 +111,8 @@ with lib;
       always-show-log-out = true;
       disable-user-extensions = false;
       enabled-extensions = with pkgs; [
-        dash-to-panel.extensionUuid
         gnomeExtensions.bluetooth-quick-connect.extensionUuid
+        gnomeExtensions.dash-to-panel.extensionUuid
         gnomeExtensions.gsconnect.extensionUuid
         # instant-workspace-switcher.uuid
         paperwm.uuid
@@ -174,10 +174,10 @@ with lib;
     gnome.dconf-editor
     gnome.gnome-shell-extensions
     gnome.gnome-tweaks
-    dash-to-panel
     gnomeExtensions.bluetooth-quick-connect
+    gnomeExtensions.dash-to-panel
     gnomeExtensions.gsconnect
-    instant-workspace-switcher
+    # instant-workspace-switcher
     paperwm
     roboto
     vertical-overview

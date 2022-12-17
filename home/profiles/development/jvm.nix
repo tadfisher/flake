@@ -6,6 +6,7 @@ let
       openjdk8
       openjdk11
       openjdk17
+      openjdk19
     ];
   };
 
@@ -14,7 +15,7 @@ in
   home = {
     file.".gradle/gradle.properties".text = ''
       org.gradle.java.installations.auto-download=false
-      org.gradle.java.installations.fromEnv=JDK8,JDK11,JDK17
+      org.gradle.java.installations.fromEnv=JDK8,JDK11,JDK17,JDK19
     '';
 
     packages = with pkgs; [
@@ -29,6 +30,7 @@ in
       JDK8 = "${pkgs.openjdk8}";
       JDK11 = "${pkgs.openjdk11}";
       JDK17 = "${pkgs.openjdk17}";
+      JDK19 = "${pkgs.openjdk19}";
     };
   };
 
@@ -36,6 +38,7 @@ in
     "java/openjdk".source = pkgs.openjdk.home;
     "java/openjdk8".source = pkgs.openjdk8.home;
     "java/openjdk11".source = pkgs.openjdk11.home;
+    "java/openjdk19".source = pkgs.openjdk19.home;
     # "java/jetbrains".source = pkgs.jetbrains.jdk;
   };
 }

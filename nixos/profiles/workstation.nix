@@ -20,10 +20,6 @@ mkMerge [
     };
 
     environment = {
-      etc."systemd/oomd.conf".text = ''
-        [OOM]
-        DefaultMemoryPressureDurationSec=20s
-      '';
       systemPackages = with pkgs; [
         adw-gtk3
         gnome.adwaita-icon-theme
@@ -186,7 +182,7 @@ mkMerge [
     };
 
     systemd = {
-      package = pkgs.systemd.override { withOomd = true; };
+      network.wait-online.enable = false; # We use NetworkManager for workstations
       oomd = {
         enableRootSlice = true;
         enableUserServices = true;
@@ -196,20 +192,10 @@ mkMerge [
           ""
           "${config.hardware.bluetooth.package}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf --experimental"
         ];
-        systemd-networkd-wait-online.enable = false;
       };
       sleep.extraConfig = ''
         HibernateDelaySec=1h
       '';
-    };
-
-    users = {
-      groups.systemd-oom.gid = 666;
-      users.systemd-oom = {
-        uid = 666;
-        group = "systemd-oom";
-        isSystemUser = true;
-      };
     };
 
     xdg.portal = {

@@ -42,7 +42,6 @@ with lib;
       enable = true;
       plugins = with pkgs.obs-studio-plugins; [
         obs-move-transition
-        obs-websocket
       ];
     };
     ssh.matchBlocks."10.0.99.2" = {

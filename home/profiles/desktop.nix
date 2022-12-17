@@ -109,7 +109,7 @@ with lib;
       ];
     };
 
-    emacs.package = pkgs.emacsPgtkNativeComp;
+    emacs.package = pkgs.emacsPgtk;
 
     firefox = {
       enable = true;

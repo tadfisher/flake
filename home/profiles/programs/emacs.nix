@@ -54,7 +54,7 @@ in
 
       init = {
         enable = true;
-        packageQuickstart = false;
+        packageQuickstart = true;
         recommendedGcSettings = true;
         usePackageVerbose = false;
 
@@ -469,7 +469,7 @@ in
               (add-to-list 'completion-at-point-functions #'cape-rfc1345)
               (add-to-list 'completion-at-point-functions #'cape-sgml)
               (add-to-list 'completion-at-point-functions #'cape-symbol)
-              (add-to-list 'completion-at-point-functions #'cape-tex)
+              ;; (add-to-list 'completion-at-point-functions #'cape-tex)
             '';
           };
 
@@ -597,15 +597,11 @@ in
               "M-s r" = "consult-ripgrep";
               "M-y" = "consult-yank-pop";
             };
-            command = [ "consult-completing-read-multiple" ];
             config = ''
               (defvar tad/consult-line-map
                 (let ((map (make-sparse-keymap)))
                   (define-key map "\C-s" #'vertico-next)
                   map))
-
-              (advice-add #'completing-read-multiple
-                          :override #'consult-completing-read-multiple)
 
               (consult-customize
                 consult-line
@@ -763,7 +759,7 @@ in
 
           # Setup ebib, my chosen bibliography manager.
           ebib = {
-            enable = true;
+            enable = false;
             command = [ "ebib" ];
             hook = [
               # Highlighting of trailing whitespace is a bit annoying in ebib.
@@ -805,6 +801,7 @@ in
 
           eglot = {
             enable = true;
+            package = (epkgs: if versionAtLeast (getVersion cfg.package) "29" then "" else epkgs.eglot);
             hook = [
               ''
                 ((c-mode c++-mode
@@ -813,6 +810,7 @@ in
                   haskell-mode
                   html-mode sgml-mode mhtml-mode web-mode
                   js-mode typescript-mode
+                  nix-mode
                   rust-mode
                   sh-mode) . eglot-ensure)
               ''
@@ -839,7 +837,10 @@ in
                               ("${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver" "--stdio"))))
                       ((js-mode typescript-mode)
                         . ,(eglot-alternatives
-                            '("javascript-typescript-stdio" "${pkgs.nodePackages.javascript-typescript-langserver}/bin/javascript-typescript-stdio")))
+                            '(("typescript-language-server" "--stdio")
+                              ("${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server" "--stdio"))))
+                      (nix-mode
+                       . ,(eglot-alternatives '("rnix-lsp" "${pkgs.rnix-lsp}/bin/rnix-lsp")))
                       (rust-mode
                        . ,(eglot-alternatives '("rust-analyzer" "${pkgs.rust-analyzer}/bin/rust-analyzer")))
                       (sh-mode
@@ -864,25 +865,32 @@ in
 
           embark = {
             enable = true;
-            command = [ "embark-prefix-help-command" ];
             bind = {
               "C-." = "embark-act";
               "M-." = "embark-dwim";
               "C-h B" = "embark-bindings";
             };
+            extraConfig = ''
+              :ensure t
+            '';
             init = ''
               (setq prefix-help-command #'embark-prefix-help-command)
             '';
             config = ''
-              (setq embark-indicators '(embark-minimal-indicator
-                                        embark-highlight-indicator
-                                        embark-isearch-highlight-indicator))
+              ;; Hide the mode line of the Embark live/completions buffers
+              (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none))))
             '';
           };
 
           embark-consult = {
             enable = true;
-            after = [ "embark" "consult" ];
+            extraConfig = ''
+              :ensure t
+            '';
+            hook = [ "(embark-collect-mode . consult-preview-at-point-mode)" ];
           };
 
           envrc = {
@@ -1733,10 +1741,10 @@ in
 
           tramp = {
             enable = true;
-            init = ''
-              (autoload 'tramp-register-crypt-file-name-handler "tramp-autoloads" "\
-              Add crypt file name handler to `file-name-handler-alist'." nil nil)
-            '';
+            package = ""; # Preferring built-in package for now
+            # init = ''
+            #   (autoload #'tramp-register-crypt-file-name-handler "tramp-crypt")
+            # '';
             config = ''
               (setq tramp-auto-save-directory "~/.cache/emacs/tramp"
                     tramp-shell-prompt-pattern
@@ -1759,8 +1767,6 @@ in
               (setq treemacs-python-executable "${pkgs.python3}/bin/python")
             '';
           };
-
-          tree-sitter.enable = true;
 
           tt-mode = {
             enable = true;

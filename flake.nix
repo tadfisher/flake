@@ -31,12 +31,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager";
     };
-    instant-workspace-switcher = {
-      url = "github:amalantony/gnome-shell-extension-instant-workspace-switcher";
-      flake = false;
-    };
     jetbrains-jdk = {
       url = "github:Jetbrains/JetBrainsRuntime/dc8888f2e085fcb387638994627c2e5e8e66bb33";
+      flake = false;
+    };
+    jextract = {
+      url = "github:openjdk/jextract";
       flake = false;
     };
     libhidx = {
@@ -45,10 +45,6 @@
     };
     ligature-el = {
       url = "github:mickeynp/ligature.el";
-      flake = false;
-    };
-    mopidy-ytmusic = {
-      url = "github:OzymandiasTheGreat/mopidy-ytmusic";
       flake = false;
     };
     notmuch-notify = {
@@ -70,7 +66,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     paperwm = {
-      url = "github:tadfisher/PaperWM/gnome-42";
+      url = "github:paperwm/PaperWM/develop";
       flake = false;
     };
     pass-audit = {
@@ -120,7 +116,7 @@
 
           overlays = [
             (inputs.android-nixpkgs.overlays.default)
-            (inputs.emacs-overlay.overlay)
+            (inputs.emacs-overlay.overlays.package)
             (inputs.nix-dart.overlay)
             (inputs.nix-direnv.overlay)
             (self.overlays.default)
@@ -293,11 +289,11 @@
           (self.overlays.overlay final prev);
       };
 
-
       packages = eachSystem (system:
         import ./pkgs { inherit inputs; pkgs = pkgsBySystem.${system}; } //
         inputs.nix-dart.packages.${system} //
         {
+          inherit (inputs.emacs-overlay.packages.${system}) emacsPgtk;
           nix-prefetch-github = inputs.nix-prefetch-github.packages.${system}.default;
           nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
           nixUnstable = inputs.nixpkgs.legacyPackages.${system}.nixUnstable;

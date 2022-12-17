@@ -8,68 +8,6 @@ with final;
   emacsPackagesFor = emacs:
     (prev.emacsPackagesFor emacs).overrideScope' (callPackage ./emacs { inherit inputs; });
 
-  # spidermonkey_91-debug = prev.spidermonkey_91.overrideAttrs (attrs: {
-  #   separateDebugInfo = true;
-  # });
-
-  # gjs-debug = (prev.gjs.override {
-  #   spidermonkey_91 = spidermonkey_91-debug;
-  # }).overrideAttrs (attrs: rec {
-  #   inherit (attrs) pname;
-  #   version = "1.73.1";
-
-  #   src = fetchurl {
-  #     url = "mirror://gnome/sources/gjs/${lib.versions.majorMinor version}/${pname}-${version}.tar.xz";
-  #     sha256 = "sha256-k/XuvxCLrR8uHb6sPBf9NHGs2o7acfQecMhdkDNR8As=";
-  #   };
-
-  #   separateDebugInfo = true;
-  # });
-
-  # gnome = prev.gnome.overrideScope' (final': prev': {
-  #   gnome-shell = (prev'.gnome-shell.override {
-  #     gjs = gjs-debug;
-  #   }).overrideAttrs (attrs: {
-  #     separateDebugInfo = true;
-  #   });
-
-  #   mutter = prev'.mutter.overrideAttrs (attrs: {
-  #     separateDebugInfo = true;
-  #   });
-  # });
-
-  mopidy-ytmusic = prev.mopidy-ytmusic.overrideAttrs (attrs: {
-    src = inputs.mopidy-ytmusic;
-
-    patches = (prev.patches or []) ++ [
-      (fetchpatch {
-        url = "https://github.com/OzymandiasTheGreat/mopidy-ytmusic/pull/57.diff";
-        hash = "sha256-ysku2UUmzy2ImUnDP904L88UpWsevLri3Y8QdA3HoW8=";
-      })
-    ];
-
-    postPatch = "";
-  });
-
-  nix-direnv = prev.nix-direnv.overrideAttrs (attrs: {
-    postPatch = ''
-      sed -i "2iNIX_BIN_PREFIX=${nix}/bin/" direnvrc
-      substituteInPlace direnvrc \
-        --replace "grep" "${gnugrep}/bin/grep"
-    '';
-  });
-
-  openmw = prev.openmw.overrideAttrs (attrs: {
-    patches = (attrs.patches or [ ]) ++ [
-      (fetchpatch {
-        url = "https://gitlab.com/OpenMW/openmw/-/merge_requests/1239.diff";
-        hash = "sha256-RhbIGeE6GyqnipisiMTwWjcFnIiR055hUPL8IkjPgZw=";
-      })
-    ];
-
-    meta = attrs.meta // { broken = false; };
-  });
-
   paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {
     pname = "paper-icon-theme-unstable";
     version = "2020-03-12";
@@ -97,13 +35,4 @@ with final;
       maintainers = with lib.maintainers; [ tadfisher ];
     };
   });
-
-  # https://github.com/NixOS/nixpkgs/pull/183798
-  python3 = prev.python3.override {
-    packageOverrides = final': prev': {
-      tpm2-pytss = prev'.tpm2-pytss.overridePythonAttrs (attrs: {
-        propagatedBuildInputs = attrs.propagatedBuildInputs ++ [ final'.pyyaml final'.setuptools-scm ];
-      });
-    };
-  };
 }

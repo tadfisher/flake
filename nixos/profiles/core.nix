@@ -5,7 +5,7 @@ with lib;
 {
   boot = {
     cleanTmpDir = true;
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = mkDefault pkgs.linuxPackages_latest;
     supportedFilesystems = [ "exfat" ];
   };
 

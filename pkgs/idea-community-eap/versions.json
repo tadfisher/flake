@@ -3,57 +3,57 @@
     "idea-community": {
       "update-channel": "IntelliJ IDEA RELEASE",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}.tar.gz",
-      "version": "2022.2.3",
-      "sha256": "4ba5faafad48d58db5099fae080ae2238086d3d9803080082de8efe35d8bf4ed",
-      "url": "https://download.jetbrains.com/idea/ideaIC-2022.2.3.tar.gz",
+      "version": "2022.3",
+      "sha256": "a3f53de8293b55739d916868d732bde521e33e59a5181e758d6f1691d479da9e",
+      "url": "https://download.jetbrains.com/idea/ideaIC-2022.3.tar.gz",
       "version-major-minor": "2022.1",
-      "build_number": "222.4345.14"
+      "build_number": "223.7571.182"
     },
     "idea-community-eap": {
       "update-channel": "IntelliJ IDEA EAP",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}.tar.gz",
-      "version": "2022.3 EAP",
-      "build_number": "223.6646.99",
-      "sha256": "32248ce75fe6e14ff9bad9656dd4e0239024e2bee92b80e7e799597c9ea6db94",
-      "url": "https://download.jetbrains.com/idea/ideaIC-223.6646.99.tar.gz"
+      "version": "2022.3 Beta",
+      "build_number": "223.7571.4",
+      "sha256": "f13d998021921a50b4864ee36ba5cdc8cdcb8951c009f7cdc724f4351bfc2633",
+      "url": "https://download.jetbrains.com/idea/ideaIC-223.7571.4.tar.gz"
     }
   },
   "x86_64-darwin": {
     "idea-community": {
       "update-channel": "IntelliJ IDEA RELEASE",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}.dmg",
-      "version": "2022.2.3",
-      "sha256": "6ec3721d9961918a14630eaf068765eeba97e71baecd95ec67510dc25c8bd1b1",
-      "url": "https://download.jetbrains.com/idea/ideaIC-2022.2.3.dmg",
+      "version": "2022.3",
+      "sha256": "52a006f6a3e0f3adfd0b8dd5630966f6bbc8880b603f5e0851e3091755bf4232",
+      "url": "https://download.jetbrains.com/idea/ideaIC-2022.3.dmg",
       "version-major-minor": "2022.1",
-      "build_number": "222.4345.14"
+      "build_number": "223.7571.182"
     },
     "idea-community-eap": {
       "update-channel": "IntelliJ IDEA EAP",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}.dmg",
-      "version": "2022.3 EAP",
-      "build_number": "223.6646.99",
-      "sha256": "58ffa13a77ae9416242337b05279fca44193781998c6707e4c0e64babd4125de",
-      "url": "https://download.jetbrains.com/idea/ideaIC-223.6646.99.dmg"
+      "version": "2022.3 Beta",
+      "build_number": "223.7571.4",
+      "sha256": "ef5e3b08e104ae04a1ee5b41014384b84d0ae663d7d69f017475dc0094fb8683",
+      "url": "https://download.jetbrains.com/idea/ideaIC-223.7571.4.dmg"
     }
   },
   "aarch64-darwin": {
     "idea-community": {
       "update-channel": "IntelliJ IDEA RELEASE",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}-aarch64.dmg",
-      "version": "2022.2.3",
-      "sha256": "333c70caf452034ae332cdded4d24a71592049b4045725eb57826a0b997d1c7a",
-      "url": "https://download.jetbrains.com/idea/ideaIC-2022.2.3-aarch64.dmg",
+      "version": "2022.3",
+      "sha256": "5dd49aef0ac72e26f7c38c1df41441bb2f3d008b30567b8250175910db5c2179",
+      "url": "https://download.jetbrains.com/idea/ideaIC-2022.3-aarch64.dmg",
       "version-major-minor": "2022.1",
-      "build_number": "222.4345.14"
+      "build_number": "223.7571.182"
     },
     "idea-community-eap": {
       "update-channel": "IntelliJ IDEA EAP",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}-aarch64.dmg",
-      "version": "2022.3 EAP",
-      "build_number": "223.6646.99",
-      "sha256": "7cd6c3730ec6ec967e97914478d578e569f2019fcdcf5ebbb7d0309ea912b173",
-      "url": "https://download.jetbrains.com/idea/ideaIC-223.6646.99-aarch64.dmg"
+      "version": "2022.3 Beta",
+      "build_number": "223.7571.4",
+      "sha256": "7d141c28fe629df5f8d2ececcbd11b32f2ee648563cd857256fbe1fd60b1fd15",
+      "url": "https://download.jetbrains.com/idea/ideaIC-223.7571.4-aarch64.dmg"
     }
   }
 }
