@@ -8,7 +8,7 @@
 }:
 
 let
-  llvmHome = runCommand "jextract-llvm-home" {} ''
+  llvmHome = runCommand "jextract-llvm-home" { } ''
     mkdir -p $out/lib
     ln -sf ${libclang.lib}/lib/* $out/lib/
     ln -sf ${libclang.libllvm.lib}/lib/* $out/lib/

@@ -11,8 +11,6 @@ let
   };
 in
 rec {
-  adw-gtk3 = callPackage ./adw-gtk3 { src = inputs.adw-gtk3; };
-
   cleaner-overview = callPackage ./cleaner-overview { };
 
   dart-sass = callPackage ./dart-sass { };
@@ -20,8 +18,6 @@ rec {
   firefox-gnome-theme = callPackage ./firefox-gnome-theme { src = inputs.firefox-gnome-theme; };
 
   fleet = callPackage ./fleet { };
-
-  gamescope = callPackage ./gamescope { src = inputs.gamescope; };
 
   inherit (ideaPackages) idea-community idea-community-eap;
 

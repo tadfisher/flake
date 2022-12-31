@@ -314,11 +314,13 @@ in
           adoc-mode = {
             enable = true;
             mode = [ ''"\\.adoc\\'"'' ];
-            hook = [''
-              (adoc-mode . (lambda ()
-                            (visual-line-mode)
-                            (buffer-face-mode)))
-            ''];
+            hook = [
+              ''
+                (adoc-mode . (lambda ()
+                              (visual-line-mode)
+                              (buffer-face-mode)))
+              ''
+            ];
             config = ''
               (set-face-background 'markup-verbatim-face nil)
             '';
@@ -476,11 +478,13 @@ in
           cc-mode = {
             enable = true;
             defer = true;
-            hook = [''
-              (c-mode-common . (lambda ()
-                                (subword-mode)
-                                (c-set-offset 'arglist-intro '++)))
-            ''];
+            hook = [
+              ''
+                (c-mode-common . (lambda ()
+                                  (subword-mode)
+                                  (c-set-offset 'arglist-intro '++)))
+              ''
+            ];
           };
 
           cmake-mode = {
@@ -1020,9 +1024,11 @@ in
               ''("\\.cpphs\\'" . haskell-mode)''
               ''("\\.lhs\\'" . haskell-literate-mode)''
             ];
-            hook = [''
-              (haskell-mode . subword-mode)
-            ''];
+            hook = [
+              ''
+                (haskell-mode . subword-mode)
+              ''
+            ];
             bindLocal = {
               haskell-mode-map = {
                 "C-c C-l" = "haskell-interactive-bring";
@@ -1817,13 +1823,15 @@ in
                 "t" = "project-vterm";
               };
             };
-            hook = [''
-              (vterm . (lambda ()
-                         (blink-cursor-mode -1)
-                         (setq-local confirm-kill-processes nil
-                                     global-hl-line-mode nil)
-                         (hl-line-mode -1)))
-            ''];
+            hook = [
+              ''
+                (vterm . (lambda ()
+                           (blink-cursor-mode -1)
+                           (setq-local confirm-kill-processes nil
+                                       global-hl-line-mode nil)
+                           (hl-line-mode -1)))
+              ''
+            ];
             init = ''
               (add-to-list 'project-switch-commands '(project-vterm "Vterm") t)
               (add-to-list 'project-kill-buffer-conditions '(major-mode . vterm-mode))

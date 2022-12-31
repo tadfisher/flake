@@ -47,7 +47,8 @@ let
       };
     });
 
-in {
+in
+{
   idea-community = buildIdea rec {
     pname = "idea-community";
     product = "IntelliJ IDEA CE";

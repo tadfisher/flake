@@ -7,6 +7,7 @@ with lib;
     cleanTmpDir = true;
     kernelPackages = mkDefault pkgs.linuxPackages_latest;
     supportedFilesystems = [ "exfat" ];
+    initrd.systemd.enable = mkDefault true;
   };
 
   console = {

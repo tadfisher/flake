@@ -5,7 +5,6 @@ with lib;
   imports = [
     ../profiles/core.nix
     ../profiles/games.nix
-    ../profiles/services/clamav.nix
     ../profiles/users/tad.nix
     ../profiles/uefi.nix
     ../profiles/workstation.nix
@@ -70,7 +69,7 @@ with lib;
     openssh.enable = true;
 
     # Issues with amdgpu reset
-    xserver.displayManager.gdm.autoSuspend = false;
+    # xserver.displayManager.gdm.autoSuspend = false;
   };
 
   systemd.network.networks."40-enp4s0" = {

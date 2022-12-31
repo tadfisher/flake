@@ -18,7 +18,7 @@ let
     inherit (source) url hash;
   };
 
-  unwrapped = runCommand "${name}-unwrapped" {} ''
+  unwrapped = runCommand "${name}-unwrapped" { } ''
     tar -xvf ${tarball}
     ls -la
     echo $out

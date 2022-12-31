@@ -2,10 +2,6 @@
   description = "Tad's Nix configurations";
 
   inputs = {
-    adw-gtk3 = {
-      url = "github:lassekongo83/adw-gtk3";
-      flake = false;
-    };
     android-nixpkgs = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/android-nixpkgs";
@@ -17,10 +13,6 @@
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     firefox-gnome-theme = {
       url = "github:rafaelmardojai/firefox-gnome-theme";
-      flake = false;
-    };
-    gamescope = {
-      url = "github:Plagman/gamescope";
       flake = false;
     };
     hidviz = {

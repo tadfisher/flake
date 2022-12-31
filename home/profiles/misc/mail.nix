@@ -52,9 +52,11 @@ let
     concatMapStrings (mkAddressEntry account.maildir account.folders)
       ([ account.address ] ++ account.aliases);
 
-  preNewHook = concatMapStringsSep "\n" (a: ''
-    ${config.programs.lieer.package}/bin/gmi sync -C ${a.maildir.absPath}
-  '') lieerAccounts;
+  preNewHook = concatMapStringsSep "\n"
+    (a: ''
+      ${config.programs.lieer.package}/bin/gmi sync -C ${a.maildir.absPath}
+    '')
+    lieerAccounts;
 
 in
 {

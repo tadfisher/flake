@@ -30,7 +30,6 @@ in
         "usb_storage"
       ];
       opal.sedutilPackage = pkgs.sedutil-fork;
-      systemd.enable = true;
     };
     kernelPackages = pkgs.linuxPackages;
     kernelModules = [

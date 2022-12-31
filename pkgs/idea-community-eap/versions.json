@@ -3,11 +3,11 @@
     "idea-community": {
       "update-channel": "IntelliJ IDEA RELEASE",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}.tar.gz",
-      "version": "2022.3",
-      "sha256": "a3f53de8293b55739d916868d732bde521e33e59a5181e758d6f1691d479da9e",
-      "url": "https://download.jetbrains.com/idea/ideaIC-2022.3.tar.gz",
+      "version": "2022.3.1",
+      "sha256": "4c3514642ce6c86e5343cc29b01c06ddc9c55f134bcb6650de5d7d36205799e8",
+      "url": "https://download.jetbrains.com/idea/ideaIC-2022.3.1.tar.gz",
       "version-major-minor": "2022.1",
-      "build_number": "223.7571.182"
+      "build_number": "223.8214.52"
     },
     "idea-community-eap": {
       "update-channel": "IntelliJ IDEA EAP",
@@ -22,11 +22,11 @@
     "idea-community": {
       "update-channel": "IntelliJ IDEA RELEASE",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}.dmg",
-      "version": "2022.3",
-      "sha256": "52a006f6a3e0f3adfd0b8dd5630966f6bbc8880b603f5e0851e3091755bf4232",
-      "url": "https://download.jetbrains.com/idea/ideaIC-2022.3.dmg",
+      "version": "2022.3.1",
+      "sha256": "8ea8b1ceebde397950592708b55f277ca43856b4013f597ccbf385bb75a42c72",
+      "url": "https://download.jetbrains.com/idea/ideaIC-2022.3.1.dmg",
       "version-major-minor": "2022.1",
-      "build_number": "223.7571.182"
+      "build_number": "223.8214.52"
     },
     "idea-community-eap": {
       "update-channel": "IntelliJ IDEA EAP",
@@ -41,11 +41,11 @@
     "idea-community": {
       "update-channel": "IntelliJ IDEA RELEASE",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}-aarch64.dmg",
-      "version": "2022.3",
-      "sha256": "5dd49aef0ac72e26f7c38c1df41441bb2f3d008b30567b8250175910db5c2179",
-      "url": "https://download.jetbrains.com/idea/ideaIC-2022.3-aarch64.dmg",
+      "version": "2022.3.1",
+      "sha256": "394478e3f2a2ea1788a5c2ef9c5a9db72531462b4db921483d24a08f7c260a43",
+      "url": "https://download.jetbrains.com/idea/ideaIC-2022.3.1-aarch64.dmg",
       "version-major-minor": "2022.1",
-      "build_number": "223.7571.182"
+      "build_number": "223.8214.52"
     },
     "idea-community-eap": {
       "update-channel": "IntelliJ IDEA EAP",

@@ -18,9 +18,10 @@ let
   stage2OpalDevices = filter (x: !(builtins.elem x stage1OpalDevices))
     (unique (catAttrs "opalDevice" stage2Filesystems));
 
-  verboseFlag = if cfg.verbosity >= 1 && cfg.verbosity <= 5
-                then "-" + concatStringsSep "" (genList (_: "v") cfg.verbosity)
-                else "";
+  verboseFlag =
+    if cfg.verbosity >= 1 && cfg.verbosity <= 5
+    then "-" + concatStringsSep "" (genList (_: "v") cfg.verbosity)
+    else "";
 
   consoleFunctions = ''
     opal_msg() {
@@ -295,17 +296,21 @@ in
 
       systemd = {
         services = mkMerge [
-          (listToAttrs (map (opalDevice: (unlockService {
-            inherit opalDevice;
-            filesystems = opalFilesystems;
-            systemd = config.boot.initrd.systemd.package;
-            prefix = "/sysroot";
-          })) stage1OpalDevices))
+          (listToAttrs (map
+            (opalDevice: (unlockService {
+              inherit opalDevice;
+              filesystems = opalFilesystems;
+              systemd = config.boot.initrd.systemd.package;
+              prefix = "/sysroot";
+            }))
+            stage1OpalDevices))
 
-          (listToAttrs (map (opalDevice: nameValuePair (serviceName opalDevice) {
-            requiredBy = hibernateResumeService;
-            before = hibernateResumeService;
-          }) stage1OpalDevices))
+          (listToAttrs (map
+            (opalDevice: nameValuePair (serviceName opalDevice) {
+              requiredBy = hibernateResumeService;
+              before = hibernateResumeService;
+            })
+            stage1OpalDevices))
         ];
         extraBin = {
           grep = "${pkgs.gnugrep}/bin/grep";
@@ -320,11 +325,13 @@ in
     '';
 
     systemd = mkIf (stage2Filesystems != { }) {
-      services = listToAttrs (map (opalDevice: (unlockService {
-        inherit opalDevice;
-        filesystems = stage2Filesystems;
-        systemd = config.systemd.package;
-      }) // { restartIfChanged = false; }) stage2OpalDevices);
+      services = listToAttrs (map
+        (opalDevice: (unlockService {
+          inherit opalDevice;
+          filesystems = stage2Filesystems;
+          systemd = config.systemd.package;
+        }) // { restartIfChanged = false; })
+        stage2OpalDevices);
 
       targets.opal-disks =
         let
