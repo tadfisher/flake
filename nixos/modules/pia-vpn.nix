@@ -98,7 +98,7 @@ with lib;
 
     systemd.services.pia-vpn = {
       description = "Connect to Private Internet Access on ${cfg.interface}";
-      path = with pkgs; [ bash curl gawk jq wireguard ];
+      path = with pkgs; [ bash curl gawk jq wireguard-tools ];
       requires = [ "network-online.target" ];
       after = [ "network.target" "network-online.target" ];
       wantedBy = [ "multi-user.target" ];
