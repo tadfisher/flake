@@ -123,7 +123,7 @@ with lib;
     unifi = {
       enable = true;
       openFirewall = true;
-      unifiPackage = pkgs.unifi6;
+      unifiPackage = pkgs.unifi7;
     };
   };
 
@@ -157,9 +157,7 @@ with lib;
       games.gid = 1001;
       # TODO Fix kepler NFS permissions
       media.gid = 2000;
-      unifi = { };
     };
-    users.unifi.group = "unifi";
   };
 
   virtualisation.libvirtd.enable = true;
