@@ -437,16 +437,16 @@
     "portmod": {
       "flake": false,
       "locked": {
-        "lastModified": 1648256570,
-        "narHash": "sha256-jqDwlKKXppt8lQu4BSOFSIPwe+4SWjs3er/NBaRXeEU=",
+        "lastModified": 1671838487,
+        "narHash": "sha256-66aWbuzRTAFHIrPu7pGvfnATb8oxpAgSBW1ArEew3eI=",
         "owner": "portmod",
         "repo": "portmod",
-        "rev": "faf765682cf24c92710640719af8a9a93971f37e",
+        "rev": "680592de887e3642f1ea42b9d5f03222f5d6b742",
         "type": "gitlab"
       },
       "original": {
         "owner": "portmod",
-        "ref": "v2.3.2",
+        "ref": "v2.5.0",
         "repo": "portmod",
         "type": "gitlab"
       }

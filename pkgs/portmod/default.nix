@@ -19,18 +19,7 @@
 }:
 
 let
-  version = "2.3.2";
-
-  portmod-rust = rustPlatform.buildRustPackage rec {
-    inherit src version;
-    pname = "portmod-rust";
-
-    cargoHash = "sha256-Ro2kgwpP1h02j2Dhhf0O1ZcFzMe/Y6W44aqQ5c8wVSE=";
-
-    nativeBuildInputs = [ python3Packages.python ];
-
-    doCheck = false;
-  };
+  version = "2.5.0";
 
   bin-programs = [
     bubblewrap
@@ -43,28 +32,34 @@ let
   ];
 
 in
-python3Packages.buildPythonApplication rec {
+python3Packages.buildPythonApplication {
   inherit src version;
 
   pname = "portmod";
 
   SETUPTOOLS_SCM_PRETEND_VERSION = version;
 
-  # build the rust library independantly
-  prePatch = ''
-    substituteInPlace setup.py \
-      --replace "from setuptools_rust import Binding, RustExtension" "" \
-      --replace "RustExtension(\"portmodlib.portmod\", binding=Binding.PyO3, strip=True)" ""
-  '';
+  cargoDeps = rustPlatform.fetchCargoTarball {
+    inherit src;
+    name = "portmod-cargo-deps-${version}";
+    hash = "sha256-9lo7xVD0lIV4O8yNWXhcIvb+PusJVZ2msRl8/vMPrhM=";
+  };
 
-  propagatedBuildInputs = with python3Packages; [
+  nativeBuildInputs = (with python3Packages; [
+    setuptools-rust
     setuptools-scm
     setuptools
+  ]) ++ (with rustPlatform; [
+    cargoSetupHook
+    rust.cargo
+    rust.rustc
+  ]);
+
+  propagatedBuildInputs = with python3Packages; [
     requests
     chardet
     colorama
     restrictedpython
-    appdirs
     GitPython
     progressbar2
     python-sat
@@ -81,7 +76,6 @@ python3Packages.buildPythonApplication rec {
   ] ++ bin-programs;
 
   preCheck = ''
-    cp ${portmod-rust}/lib/libportmod.so portmodlib/portmod.so
     export HOME=$(mktemp -d)
   '';
 
@@ -95,13 +89,9 @@ python3Packages.buildPythonApplication rec {
     "test_sync"
     "test_manifest"
     "test_add_repo"
-
   ];
 
-  # for some reason, installPhase doesn't copy the compiled binary
   postInstall = ''
-    cp ${portmod-rust}/lib/libportmod.so $out/${python3Packages.python.sitePackages}/portmodlib/portmod.so
-
     makeWrapperArgs+=("--prefix" "GIT_SSL_CAINFO" ":" "${cacert}/etc/ssl/certs/ca-bundle.crt" \
       "--prefix" "PATH" ":" "${lib.makeBinPath bin-programs }")
   '';

@@ -66,7 +66,7 @@
       flake = false;
     };
     portmod = {
-      url = "gitlab:portmod/portmod/v2.3.2";
+      url = "gitlab:portmod/portmod/v2.5.0";
       flake = false;
     };
     rycee = {
