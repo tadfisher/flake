@@ -115,6 +115,13 @@ with lib;
 
     iperf3.enable = true;
 
+    nfs.server = {
+      enable = true;
+      exports = ''
+        /srv *(insecure,rw,sync,no_subtree_check,crossmnt)
+      '';
+    };
+
     transmission.settings = {
       download-dir = "/srv/media/.incoming";
       watch-dir = "/srv/media/.incoming/";
