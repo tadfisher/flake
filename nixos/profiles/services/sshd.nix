@@ -10,11 +10,11 @@ with lib;
 
   services.openssh = {
     enable = true;
-    passwordAuthentication = mkDefault false;
-    permitRootLogin = "no";
     startWhenNeeded = true;
-    extraConfig = ''
-      StreamLocalBindUnlink yes
-    '';
+    settings = {
+      PasswordAuthentication = mkDefault "no";
+      PermitRootLogin = "no";
+      StreamLocalBindUnlink = "yes";
+    };
   };
 }

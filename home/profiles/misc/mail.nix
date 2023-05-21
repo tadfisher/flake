@@ -120,78 +120,75 @@ in
 
       notmuch-notify.enable = false;
 
-      emacs.init = {
-        usePackage = {
-          message = {
-            enable = true;
-            package = "";
-            defer = true;
-            config = ''
-              (setq hm--message-maildir-paths ${elispMaildirPaths})
+      emacs.init.usePackage = {
+        message = {
+          enable = true;
+          package = "";
+          config = ''
+            (setq hm--message-maildir-paths ${elispMaildirPaths})
 
-              (defun hm--message-draft-folder (from)
-                (cond ${concatMapStrings (mkAccountEntries "${cfgEmail.maildirBasePath}") sortedAccounts}))
+            (defun hm--message-draft-folder (from)
+              (cond ${concatMapStrings (mkAccountEntries "${cfgEmail.maildirBasePath}") sortedAccounts}))
 
-              (defun hm--message-send ()
-                (make-local-variable 'message-user-fqdn)
-                (make-local-variable 'message-sendmail-extra-arguments)
-                (when-let* ((from ${elispFromAddress})
-                       (path (cdr (assoc from hm--message-maildir-paths))))
-                  ; Set the host part of the Message-ID to the email address host.
-                  (setq message-user-fqdn ${elispFromHost})
-                  (setq message-sendmail-extra-arguments `("--quiet" "-t" "-C" ,path))))
-              (add-hook 'message-send-mail-hook 'hm--message-send)
+            (defun hm--message-send ()
+              (make-local-variable 'message-user-fqdn)
+              (make-local-variable 'message-sendmail-extra-arguments)
+              (when-let* ((from ${elispFromAddress})
+                     (path (cdr (assoc from hm--message-maildir-paths))))
+                ; Set the host part of the Message-ID to the email address host.
+                (setq message-user-fqdn ${elispFromHost})
+                (setq message-sendmail-extra-arguments `("--quiet" "-t" "-C" ,path))))
+            (add-hook 'message-send-mail-hook 'hm--message-send)
 
-              (defun hm--notmuch-message-set-auto-save-file-name ()
-                (let* ((from ${elispFromAddress})
-                       (message-auto-save-directory (hm--message-draft-folder from)))
-                  (message-set-auto-save-file-name)))
-              (add-hook 'message-setup-hook 'hm--notmuch-message-set-auto-save-file-name)
+            (defun hm--notmuch-message-set-auto-save-file-name ()
+              (let* ((from ${elispFromAddress})
+                     (message-auto-save-directory (hm--message-draft-folder from)))
+                (message-set-auto-save-file-name)))
+            (add-hook 'message-setup-hook 'hm--notmuch-message-set-auto-save-file-name)
 
-              (setq message-auto-save-directory nil
-                    message-directory "${cfgEmail.maildirBasePath}"
-                    message-sendmail-extra-arguments '("--quiet" "-t" "-C" "${primaryAccount.maildir.absPath}"))
-            '';
-          };
+            (setq message-auto-save-directory nil
+                  message-directory "${cfgEmail.maildirBasePath}"
+                  message-sendmail-extra-arguments '("--quiet" "-t" "-C" "${primaryAccount.maildir.absPath}"))
+          '';
+        };
 
-          mml = {
-            enable = true;
-            package = "";
-            defer = true;
-            config = ''
-              (setq mml-secure-openpgp-sign-with-sender t)
-            '';
-          };
+        mml = {
+          enable = true;
+          package = "";
+          defer = true;
+          config = ''
+            (setq mml-secure-openpgp-sign-with-sender t)
+          '';
+        };
 
-          notmuch = {
-            after = [ "message" ];
-            config = ''
-              ;; See https://github.com/Schnouki/dotfiles/blob/0d6716a041e1db95a27fc393baa8f38b850c5a25/emacs/init-50-mail.el#L243
-              (defun hm--notmuch-draft-folder (from)
-                (cond ${concatMapStrings (mkAccountEntries "") sortedAccounts}))
+        notmuch = {
+          after = [ "message" ];
+          config = ''
+            ;; See https://github.com/Schnouki/dotfiles/blob/0d6716a041e1db95a27fc393baa8f38b850c5a25/emacs/init-50-mail.el#L243
+            (defun hm--notmuch-draft-folder (from)
+              (cond ${concatMapStrings (mkAccountEntries "") sortedAccounts}))
 
-              (defun hm--notmuch-draft-save (orig-fun &rest args)
-                (let* ((from ${elispFromAddress})
-                       (notmuch-draft-folder (hm--notmuch-draft-folder from))
-                       (message-user-fqdn ${elispFromHost}))
-                  (apply orig-fun args)))
-              (advice-add 'notmuch-draft-save :around #'hm--notmuch-draft-save)
+            (defun hm--notmuch-draft-save (orig-fun &rest args)
+              (let* ((from ${elispFromAddress})
+                     (notmuch-draft-folder (hm--notmuch-draft-folder from))
+                     (message-user-fqdn ${elispFromHost}))
+                (apply orig-fun args)))
+            (advice-add 'notmuch-draft-save :around #'hm--notmuch-draft-save)
 
-              ;; gmi send automatially persists sent messages
-              (setq notmuch-fcc-dirs nil
-                    notmuch-always-prompt-for-sender ${notmuchPromptFrom})
-            '';
-          };
+            ;; gmi send automatially persists sent messages
+            (setq notmuch-fcc-dirs nil
+                  notmuch-always-prompt-for-sender ${notmuchPromptFrom})
+          '';
+        };
 
-          sendmail = {
-            enable = true;
-            package = ""; # built-in
-            defer = true;
-            config = ''
-              (setq send-mail-function #'sendmail-send-it
-                    sendmail-program "${sendmail}")
-            '';
-          };
+        sendmail = {
+          enable = true;
+          package = ""; # built-in
+          defer = true;
+          config = ''
+            (setq send-mail-function #'sendmail-send-it
+                  sendmail-program "${sendmail}")
+          '';
         };
       };
     };

@@ -6,8 +6,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/android-nixpkgs";
     };
-    dash-to-panel = {
-      url = "github:home-sweet-gnome/dash-to-panel/v46";
+    emacs = {
+      url = "github:emacs-mirror/emacs/emacs-29";
       flake = false;
     };
     emacs-overlay.url = "github:nix-community/emacs-overlay";
@@ -39,6 +39,10 @@
       url = "github:mickeynp/ligature.el";
       flake = false;
     };
+    mutter = {
+      url = "git+https://gitlab.gnome.org/Community/Ubuntu/mutter.git?ref=triple-buffering-v4-43";
+      flake = false;
+    };
     notmuch-notify = {
       url = "git+https://git.celti.name/Celti/notmuch-notify?ref=trunk";
       flake = false;
@@ -58,7 +62,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     paperwm = {
-      url = "github:paperwm/PaperWM/develop";
+      url = "github:paperwm/PaperWM/fixes-gnome-44-support";
       flake = false;
     };
     pass-audit = {
@@ -102,6 +106,7 @@
             {
               allowAliases = true;
               allowUnfree = true;
+              android_sdk.accept_license = true;
             }
             // profiles.games;
 
@@ -272,7 +277,7 @@
       overlays = rec {
         overlay = final: prev: import ./pkgs/overlay.nix inputs final prev;
 
-        pkgs = final: prev: self.packages.${prev.hostPlatform.system} or { };
+        pkgs = final: prev: import ./pkgs { inherit inputs; pkgs = final; };
 
         # There's probably an easier way to merge attributes in `overlays' into a
         # single function.
@@ -285,7 +290,6 @@
         import ./pkgs { inherit inputs; pkgs = pkgsBySystem.${system}; } //
         inputs.nix-dart.packages.${system} //
         {
-          inherit (inputs.emacs-overlay.packages.${system}) emacsPgtk;
           nix-prefetch-github = inputs.nix-prefetch-github.packages.${system}.default;
           nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
           nixUnstable = inputs.nixpkgs.legacyPackages.${system}.nixUnstable;

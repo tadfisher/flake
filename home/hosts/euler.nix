@@ -25,8 +25,9 @@ with lib;
 
   home.packages = with pkgs; [
     awscli2
-    inkscape
+    figma-linux
     gimp
+    inkscape
   ];
 
   programs = {

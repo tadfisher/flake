@@ -31,10 +31,10 @@ in
       ];
       opal.sedutilPackage = pkgs.sedutil-fork;
     };
-    kernelPackages = pkgs.linuxPackages;
     kernelModules = [
       "kvm-amd"
     ];
+    kernelPackages = pkgs.linuxPackages;
     kernelParams = [
       "mitigations=off"
     ];
@@ -114,6 +114,8 @@ in
       fileSystems = [ "/dev/nvme0n1" ];
     };
 
+    openssh.settings.PasswordAuthentication = true;
+
     postgresql =
       let
         package = pkgs.postgresql_13;
@@ -137,7 +139,7 @@ in
         };
       };
 
-    openssh.passwordAuthentication = true;
+    tailscale.enable = true;
 
     udev.extraRules = ''
       # Enable systemd device units for android devices

@@ -115,7 +115,7 @@ with lib;
         gnomeExtensions.dash-to-panel.extensionUuid
         gnomeExtensions.gsconnect.extensionUuid
         # instant-workspace-switcher.uuid
-        paperwm.uuid
+        paperwm.extensionUuid
         vertical-overview.uuid
         # "user-theme@gnome-shell-extensions.gcampax.github.com"
       ];
@@ -128,6 +128,8 @@ with lib;
 
     "org/gnome/shell/extensions/paperwm" = {
       horizontal-margin = 0;
+      show-focus-mode-icon = false;
+      show-window-position-bar = false;
       use-default-background = true;
       vertical-margin = 0;
       vertical-margin-bottom = 0;

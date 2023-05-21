@@ -17,6 +17,14 @@ in
         SDK platform-tools package to use.
       '';
     };
+
+    port = mkOption {
+      type = types.ints.between 1025 65535;
+      default = 5037;
+      description = ''
+        Port to which the ADB service should bind.
+      '';
+    };
   };
 
   config = mkIf (cfg.enable) {
@@ -46,7 +54,7 @@ in
         };
 
         Socket = {
-          ListenStream = "127.0.0.1:5037";
+          ListenStream = "127.0.0.1:${toString cfg.port}";
           Accept = "no";
         };
 

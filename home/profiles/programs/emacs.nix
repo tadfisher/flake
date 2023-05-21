@@ -4,6 +4,46 @@ with lib;
 let
   cfg = config.programs.emacs;
 
+  tree-sitter-grammars =
+    let
+      libName = drv: removeSuffix "-grammar" drv.pname;
+      libSuffix = if pkgs.stdenv.isDarwin then "dylib" else "so";
+      lib = drv: ''lib${libName drv}.${libSuffix}'';
+      linkCmd = drv:
+        if pkgs.stdenv.isDarwin then ''
+          cp ${drv}/parser .
+          chmod +w ./parser
+          install_name_tool -id $out/lib/${lib drv} ./parser
+          cp ./parser $out/lib/${lib drv}
+          /usr/bin/codesign -s - -f $out/lib/${lib drv}
+        '' else ''
+          ln -s ${drv}/parser $out/lib/${lib drv}
+        '';
+      plugins = with pkgs.tree-sitter-grammars; [
+        tree-sitter-bash
+        tree-sitter-c
+        tree-sitter-c-sharp
+        tree-sitter-cmake
+        tree-sitter-cpp
+        tree-sitter-css
+        tree-sitter-dockerfile
+        tree-sitter-go
+        tree-sitter-gomod
+        tree-sitter-java
+        tree-sitter-javascript
+        tree-sitter-json
+        tree-sitter-python
+        tree-sitter-ruby
+        tree-sitter-rust
+        tree-sitter-toml
+        tree-sitter-tsx
+        tree-sitter-typescript
+        tree-sitter-yaml
+      ];
+    in
+    pkgs.runCommandCC "tree-sitter-grammars" {}
+      (concatStringsSep "\n" (["mkdir -p $out/lib"] ++ (map linkCmd plugins)));
+
 in
 {
   home.packages = with pkgs; [
@@ -12,15 +52,8 @@ in
     freefont_ttf
     graphviz
     (hunspellWithDicts [ hunspellDicts.en-us ])
-    jetbrains-mono
     jre
-    noto-fonts
-    noto-fonts-cjk
-    noto-fonts-emoji
-    noto-fonts-extra
     plantuml
-    roboto
-    roboto-mono
     silver-searcher
     sqlite
   ];
@@ -65,21 +98,18 @@ in
           (push '(tool-bar-lines . nil) default-frame-alist)
           (push '(vertical-scroll-bars . nil) default-frame-alist)
           (push '(width . 120) default-frame-alist)
-          (push '(fullscreen . 'fullheight) default-frame-alist)
+          (push '(fullscreen . fullheight) default-frame-alist)
 
           ;; Set up fonts early.
           (set-face-attribute 'default
                               nil
-                              :height 98
-                              :family "JetBrains Mono"
-                              :weight 'semi-light)
+                              :family "JetBrains Mono")
           (set-face-attribute 'variable-pitch
                               nil
                               :family "Roboto"
                               :height 88
                               :weight 'regular)
         '';
-
         prelude = ''
           ;; Disable startup message.
           (setq inhibit-startup-message t
@@ -154,6 +184,9 @@ in
           ;; Set a reasonable default fill-column.
           (setq-default fill-column 100)
 
+          ;; <TAB> completes.
+          (setq tab-always-indent 'complete)
+
           ;; Improved handling of clipboard in GNU/Linux and otherwise.
           (setq select-enable-clipboard t
                 select-enable-primary t
@@ -200,6 +233,9 @@ in
 
           ;; Set user info.
           (setq user-mail-address "${config.accounts.email.primaryAccount.address}")
+
+          ;; Add tree-sitter grammars.
+          (setq treesit-extra-load-path '("${tree-sitter-grammars}/lib"))
         '';
 
         lsp = {
@@ -326,6 +362,22 @@ in
             '';
           };
 
+          adw-dark-theme = {
+            enable = true;
+            package = "adw-themes";
+            config = ''
+              (if (daemonp)
+                  (progn
+                    (require 'server)
+                    (add-hook 'server-after-make-frame-hook
+                              (lambda ()
+                                (if (member 'adw-dark custom-known-themes)
+                                    (enable-theme 'adw-dark)
+                                  (load-theme 'adw-dark t)))))
+                (load-theme 'adw-dark t))
+            '';
+          };
+
           all-the-icons = {
             enable = true;
             defer = true;
@@ -416,7 +468,7 @@ in
           base16-theme.enable = true;
 
           base16-plata-noir-theme = {
-            enable = true;
+            enable = false;
             package = "base16-plata-theme";
             after = [ "base16-theme" ];
             config = ''
@@ -425,15 +477,6 @@ in
                                              load-path
                                              (get-load-suffixes)))))
                 (add-to-list 'custom-theme-load-path dir)
-                (if (daemonp)
-                    (progn
-                      (require 'server)
-                      (add-hook 'server-after-make-frame-hook
-                                (lambda ()
-                                  (if (member 'base16-plata-noir custom-known-themes)
-                                      (enable-theme 'base16-plata-noir)
-                                    (load-theme 'base16-plata-noir t)))))
-                  (load-theme 'base16-plata-noir t)))
             '';
           };
 
@@ -611,10 +654,13 @@ in
                 consult-line
                   :history t ;; disable history
                   :keymap tad/consult-line-map
-                consult-buffer consult-find consult-ripgrep
-                  :preview-key (kbd "M-.")
+                consult-ripgrep consult-git-grep consult-grep
+                consult-bookmark consult-recent-file consult-xref
+                consult--source-bookmark consult--source-file-register
+                consult--source-recent-file consult--source-project-recent-file
+                  :preview-key '(:debounce 0.4 any)
                 consult-theme
-                  :preview-key '(:debounce 1 any)
+                  :preview-key '(:debounce 0.2 any)
               )
             '';
           };
@@ -672,6 +718,8 @@ in
           };
 
           csv-mode.enable = true;
+
+          ct.enable = true;
 
           dap-mode = {
             # FIXME fails with (void-function "dap-ui-mode")
@@ -808,20 +856,23 @@ in
             package = (epkgs: if versionAtLeast (getVersion cfg.package) "29" then "" else epkgs.eglot);
             hook = [
               ''
-                ((c-mode c++-mode
+                ((c-mode c++-mode c-ts-base-mode
                   css-mode less-css-mode sass-mode scss-mode
                   go-mode
+                  kotlin-mode
                   haskell-mode
                   html-mode sgml-mode mhtml-mode web-mode
-                  js-mode typescript-mode
+                  js-mode js-ts-mode typescript-mode typescript-ts-mode tsx-ts-mode
                   nix-mode
                   rust-mode
                   sh-mode) . eglot-ensure)
               ''
             ];
             config = ''
-              (setq eglot-server-programs
-                    `(((c-mode c++-mode)
+              (setq eglot-autoshutdown t
+                    eglot-confirm-server-initiated-edits nil
+                    eglot-server-programs
+                    `(((c-mode c++-mode c-ts-base-mode)
                         . ,(eglot-alternatives '("clangd" "${pkgs.clang-tools}/bin/clangd")))
                       ((css-mode less-css-mode sass-mode scss-mode)
                         . ,(eglot-alternatives
@@ -839,7 +890,7 @@ in
                         . ,(eglot-alternatives
                             '(("html-languageserver" "--stdio")
                               ("${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver" "--stdio"))))
-                      ((js-mode typescript-mode)
+                      ((js-mode js-ts-mode typescript-mode typescript-ts-mode tsx-ts-mode)
                         . ,(eglot-alternatives
                             '(("typescript-language-server" "--stdio")
                               ("${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server" "--stdio"))))
@@ -1098,14 +1149,6 @@ in
             '';
           };
 
-          indent = {
-            enable = true;
-            package = "";
-            config = ''
-              (setq tab-always-indent 'complete)
-            '';
-          };
-
           ispell = {
             enable = true;
             defer = 1;
@@ -1354,30 +1397,6 @@ in
             '';
           };
 
-          posframe.enable = true;
-
-          pretty-tabs = {
-            enable = true;
-            after = [ "tab-bar" "all-the-icons" ];
-            extraConfig = ''
-              :functions pretty-tabs-mode
-            '';
-            config = ''
-              (if (daemonp)
-                  (progn
-                    (require 'server)
-                    (add-hook 'server-after-make-frame-hook
-                              'pretty-tabs-mode))
-                (pretty-tabs-mode))
-            '';
-          };
-
-          prog-mode = {
-            enable = true;
-            package = "";
-            defer = true;
-          };
-
           ob-http = {
             enable = true;
             after = [ "org" ];
@@ -1575,6 +1594,30 @@ in
             '';
           };
 
+          posframe.enable = true;
+
+          pretty-tabs = {
+            enable = true;
+            after = [ "tab-bar" "all-the-icons" ];
+            extraConfig = ''
+              :functions pretty-tabs-mode
+            '';
+            config = ''
+              (if (daemonp)
+                  (progn
+                    (require 'server)
+                    (add-hook 'server-after-make-frame-hook
+                              'pretty-tabs-mode))
+                (pretty-tabs-mode))
+            '';
+          };
+
+          prog-mode = {
+            enable = true;
+            package = "";
+            defer = true;
+          };
+
           project = {
             enable = true;
             package = "";
@@ -1705,6 +1748,13 @@ in
             '';
           };
 
+          solaire-mode = {
+            enable = true;
+            config = ''
+              (solaire-global-mode +1)
+            '';
+          };
+
           string-inflection = {
             enable = true;
             bind = { "C-c C-u" = "string-inflection-all-cycle"; };
@@ -1736,7 +1786,10 @@ in
               :functions all-the-icons-material
             '';
             config = ''
-              (setq tab-bar-close-button
+              (setq tab-bar-auto-width t
+                    tab-bar-auto-width-max nil
+                    tab-bar-show 1
+                    tab-bar-close-button
                     (propertize (all-the-icons-material "close" :face 'tab-bar-tab)
                                 'close-tab t
                                 :help "Close tab")
@@ -1979,7 +2032,7 @@ in
           # Set up yasnippet. Defer it for a while since I don't generally
           # need it immediately.
           yasnippet = {
-            enable = true;
+            enable = false;
             defer = 1;
             diminish = [ "yas-minor-mode" ];
             command = [ "yas-global-mode" "yas-minor-mode" ];
@@ -1991,7 +2044,7 @@ in
           };
 
           yasnippet-snippets = {
-            enable = true;
+            enable = false;
             after = [ "yasnippet" ];
           };
         };

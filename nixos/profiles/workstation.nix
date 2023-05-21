@@ -89,6 +89,7 @@ mkMerge [
     };
 
     programs = {
+      dconf.enable = true;
       evolution.enable = true;
       seahorse.enable = false;
     };

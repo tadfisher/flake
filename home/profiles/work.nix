@@ -34,7 +34,12 @@ with lib;
     userName = "tad@mercury.com";
   };
 
+  dconf.settings."org/gnome/shell".enabled-extensions = [
+    pkgs.gnomeExtensions.tailscale-status.extensionUuid
+  ];
+
   home.packages = with pkgs; [
+    gnomeExtensions.tailscale-status
     zoom-us
   ];
 
@@ -56,6 +61,9 @@ with lib;
       "work" = ''path:"tad@mercury.com/**"'';
     };
 
-    ssh.matchBlocks."*.internal.mercury.com".forwardAgent = true;
+    ssh.matchBlocks = {
+      "*.internal.mercury.com".forwardAgent = true;
+      "ohm.local".forwardAgent = true;
+    };
   };
 }

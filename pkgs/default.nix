@@ -7,6 +7,7 @@ with pkgs;
 let
   ideaPackages = callPackage ./idea-community-eap {
     inherit (inputs) nixpkgs;
+    jdk = jetbrains.jdk;
     vmopts = config.jetbrains.vmopts or null;
   };
 in
@@ -14,6 +15,14 @@ rec {
   cleaner-overview = callPackage ./cleaner-overview { };
 
   dart-sass = callPackage ./dart-sass { };
+
+  emacsPgtk = inputs.emacs-overlay.packages.${system}.emacsPgtk.overrideAttrs (attrs: rec {
+    pname = "emacs-pgtk";
+    version = "29.0-${inputs.emacs.shortRev}";
+    name = "emacs-pgtk-${version}";
+    src = inputs.emacs;
+    separateDebugInfo = true;
+  });
 
   firefox-gnome-theme = callPackage ./firefox-gnome-theme { src = inputs.firefox-gnome-theme; };
 

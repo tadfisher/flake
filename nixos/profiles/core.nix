@@ -4,10 +4,10 @@ with lib;
 
 {
   boot = {
-    cleanTmpDir = true;
     kernelPackages = mkDefault pkgs.linuxPackages_latest;
     supportedFilesystems = [ "exfat" ];
     initrd.systemd.enable = mkDefault true;
+    tmp.cleanOnBoot = true;
   };
 
   console = {

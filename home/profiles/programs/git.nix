@@ -40,7 +40,6 @@ in
       password = secrets.googlesource.password;
     in
     ''
-      android.googlesource.com	FALSE	/	TRUE	2147483647	o	${username}=${password}
-      android-review.googlesource.com	FALSE	/	TRUE	2147483647	o	${username}=${password}
+      .googlesource.com	TRUE	/	TRUE	2147483647	o	${username}=${password}
     '';
 }

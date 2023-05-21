@@ -8,6 +8,32 @@ with final;
   emacsPackagesFor = emacs:
     (prev.emacsPackagesFor emacs).overrideScope' (callPackage ./emacs { inherit inputs; });
 
+  # jetbrains-mono = stdenv.mkDerivation rec {
+  #   pname = "JetBrainsMono";
+  #   version = "2.304";
+
+  #   src = fetchFromGitHub {
+  #     owner = "JetBrains";
+  #     repo = "JetBrainsMono";
+  #     rev = "v${version}";
+  #     hash = "sha256-SW9d5yVud2BWUJpDOlqYn1E1cqicIHdSZjbXjqOAQGw=";
+  #   };
+
+  #   dontConfigure = true;
+  #   dontBuild = true;
+  #   dontCheck = true;
+
+  #   installPhase = ''
+  #     install -m444 -Dt $out/share/fonts/truetype/JetBrainsMono fonts/ttf/*.ttf
+  #     # for f in $out/share/fonts/variable/JetBrainsMono/*; do
+  #     #  echo "$f -> ''${f//\[*\]/-VF}"
+  #     #  mv "$f" "''${f//\[*\]/-VF}"
+  #     #done
+  #   '';
+
+  #   inherit (prev.jetbrains-mono) meta;
+  # };
+
   paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {
     pname = "paper-icon-theme-unstable";
     version = "2020-03-12";

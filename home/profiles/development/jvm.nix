@@ -4,9 +4,9 @@ let
   gradleWithToolchains = with pkgs; callPackage gradle-packages.gradle_7 {
     javaToolchains = [
       openjdk8
-      openjdk11
-      openjdk17
-      openjdk19
+      jdk11
+      jdk17
+      jdk19
     ];
   };
 
@@ -15,22 +15,20 @@ in
   home = {
     file.".gradle/gradle.properties".text = ''
       org.gradle.java.installations.auto-download=false
-      org.gradle.java.installations.fromEnv=JDK8,JDK11,JDK17,JDK19
+      org.gradle.java.installations.paths=${pkgs.jdk8.home},${pkgs.jdk11.home},${pkgs.jdk17.home},${pkgs.jdk19.home}
     '';
 
     packages = with pkgs; [
-      gradleWithToolchains
       gradle-completion
+      gradleWithToolchains
       idea-community
       idea-community-eap
+      jd-gui
+      jdk
     ];
 
     sessionVariables = {
-      JAVA_HOME = "${pkgs.openjdk.home}";
-      JDK8 = "${pkgs.openjdk8}";
-      JDK11 = "${pkgs.openjdk11}";
-      JDK17 = "${pkgs.openjdk17}";
-      JDK19 = "${pkgs.openjdk19}";
+      JAVA_HOME = "${pkgs.jdk.home}";
     };
   };
 

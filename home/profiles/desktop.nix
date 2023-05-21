@@ -33,6 +33,11 @@ with lib;
     };
   };
 
+  dconf.settings."org/gnu/emacs/defaults-by-name/emacs" = {
+    fullscreen = "fullheight";
+
+  };
+
   home = {
     file = {
       ".Xcompose".text = ''
@@ -58,16 +63,10 @@ with lib;
       emacs-all-the-icons-fonts
       gparted
       gnome.gnome-themes-extra
-      jetbrains-mono
       keybase
       material-icons
-      noto-fonts
-      noto-fonts-cjk
-      noto-fonts-emoji
       nyxt
       qt5.qtwayland
-      roboto
-      roboto-mono
       signal-desktop
       simple-scan
       slack
@@ -140,6 +139,7 @@ with lib;
   };
 
   services = {
+    easyeffects.enable = true;
     gpg-agent.pinentryFlavor = "gnome3";
   };
 
