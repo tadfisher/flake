@@ -4,6 +4,8 @@
 , python3Packages
 , fetchFromGitLab
 , cacert
+, cargo,
+ rustc
 , rustPlatform
 , bubblewrap
 , git
@@ -45,14 +47,15 @@ python3Packages.buildPythonApplication {
     hash = "sha256-9lo7xVD0lIV4O8yNWXhcIvb+PusJVZ2msRl8/vMPrhM=";
   };
 
-  nativeBuildInputs = (with python3Packages; [
+  nativeBuildInputs = [
+    cargo
+    rustc
+  ] ++ (with python3Packages; [
     setuptools-rust
     setuptools-scm
     setuptools
   ]) ++ (with rustPlatform; [
     cargoSetupHook
-    rust.cargo
-    rust.rustc
   ]);
 
   propagatedBuildInputs = with python3Packages; [
