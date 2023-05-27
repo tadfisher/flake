@@ -4,8 +4,8 @@
 , python3Packages
 , fetchFromGitLab
 , cacert
-, cargo,
- rustc
+, cargo
+, rustc
 , rustPlatform
 , bubblewrap
 , git

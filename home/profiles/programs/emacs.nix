@@ -41,8 +41,8 @@ let
         tree-sitter-yaml
       ];
     in
-    pkgs.runCommandCC "tree-sitter-grammars" {}
-      (concatStringsSep "\n" (["mkdir -p $out/lib"] ++ (map linkCmd plugins)));
+    pkgs.runCommandCC "tree-sitter-grammars" { }
+      (concatStringsSep "\n" ([ "mkdir -p $out/lib" ] ++ (map linkCmd plugins)));
 
 in
 {
