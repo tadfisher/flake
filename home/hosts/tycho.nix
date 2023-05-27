@@ -24,5 +24,6 @@
     gamescope
     inkscape
     transmission-remote-gtk
+    yuzu
   ];
 }
