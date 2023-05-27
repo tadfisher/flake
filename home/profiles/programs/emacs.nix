@@ -53,6 +53,7 @@ in
     graphviz
     (hunspellWithDicts [ hunspellDicts.en-us ])
     jre
+    nerdfonts
     plantuml
     silver-searcher
     sqlite
@@ -70,6 +71,7 @@ in
 
     emacs = {
       enable = true;
+
       package = mkDefault pkgs.emacs-nox;
 
       # TODO Not sure if still needed.

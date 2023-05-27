@@ -16,12 +16,8 @@ rec {
 
   dart-sass = callPackage ./dart-sass { };
 
-  emacsPgtk = inputs.emacs-overlay.packages.${system}.emacsPgtk.overrideAttrs (attrs: rec {
-    pname = "emacs-pgtk";
-    version = "29.0-${inputs.emacs.shortRev}";
-    name = "emacs-pgtk-${version}";
-    src = inputs.emacs;
-    separateDebugInfo = true;
+  emacsPgtk = inputs.emacs-overlay.packages.${system}.emacsUnstablePgtk.overrideAttrs (attrs: {
+    passthru = attrs.passthru // { treeSitter = true; };
   });
 
   firefox-gnome-theme = callPackage ./firefox-gnome-theme { src = inputs.firefox-gnome-theme; };

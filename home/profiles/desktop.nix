@@ -108,7 +108,12 @@ with lib;
       ];
     };
 
-    emacs.package = pkgs.emacsPgtk;
+    emacs = {
+      package = pkgs.emacsPgtk;
+      extraPackages = (epkgs: with epkgs; [
+        treesit-grammars.with-all-grammars
+      ]);
+    };
 
     firefox = {
       enable = true;

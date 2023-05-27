@@ -6,7 +6,8 @@ with final;
 
 {
   emacsPackagesFor = emacs:
-    (prev.emacsPackagesFor emacs).overrideScope' (callPackage ./emacs { inherit inputs; });
+    (inputs.emacs-overlay.lib.${system}.emacsPackagesFor emacs)
+      .overrideScope' (callPackage ./emacs { inherit inputs; });
 
   # jetbrains-mono = stdenv.mkDerivation rec {
   #   pname = "JetBrainsMono";

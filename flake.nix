@@ -6,11 +6,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/android-nixpkgs";
     };
-    emacs = {
-      url = "github:emacs-mirror/emacs/emacs-29";
-      flake = false;
+    emacs-overlay = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/emacs-overlay";
     };
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
     firefox-gnome-theme = {
       url = "github:rafaelmardojai/firefox-gnome-theme";
       flake = false;
@@ -62,7 +61,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     paperwm = {
-      url = "github:paperwm/PaperWM/fixes-gnome-44-support";
+      url = "github:paperwm/PaperWM/develop";
       flake = false;
     };
     pass-audit = {
@@ -78,7 +77,7 @@
       flake = false;
     };
     sedcli = {
-      url = "github:gjoyce-ibm/sedcli/do-not-pull";
+      url = "github:gjoyce-ibm/sedcli/kernel-keyring";
       flake = false;
     };
     vertical-overview = {
@@ -113,7 +112,6 @@
 
           overlays = [
             (inputs.android-nixpkgs.overlays.default)
-            (inputs.emacs-overlay.overlays.package)
             (inputs.nix-dart.overlay)
             (inputs.nix-direnv.overlay)
             (self.overlays.default)
