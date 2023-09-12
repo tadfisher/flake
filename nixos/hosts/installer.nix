@@ -3,11 +3,12 @@
 with lib;
 
 {
-  imports = [
-    ../profiles/core.nix
-  ];
+  # imports = [
+  #   ../profiles/core.nix
+  # ];
 
   boot = {
+    initrd.systemd.enable = false;
     kernelPackages = pkgs.linuxPackages_latest;
     supportedFilesystems = mkForce [ "btrfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
   };

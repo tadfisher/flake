@@ -21,14 +21,13 @@ in
     initrd = {
       availableKernelModules = [
         "nvme"
-        "ehci_pci"
         "xhci_pci"
+	"thunderbolt"
         "usbhid"
-        "rtsx_pci_sdmmc"
         "sd_mod"
         "usb_storage"
       ];
-      opal.sedutilPackage = pkgs.sedutil-fork;
+      luks.devices."crypt".device = "/dev/disk/by-partlabel/crypt";
     };
     kernelModules = [
       "kvm-amd"
@@ -36,8 +35,9 @@ in
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
       "mitigations=off"
+      "resume_offet=533760"
     ];
-    # resumeDevice = "/dev/disk/by-label/swap";
+    resumeDevice = "/dev/disk/by-label/pool";
   };
 
   environment = {
@@ -61,27 +61,29 @@ in
     "/" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
-      opalDevice = "/dev/nvme0";
       options = [ "subvol=root" "discard=async" "compress-force=zstd" ];
     };
     "/home" = {
       device = "/dev/disk/by-label/pool";
       fsType = "btrfs";
-      opalDevice = "/dev/nvme0";
       options = [ "subvol=home" "discard=async" "compress-force=zstd" ];
     };
-    "/mnt/pool" = {
+    "/var/swap" = {
       device = "/dev/disk/by-label/pool";
-      fsType = "btrfs";
-      opalDevice = "/dev/nvme0";
-      options = [ "discard=async" "compress-force=zstd" ];
+      options = [ "subvol=swap" ];
     };
-    "/mnt/snap" = {
-      device = "/dev/disk/by-label/pool";
-      fsType = "btrfs";
-      opalDevice = "/dev/nvme0";
-      options = [ "subvol=snap" "discard=async" "compress-force=zstd" ];
-    };
+
+    # "/mnt/pool" = {
+    #   device = "/dev/disk/by-label/pool";
+    #   fsType = "btrfs";
+    #   options = [ "discard=async" "compress-force=zstd" ];
+    # };
+    # "/mnt/snap" = {
+    #   device = "/dev/disk/by-label/pool";
+    #   fsType = "btrfs";
+    #   opalDevice = "/dev/nvme0";
+    #   options = [ "subvol=snap" "discard=async" "compress-force=zstd" ];
+    # };
   };
 
   nix.settings = {
@@ -98,6 +100,8 @@ in
       enable = true;
       fileSystems = [ "/dev/nvme0n1" ];
     };
+
+    homed.enable = true;
 
     openssh.settings.PasswordAuthentication = true;
 
@@ -143,7 +147,7 @@ in
     };
   };
 
-  # swapDevices = [{ label = "swap"; }];
+  swapDevices = [{ device = "/var/swap/swapfile"; }];
 
   system.stateVersion = "23.11";
 
