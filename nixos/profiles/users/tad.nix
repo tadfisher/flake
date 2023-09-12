@@ -2,6 +2,7 @@
 
 {
   users.users.tad = {
+    createHome = true;
     description = "Tad Fisher";
     extraGroups = [
       "adbusers"
