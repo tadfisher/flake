@@ -24,9 +24,9 @@ let
   package = nixpkgs + "/pkgs/applications/editors/jetbrains/" + (if stdenv.isDarwin then "darwin.nix" else "linux.nix");
   mkJetBrainsProduct = callPackage package { inherit vmopts; };
 
-  buildIdea = { pname, version, src, license, description, wmClass, product, ... }:
+  buildIdea = { pname, version, buildNumber, src, license, description, wmClass, product, ... }:
     (mkJetBrainsProduct {
-      inherit pname version src wmClass jdk product;
+      inherit pname version buildNumber src wmClass jdk product;
       productShort = "IDEA";
       extraLdPath = [ zlib ];
       extraWrapperArgs = [
@@ -46,13 +46,13 @@ let
         platforms = ideaPlatforms;
       };
     });
-
 in
 {
   idea-community = buildIdea rec {
     pname = "idea-community";
     product = "IntelliJ IDEA CE";
     version = products.idea-community.version;
+    buildNumber = products.idea-community.build_number;
     description = "Integrated Development Environment (IDE) by Jetbrains, community edition";
     license = lib.licenses.asl20;
     src = fetchurl {
@@ -67,6 +67,7 @@ in
     pname = "idea-community-eap";
     product = "IntelliJ IDEA CE (EAP)";
     version = products.idea-community-eap.version;
+    buildNumber = products.idea-community-eap.build_number;
     description = "Integrated Development Environment (IDE) by Jetbrains, community edition (Early-Access Preview)";
     license = lib.licenses.asl20;
     src = fetchurl {

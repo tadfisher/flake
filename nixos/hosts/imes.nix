@@ -7,7 +7,6 @@ in
 {
   imports = [
     ../profiles/core.nix
-    # ../profiles/networks/euler.nix
     ../profiles/services/sshd.nix
     ../profiles/users/tad.nix
     ../profiles/uefi.nix
@@ -34,12 +33,11 @@ in
     kernelModules = [
       "kvm-amd"
     ];
-    # https://patchwork.freedesktop.org/patch/537553/
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
       "mitigations=off"
     ];
-    resumeDevice = "/dev/disk/by-label/swap";
+    # resumeDevice = "/dev/disk/by-label/swap";
   };
 
   environment = {
@@ -91,12 +89,6 @@ in
     max-jobs = 4;
     substituters = mkAfter [ "https://cache.mercury.com/" ];
     trusted-public-keys = mkAfter [ "cache.mercury.com:yhfFlgvqtv0cAxzflJ0aZW3mbulx4+5EOZm6k3oML+I=" ];
-  };
-
-  powerManagement = {
-    powerUpCommands = ''
-      ${pkgs.sed-opal-unlocker}/bin/sed-opal-unlocker s3save /dev/nvme0n1 ${../../secrets/euler/pool.hash}
-    '';
   };
 
   security.pki.certificateFiles = [ ../../secrets/mercury/mercury.ca.crt ];
@@ -151,9 +143,9 @@ in
     };
   };
 
-  swapDevices = [{ label = "swap"; }];
+  # swapDevices = [{ label = "swap"; }];
 
-  system.stateVersion = "21.03";
+  system.stateVersion = "23.11";
 
   virtualisation.libvirtd.qemu = {
     ovmf.packages = [ pkgs.OVMFFull ];

@@ -81,6 +81,7 @@ with lib;
     extraConfig = ''
       MulticastDNS=true
       DNSOverTLS=opportunistic
+      ResolveUnicastSingleLabel=true
     '';
     llmnr = "false";
   };

@@ -57,6 +57,7 @@ in
     plantuml
     silver-searcher
     sqlite
+    zbar
   ];
 
   programs = {
@@ -1587,6 +1588,20 @@ in
             enable = true;
             command = [ "org-tree-slide-mode" ];
           };
+
+          pass = {
+            enable = true;
+            after = [ "password-store" "password-store-otp" ];
+          };
+
+          password-store = {
+            enable = true;
+            config = ''
+              (setq password-store-executable "${config.programs.password-store.package}/bin/pass")
+            '';
+          };
+
+          password-store-otp.enable = true;
 
           plantuml-mode = {
             enable = true;

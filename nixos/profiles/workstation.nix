@@ -30,7 +30,7 @@ mkMerge [
       ];
     };
 
-    fonts.fonts = with pkgs; [
+    fonts.packages = with pkgs; [
       jetbrains-mono
       noto-fonts
       noto-fonts-cjk
@@ -100,7 +100,6 @@ mkMerge [
       tpm2 = {
         enable = true;
         abrmd.enable = true;
-        pkcs11.enable = true;
         tctiEnvironment = {
           enable = true;
           interface = "tabrmd";

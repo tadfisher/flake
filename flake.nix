@@ -133,7 +133,6 @@
             self.nixosModules.boot.opal-unlock
             self.nixosModules.hardware.pulseaudio
             self.nixosModules.services.pia-vpn
-            self.nixosModules.programs.cardboard
             self.nixosModules.programs.steam
 
             ({ pkgs, ... }: {
@@ -200,6 +199,10 @@
           system = "x86_64-linux";
           config = ./home/hosts/euler.nix;
         };
+        imes = {
+          system = "x86_64-linux";
+          config = ./home/hosts/imes.nix;
+        };
         kepler = {
           system = "x86_64-linux";
           config = ./home/hosts/kepler.nix;
@@ -241,6 +244,13 @@
             inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t14-amd-gen1
           ];
         };
+        imes = {
+          system = "x86_64-linux";
+          config = ./nixos/hosts/imes.nix;
+          modules = [
+            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t14-amd-gen3
+          ];
+        };
         installer = {
           system = "x86_64-linux";
           config = ./nixos/hosts/installer.nix;
@@ -267,7 +277,6 @@
       nixosModules = {
         boot.opal-unlock = ./nixos/modules/opal-unlock.nix;
         hardware.pulseaudio = ./nixos/modules/pulseaudio.nix;
-        programs.cardboard = ./nixos/modules/cardboard.nix;
         programs.steam = ./nixos/modules/steam.nix;
         services.pia-vpn = ./nixos/modules/pia-vpn.nix;
       };

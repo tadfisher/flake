@@ -12,9 +12,9 @@ with lib;
     enable = true;
     startWhenNeeded = true;
     settings = {
-      PasswordAuthentication = mkDefault "no";
+      PasswordAuthentication = mkDefault false;
       PermitRootLogin = "no";
-      StreamLocalBindUnlink = "yes";
+      StreamLocalBindUnlink = true;
     };
   };
 }

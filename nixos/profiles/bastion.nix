@@ -28,11 +28,6 @@ in
   };
 
   services = {
-    ddclient = {
-      enable = true;
-      configFile = "/root/nixos/secrets/ddclient.conf";
-    };
-
     nginx = {
       enable = true;
       recommendedGzipSettings = true;

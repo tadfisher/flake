@@ -29,9 +29,9 @@ with lib;
     ];
   };
 
-  # services.adb = {
-  #   enable = true;
-  #   # Android Studio doesn't allow setting the standard port (5037).
-  #   port = 5038;
-  # };
+  services.adb = {
+    enable = true;
+    # Android Studio doesn't allow setting the standard port (5037).
+    port = 5038;
+  };
 }

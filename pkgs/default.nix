@@ -16,9 +16,7 @@ rec {
 
   dart-sass = callPackage ./dart-sass { };
 
-  emacsPgtk = inputs.emacs-overlay.packages.${system}.emacsUnstablePgtk.overrideAttrs (attrs: {
-    passthru = attrs.passthru // { treeSitter = true; };
-  });
+  inherit (inputs.emacs-overlay.packages.${system}) emacs-unstable-pgtk;
 
   firefox-gnome-theme = callPackage ./firefox-gnome-theme { src = inputs.firefox-gnome-theme; };
 

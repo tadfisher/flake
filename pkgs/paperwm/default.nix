@@ -3,6 +3,9 @@
 , src
 }:
 
+let
+   uuid = "paperwm@paperwm.github.com";
+in
 stdenv.mkDerivation {
   pname = "gnome-shell-extension-paperwm";
   version = "unstable";
@@ -14,8 +17,8 @@ stdenv.mkDerivation {
 
   installPhase = ''
     runHook preInstall
-    mkdir -p "$out/share/gnome-shell/extensions/paperwm@hedning:matrix.org"
-    cp -r . "$out/share/gnome-shell/extensions/paperwm@hedning:matrix.org"
+    mkdir -p "$out/share/gnome-shell/extensions/${uuid}"
+    cp -r . "$out/share/gnome-shell/extensions/${uuid}"
     runHook postInstall
   '';
 
@@ -27,5 +30,5 @@ stdenv.mkDerivation {
     platforms = platforms.all;
   };
 
-  passthru.extensionUuid = "paperwm@hedning:matrix.org";
+  passthru.extensionUuid = uuid;
 }

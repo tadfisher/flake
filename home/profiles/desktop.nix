@@ -59,6 +59,7 @@ with lib;
     keyboard.options = [ "ctrl:nocaps" "compose:prsc" ];
 
     packages = with pkgs; [
+      blackbox-terminal
       d-spy
       emacs-all-the-icons-fonts
       gparted
@@ -109,7 +110,7 @@ with lib;
     };
 
     emacs = {
-      package = pkgs.emacsPgtk;
+      package = pkgs.emacs-unstable-pgtk;
       extraPackages = (epkgs: with epkgs; [
         treesit-grammars.with-all-grammars
       ]);
@@ -144,7 +145,7 @@ with lib;
   };
 
   services = {
-    easyeffects.enable = true;
+    # easyeffects.enable = true;
     gpg-agent.pinentryFlavor = "gnome3";
   };
 

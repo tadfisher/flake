@@ -7,12 +7,21 @@ with lib;
     ../profiles/core.nix
   ];
 
-  boot.supportedFilesystems = mkForce [ "btrfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
+    supportedFilesystems = mkForce [ "btrfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
+  };
 
-  environment.systemPackages = with pkgs; [
-    sedutil-fork
-    sed-opal-unlocker
-  ];
+  environment = {
+    etc."nixos/flake" = {
+      source = cleanSource ../../.;
+    };
+
+    systemPackages = with pkgs; [
+      sedutil-fork
+      sed-opal-unlocker
+    ];
+  };
 
   services.openssh.enable = true;
 }
