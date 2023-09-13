@@ -158,4 +158,5 @@ with lib;
   };
 
   xdg.dataFile."icc/Lenovo P32u-10 (DCI-P3 D65, 48%).icm".source = ../../data/icc + "/Lenovo P32u-10 (DCI-P3 D65, 48%).icm";
+  xdg.dataFile."icc/Thinkpad P14s OLED (D65, 50%).icc".source = ../../data/icc + "/Thinkpad P14s OLED (D65, 50%).icc";
 }

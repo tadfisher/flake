@@ -32,10 +32,10 @@ in
     kernelModules = [
       "kvm-amd"
     ];
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_testing;
     kernelParams = [
       "mitigations=off"
-      "resume_offet=533760"
+      "resume_offset=533760"
     ];
     resumeDevice = "/dev/disk/by-label/pool";
   };

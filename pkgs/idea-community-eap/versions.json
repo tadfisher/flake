@@ -3,11 +3,11 @@
     "idea-community": {
       "update-channel": "IntelliJ IDEA RELEASE",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}.tar.gz",
-      "version": "2023.2.1",
-      "sha256": "2a11cd6d8f245e4afb99286255e50b7b84a55dbbfaba3bdb7c0f7027803a0e8d",
-      "url": "https://download.jetbrains.com/idea/ideaIC-2023.2.1.tar.gz",
+      "version": "2023.2.2",
+      "sha256": "cf647137394e27b3011072e463dc2e4bcdd54dc6ea9406e487a47648fc77bd26",
+      "url": "https://download.jetbrains.com/idea/ideaIC-2023.2.2.tar.gz",
       "version-major-minor": "2022.1",
-      "build_number": "232.9559.62"
+      "build_number": "232.9921.47"
     },
     "idea-community-eap": {
       "update-channel": "IntelliJ IDEA EAP",
@@ -22,11 +22,11 @@
     "idea-community": {
       "update-channel": "IntelliJ IDEA RELEASE",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}.dmg",
-      "version": "2023.2.1",
-      "sha256": "6c1eb5c4ef27c2cb16643befd11497b280ca782109748c9fa1a9badbd9a519ca",
-      "url": "https://download.jetbrains.com/idea/ideaIC-2023.2.1.dmg",
+      "version": "2023.2.2",
+      "sha256": "a59590af2bef95562f3b7a066016d22f347d59b71e136d3dd739d626f1594636",
+      "url": "https://download.jetbrains.com/idea/ideaIC-2023.2.2.dmg",
       "version-major-minor": "2022.1",
-      "build_number": "232.9559.62"
+      "build_number": "232.9921.47"
     },
     "idea-community-eap": {
       "update-channel": "IntelliJ IDEA EAP",
@@ -41,11 +41,11 @@
     "idea-community": {
       "update-channel": "IntelliJ IDEA RELEASE",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}-aarch64.dmg",
-      "version": "2023.2.1",
-      "sha256": "f168e3d751f3f638a38ab9f9d974ca721e21a23e52e928ef297fc7a5026a30c6",
-      "url": "https://download.jetbrains.com/idea/ideaIC-2023.2.1-aarch64.dmg",
+      "version": "2023.2.2",
+      "sha256": "b3c126636d2096933672d1c1359fe32ad04d35057090363ad1812951f2ada7d9",
+      "url": "https://download.jetbrains.com/idea/ideaIC-2023.2.2-aarch64.dmg",
       "version-major-minor": "2022.1",
-      "build_number": "232.9559.62"
+      "build_number": "232.9921.47"
     },
     "idea-community-eap": {
       "update-channel": "IntelliJ IDEA EAP",

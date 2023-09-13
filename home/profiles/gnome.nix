@@ -89,7 +89,6 @@ with lib;
       edge-tiling = false;
       experimental-features = [
         "autoclose-xwayland"
-        "dma-buf-screen-sharing"
         "rt-scheduler"
         "scale-monitor-framebuffer"
       ];
