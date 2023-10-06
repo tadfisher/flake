@@ -19,10 +19,11 @@ in
       config.boot.kernelPackages.v4l2loopback.out
     ];
     initrd = {
+
       availableKernelModules = [
         "nvme"
         "xhci_pci"
-	"thunderbolt"
+	      "thunderbolt"
         "usbhid"
         "sd_mod"
         "usb_storage"
@@ -32,7 +33,7 @@ in
     kernelModules = [
       "kvm-amd"
     ];
-    kernelPackages = pkgs.linuxPackages_testing;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
       "mitigations=off"
       "resume_offset=533760"
@@ -150,6 +151,8 @@ in
   swapDevices = [{ device = "/var/swap/swapfile"; }];
 
   system.stateVersion = "23.11";
+
+  systemd.services.systemd-resolved.serviceConfig.ExecStart = [ "" "!!${pkgs.systemd-patched}/lib/systemd/systemd-resolved" ];
 
   virtualisation.libvirtd.qemu = {
     ovmf.packages = [ pkgs.OVMFFull ];

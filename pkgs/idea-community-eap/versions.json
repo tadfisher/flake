@@ -12,10 +12,10 @@
     "idea-community-eap": {
       "update-channel": "IntelliJ IDEA EAP",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}.tar.gz",
-      "version": "2023.2 Beta",
-      "build_number": "232.8660.48",
-      "sha256": "24ebc08dc3452d82a32cfbe4f96476b241e559666095c1ed9c4ac0fbee8114c8",
-      "url": "https://download.jetbrains.com/idea/ideaIC-232.8660.48.tar.gz"
+      "version": "2023.3 EAP",
+      "build_number": "233.6745.305",
+      "sha256": "bb4edf9a87cd47c76470ecddf026bd72b95ab25932b9476508ca5adb166152cb",
+      "url": "https://download.jetbrains.com/idea/ideaIC-233.6745.305.tar.gz"
     }
   },
   "x86_64-darwin": {
@@ -31,10 +31,10 @@
     "idea-community-eap": {
       "update-channel": "IntelliJ IDEA EAP",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}.dmg",
-      "version": "2023.2 Beta",
-      "build_number": "232.8660.48",
-      "sha256": "336ade0c5570d1a19c2fd7567fc5369079e24bd837f5bafede39ac384beb04c9",
-      "url": "https://download.jetbrains.com/idea/ideaIC-232.8660.48.dmg"
+      "version": "2023.3 EAP",
+      "build_number": "233.6745.305",
+      "sha256": "ca402dbf0208dd171a4125cac5e0331e38ce4cb51df364cc2273b7372a6847dd",
+      "url": "https://download.jetbrains.com/idea/ideaIC-233.6745.305.dmg"
     }
   },
   "aarch64-darwin": {
@@ -50,10 +50,10 @@
     "idea-community-eap": {
       "update-channel": "IntelliJ IDEA EAP",
       "url-template": "https://download.jetbrains.com/idea/ideaIC-{version}-aarch64.dmg",
-      "version": "2023.2 Beta",
-      "build_number": "232.8660.48",
-      "sha256": "5c137b09f395682ae725abeac8218de6def494c8626d06c956a0749b84cd91a6",
-      "url": "https://download.jetbrains.com/idea/ideaIC-232.8660.48-aarch64.dmg"
+      "version": "2023.3 EAP",
+      "build_number": "233.6745.305",
+      "sha256": "7efb6ed3705126d0280842595ed14bae596104dcf7a42f621566d8e5eb974921",
+      "url": "https://download.jetbrains.com/idea/ideaIC-233.6745.305-aarch64.dmg"
     }
   }
 }
