@@ -55,6 +55,7 @@ with lib;
       userName = "Tad Fisher";
       userEmail = "tadfisher@gmail.com";
     };
+    nix-index.enable = true;
     password-store = {
       enable = true;
       package = mkDefault (pkgs.pass.withExtensions (e: with e; [ pass-audit pass-otp ]));

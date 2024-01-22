@@ -6,14 +6,18 @@ with lib;
   android-sdk = {
     enable = true;
     packages = mkDefault (sdk: with sdk; [
-      build-tools-30-0-2
+      build-tools-34-0-0
+      cmake-3-22-1
       cmdline-tools-latest
       emulator
-      platforms-android-30
+      ndk-25-1-8937393
+      platforms-android-34
       platform-tools
       skiaparser-1
-      sources-android-30
-      system-images-android-30-google-apis-playstore-x86
+      skiaparser-2
+      skiaparser-3
+      sources-android-34
+      system-images-android-34-google-apis-playstore-x86-64
     ]);
   };
 
@@ -31,6 +35,8 @@ with lib;
 
   services.adb = {
     enable = true;
+    mdnsBackend = null;
+    logLevel = "verbose";
     # Android Studio doesn't allow setting the standard port (5037).
     port = 5038;
   };

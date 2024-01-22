@@ -19,7 +19,6 @@ in
       config.boot.kernelPackages.v4l2loopback.out
     ];
     initrd = {
-
       availableKernelModules = [
         "nvme"
         "xhci_pci"
@@ -37,9 +36,13 @@ in
     kernelParams = [
       "mitigations=off"
       "resume_offset=533760"
+      # https://github.com/systemd/systemd/issues/24279
+      "rtc_cmos.use_acpi_alarm=1"
     ];
     resumeDevice = "/dev/disk/by-label/pool";
   };
+
+  hardware.firmware = mkBefore [ pkgs.ath11k-firmware ];
 
   environment = {
     etc."NetworkManager/system-connections/mercury.nmconnection" = {
@@ -102,6 +105,8 @@ in
       fileSystems = [ "/dev/nvme0n1" ];
     };
 
+    fwupd.extraRemotes = [ "lvfs-testing" ];
+
     homed.enable = true;
 
     openssh.settings.PasswordAuthentication = true;
@@ -139,8 +144,6 @@ in
       ENV{adb_user}=="yes", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="add", TAG+="systemd", SYMLINK="android adb/%s{serial}", ENV{SYSTEMD_USER_WANTS}+="adb@%s{serial}.target"
       ENV{adb_user}=="yes", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="remove", TAG+="systemd"
     '';
-
-    usbmuxd.enable = true;
 
     xserver.libinput.touchpad = {
       disableWhileTyping = true;

@@ -15,7 +15,7 @@
 
   accounts.email.accounts."tadfisher@gmail.com".primary = true;
 
-  home.packages = with pkgs; [ inkscape gimp ];
+  home.packages = with pkgs; [ gimp ];
 
   android-sdk.packages = sdk: with sdk; [
     build-tools-30-0-2

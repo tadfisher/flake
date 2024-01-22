@@ -22,7 +22,6 @@
     brasero
     celestia
     gamescope
-    inkscape
     transmission-remote-gtk
     yuzu
   ];

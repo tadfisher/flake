@@ -449,8 +449,8 @@ in
                     archive-lzh-write-file-member '("${pkgs.lhasa}/bin/lha" "a")
                     archive-zip-extract '("${pkgs.unzip}/bin/unzip" "-qq" "-c")
                     archive-zip-expunge '("${pkgs.zip}/bin/zip" "-d" "-q")
-                    archive-zip-update '("${pkgs.unzip}/bin/zip" "-q")
-                    archive-zip-update-case '("${pkgs.unzip}/bin/zip" "-q" "-k")
+                    archive-zip-update '("${pkgs.zip}/bin/zip" "-q")
+                    archive-zip-update-case '("${pkgs.zip}/bin/zip" "-q" "-k")
                     archive-7z-program '("${pkgs._7zz}/bin/7zz")
                     archive-squashfs-extract '("${pkgs.squashfs-tools-ng}/bin/rdsquashfs" "-c"))
             '';
@@ -748,6 +748,7 @@ in
 
           dired = {
             enable = true;
+            package = "";       # built-in
             command = [ "dired" "dired-jump" ];
             config = ''
               (put 'dired-find-alternate-file 'disabled nil)
@@ -757,8 +758,25 @@ in
             '';
           };
 
+          dired-aux = {
+            enable = true;
+            package = "";       # built-in
+            config = ''
+              (setq dired-compress-files-alist
+                    '(("\\.tar\\.gz\\'" . "${pkgs.gnutar}/bin/tar -cf - %i | ${pkgs.gzip}/bin/gzip -c9 > %o")
+                     ("\\.tar\\.bz2\\'" . "${pkgs.gnutar}/bin/tar -cf - %i | ${pkgs.bzip2}/bin/bzip2 -c9 > %o")
+                     ("\\.tar\\.xz\\'" . "${pkgs.gnutar}/bin/tar -cf - %i | ${pkgs.xz}/bin/xz -c9 > %o")
+                     ("\\.tar\\.zst\\'" . "${pkgs.gnutar}/bin/tar -cf - %i | ${pkgs.zstd}/bin/zstd -19 -o %o")
+                     ("\\.tar\\.lz\\'" . "${pkgs.gnutar}/bin/tar -cf - %i | ${pkgs.lzip}/bin/lzip -c9 > %o")
+                     ("\\.tar\\.lzo\\'" . "${pkgs.gnutar}/bin/tar -cf - %i | ${pkgs.lzop}/bin/lzop -c9 > %o")
+                     ("\\.zip\\'" . "${pkgs.zip}/bin/zip %o -r --filesync %i")
+                     ("\\.pax\\'" . "${pkgs.pax}/bin/pax -wf %o %i")))
+            '';
+          };
+
           dired-x = {
             enable = true;
+            package = "";       # built-in
             hook = [ "(dired-mode . dired-omit-mode)" ];
             bindLocal.dired-mode-map = { "." = "dired-omit-mode"; };
             config = ''
@@ -1601,7 +1619,14 @@ in
             '';
           };
 
-          password-store-otp.enable = true;
+          password-store-otp = {
+            enable = true;
+            config = ''
+              (setq password-store-otp-qrencode-executable "${pkgs.qrencode}/bin/qrencode"
+                    password-store-otp-screenshot-command "${pkgs.gnome.gnome-screenshot}/bin/gnome-screenshot -a -f"
+                    password-store-otp-zbarimg-executable "${pkgs.zbar}/bin/zbarimg")
+            '';
+          };
 
           plantuml-mode = {
             enable = true;
@@ -1911,6 +1936,7 @@ in
                     vterm-copy-exclude-prompt t
                     vterm-kill-buffer-on-exit t
                     vterm-max-scrollback 100000)
+              (add-to-list 'vterm-keymap-exceptions "M-:")
             '';
             extraConfig = ''
               :preface

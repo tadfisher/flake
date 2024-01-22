@@ -87,11 +87,7 @@ with lib;
     "org/gnome/mutter" = {
       auto-maximize = false;
       edge-tiling = false;
-      experimental-features = [
-        "autoclose-xwayland"
-        "rt-scheduler"
-        "scale-monitor-framebuffer"
-      ];
+      experimental-features = [ "scale-monitor-framebuffer" ];
     };
 
     "org/gnome/mutter/keybindings" = {
@@ -109,13 +105,14 @@ with lib;
     "org/gnome/shell" = {
       always-show-log-out = true;
       disable-user-extensions = false;
+      disable-extension-version-validation = true;
       enabled-extensions = with pkgs; [
         gnomeExtensions.bluetooth-quick-connect.extensionUuid
         gnomeExtensions.dash-to-panel.extensionUuid
-        gnomeExtensions.gsconnect.extensionUuid
+        gnomeExtensions.valent.extensionUuid
+        gnomeExtensions.vertical-workspaces.extensionUuid
         # instant-workspace-switcher.uuid
         paperwm.extensionUuid
-        vertical-overview.uuid
         # "user-theme@gnome-shell-extensions.gcampax.github.com"
       ];
     };
@@ -177,11 +174,12 @@ with lib;
     gnome.gnome-tweaks
     gnomeExtensions.bluetooth-quick-connect
     gnomeExtensions.dash-to-panel
-    gnomeExtensions.gsconnect
+    gnomeExtensions.valent
+    gnomeExtensions.vertical-workspaces
     # instant-workspace-switcher
     paperwm
     roboto
-    vertical-overview
+    valent
     virt-manager
   ];
 

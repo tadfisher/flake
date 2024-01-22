@@ -143,8 +143,6 @@ in
       ENV{adb_user}=="yes", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="remove", TAG+="systemd"
     '';
 
-    usbmuxd.enable = true;
-
     xserver.libinput.touchpad = {
       disableWhileTyping = true;
       naturalScrolling = true;

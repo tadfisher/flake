@@ -27,7 +27,6 @@ with lib;
     awscli2
     figma-linux
     gimp
-    inkscape
   ];
 
   programs = {

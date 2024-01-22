@@ -4,14 +4,9 @@
 
 with pkgs;
 
-let
-  ideaPackages = callPackage ./idea-community-eap {
-    inherit (inputs) nixpkgs;
-    jdk = jetbrains.jdk;
-    vmopts = config.jetbrains.vmopts or null;
-  };
-in
-rec {
+{
+  ath11k-firmware = callPackage ./ath11k-firmware { src = inputs.ath11k-firmware; };
+
   cleaner-overview = callPackage ./cleaner-overview { };
 
   dart-sass = callPackage ./dart-sass { };
@@ -21,10 +16,6 @@ rec {
   firefox-gnome-theme = callPackage ./firefox-gnome-theme { src = inputs.firefox-gnome-theme; };
 
   fleet = callPackage ./fleet { };
-
-  inherit (ideaPackages) idea-community idea-community-eap;
-
-  jetbrains-toolbox = callPackage ./jetbrains-toolbox { };
 
   jextract = callPackage ./jextract { src = inputs.jextract; };
 
@@ -65,8 +56,6 @@ rec {
   xcompose = callPackage ./xcompose { };
 
   vertical-overview = callPackage ./vertical-overview { src = inputs.vertical-overview; };
-
-  webp-pixbuf-loader = callPackage ./webp-pixbuf-loader { };
 
   zephyr-toolchain = callPackage ./zephyr-toolchain { };
 

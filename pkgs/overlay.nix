@@ -61,4 +61,8 @@ with final;
       maintainers = with lib.maintainers; [ tadfisher ];
     };
   });
+
+  systemd-patched = prev.systemd.overrideAttrs (attrs: rec {
+    patches = attrs.patches ++ [./systemd/query-single-label-on-routing-domain.patch];
+  });
 }

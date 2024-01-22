@@ -25,12 +25,25 @@ with lib;
       gtk-im-module = "xim"
       gtk-key-theme-name = "Emacs"
     '';
-    gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-      gtk-cursor-blink = false;
-      gtk-im-module = "xim";
-      gtk-key-theme-name = "Emacs";
+    gtk3 = {
+      extraCss = ''
+        .background .titlebar:backdrop, .background .titlebar { border-radius: 0; }
+        decoration {
+          border-radius: 0;
+        }
+      '';
+      extraConfig = {
+        gtk-application-prefer-dark-theme = 1;
+        gtk-cursor-blink = false;
+        gtk-im-module = "xim";
+        gtk-key-theme-name = "Emacs";
+      };
     };
+    gtk4.extraCss = ''
+      window.csd {
+        border-radius: 0;
+      }
+    '';
   };
 
   dconf.settings."org/gnu/emacs/defaults-by-name/emacs" = {
@@ -66,7 +79,6 @@ with lib;
       gnome.gnome-themes-extra
       keybase
       material-icons
-      nyxt
       qt5.qtwayland
       signal-desktop
       simple-scan
@@ -128,8 +140,14 @@ with lib;
           "media.navigator.mediadataencoder_vpx_enabled" = true;
           "media.rdd-ffmpeg.enabled" = true;
           "ui.key.menuAccessKey" = 0; # Hide access key underlining
+          "ui.titlebarRadius" = 0;
         };
       };
+    };
+
+    inkscape = {
+      enable = true;
+      package = pkgs.inkscape-with-extensions;
     };
 
     password-store.package = pkgs.pass-wayland.withExtensions (e: with e; [ pass-audit pass-otp ]);

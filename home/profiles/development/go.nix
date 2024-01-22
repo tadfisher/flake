@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  home.packages = with pkgs; [ dep go2nix gocode godef gopkgs gotests gotools ];
+  home.packages = with pkgs; [ gocode godef gopkgs gotests gotools ];
 
   programs.go = {
     enable = true;

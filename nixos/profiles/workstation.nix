@@ -27,6 +27,8 @@ mkMerge [
         gst_all_1.gst-libav
         gst_all_1.gst-vaapi
         paper-icon-theme
+        # BUG https://github.com/NixOS/nixpkgs/issues/280826
+        pcscliteWithPolkit.out
       ];
     };
 
@@ -185,7 +187,7 @@ mkMerge [
       network.wait-online.enable = false; # We use NetworkManager for workstations
       oomd = {
         enableRootSlice = true;
-        enableUserServices = true;
+        enableUserSlices = true;
       };
       services = {
         bluetooth.serviceConfig.ExecStart = mkForce [

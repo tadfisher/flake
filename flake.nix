@@ -6,6 +6,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/android-nixpkgs";
     };
+    ath11k-firmware = {
+      url = "github:kvalo/ath11k-firmware";
+      flake = false;
+    };
     emacs-overlay = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/emacs-overlay";
@@ -58,14 +62,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:seppeljordan/nix-prefetch-github";
     };
-    nixos-hardware.url = "github:NixOS/nixos-hardware";
+    nixos-hardware.url = "github:tadfisher/nixos-hardware/lenovo-p14s-t14-updates";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     paperwm = {
-      url = "github:paperwm/PaperWM/develop";
+      url = "github:paperwm/PaperWM";
       flake = false;
     };
     pass-audit = {
       url = "github:roddhjav/pass-audit";
+      flake = false;
+    };
+    password-store-otp-el = {
+      url = "github:tadfisher/password-store-otp.el/executable-vars";
       flake = false;
     };
     portmod = {
@@ -106,6 +114,7 @@
               allowAliases = true;
               allowUnfree = true;
               android_sdk.accept_license = true;
+              permittedInsecurePackages = [ "figma-linux-0.10.0" ];
             }
             // profiles.games;
 
@@ -113,7 +122,7 @@
           overlays = [
             (inputs.android-nixpkgs.overlays.default)
             (inputs.nix-dart.overlay)
-            (inputs.nix-direnv.overlay)
+            (inputs.nix-direnv.overlays.default)
             (self.overlays.default)
           ];
         }
@@ -177,6 +186,7 @@
             (import inputs.rycee { inherit pkgs; }).hmModules.emacs-init
             self.hmModules.programs.devhelp
             self.hmModules.programs.emacs-lsp
+            self.hmModules.programs.inkscape
             self.hmModules.programs.notmuch-notify
             self.hmModules.programs.pass-git-helper
             self.hmModules.services.adb
@@ -218,6 +228,7 @@
           devhelp = import ./home/modules/programs/devhelp.nix;
           emacs-init = import ./home/modules/programs/emacs-init.nix;
           emacs-lsp = import ./home/modules/programs/emacs-lsp.nix;
+          inkscape = import ./home/modules/programs/inkscape.nix;
           notmuch-notify = import ./home/modules/programs/notmuch-notify.nix;
           pass-git-helper = import ./home/modules/programs/pass-git-helper.nix;
         };
@@ -241,14 +252,14 @@
           system = "x86_64-linux";
           config = ./nixos/hosts/euler.nix;
           modules = [
-            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t14-amd-gen1
+            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen1
           ];
         };
         imes = {
           system = "x86_64-linux";
           config = ./nixos/hosts/imes.nix;
           modules = [
-            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t14-amd-gen3
+            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen4
           ];
         };
         installer = {

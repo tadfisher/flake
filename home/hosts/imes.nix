@@ -18,16 +18,13 @@ with lib;
 
   accounts.email.accounts."tad@mercury.com".primary = true;
 
-  android-sdk.packages = mkForce (sdk: with sdk; [
-    cmdline-tools-latest
-    platform-tools
-  ]);
-
   home.packages = with pkgs; [
-    awscli2
+    # TODO https://github.com/NixOS/nixpkgs/issues/268737
+    # awscli2
+    entr
     figma-linux
     gimp
-    inkscape
+    jetbrains-toolbox
   ];
 
   programs = {

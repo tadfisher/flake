@@ -64,13 +64,18 @@ with lib;
     sandbox = true;
   };
 
-  nixpkgs.config.allowUnfree = true;
-
-  programs.bash.enableCompletion = true;
+  programs = {
+    bash.enableCompletion = true;
+    command-not-found.enable = false;
+    nix-ld.enable = true;
+  };
 
   security = {
     pam = {
-      enableSSHAgentAuth = true;
+      sshAgentAuth = {
+        enable = true;
+        authorizedKeysFiles = [ "/etc/ssh/authorized_keys.d/%u" ];
+      };
       services.ssh.sshAgentAuth = true;
     };
     sudo.wheelNeedsPassword = false;
