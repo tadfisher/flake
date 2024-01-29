@@ -22,7 +22,7 @@ in
     };
 
     pam = {
-      enableSSHAgentAuth = true;
+      sshAgentAuth.enable = true;
       services.ssh.sshAgentAuth = true;
     };
   };

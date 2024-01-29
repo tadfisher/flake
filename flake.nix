@@ -65,7 +65,7 @@
     nixos-hardware.url = "github:tadfisher/nixos-hardware/lenovo-p14s-t14-updates";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     paperwm = {
-      url = "github:paperwm/PaperWM";
+      url = "github:paperwm/PaperWM/develop";
       flake = false;
     };
     pass-audit = {

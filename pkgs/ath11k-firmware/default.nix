@@ -5,7 +5,7 @@
 
 stdenv.mkDerivation {
   pname = "ath11k-firmware";
-  version = "unstable-20211223";
+  version = "unstable-20240124";
   inherit src;
 
   dontBuild = true;
@@ -13,8 +13,8 @@ stdenv.mkDerivation {
   installPhase = ''
     for i in WCN6855/hw2.0/board-2.bin \
              WCN6855/hw2.0/regdb.bin \
-             WCN6855/hw2.0/1.1/WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.16/amss.bin \
-             WCN6855/hw2.0/1.1/WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.16/m3.bin;
+             WCN6855/hw2.0/1.1/WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.37/amss.bin \
+             WCN6855/hw2.0/1.1/WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.37/m3.bin;
     do
       install -D -pm644 $i $out/lib/firmware/ath11k/WCN6855/hw2.0/$(basename $i)
     done
