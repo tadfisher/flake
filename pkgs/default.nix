@@ -49,10 +49,6 @@ with pkgs;
 
   steamos-modeswitch-inhibitor-i686 = pkgsi686Linux.callPackage ./steamos-modeswitch-inhibitor { };
 
-  systemd-patched = pkgs.systemd.overrideAttrs (attrs: rec {
-    patches = attrs.patches ++ [./systemd/query-single-label-on-routing-domain.patch];
-  });
-
   xcompose = callPackage ./xcompose { };
 
   vertical-overview = callPackage ./vertical-overview { src = inputs.vertical-overview; };

@@ -1,13 +1,14 @@
 { pkgs, ... }:
 
 let
-  gradleWithToolchains = with pkgs; callPackage gradle-packages.gradle_7 {
+  gradleWithToolchains = with pkgs; callPackage gradle-packages.gradle_8 {
     javaToolchains = [
       openjdk8
       jdk11
       jdk17
       jdk19
       jdk21
+      jdk21_headless
     ];
   };
 
@@ -16,7 +17,7 @@ in
   home = {
     file.".gradle/gradle.properties".text = ''
       org.gradle.java.installations.auto-download=false
-      org.gradle.java.installations.paths=${pkgs.jdk8.home},${pkgs.jdk11.home},${pkgs.jdk17.home},${pkgs.jdk19.home},${pkgs.jdk21.home}
+      org.gradle.java.installations.paths=${pkgs.jdk8.home},${pkgs.jdk11.home},${pkgs.jdk17.home},${pkgs.jdk19.home},${pkgs.jdk21.home},${pkgs.jdk21_headless.home}
     '';
 
     packages = with pkgs; [
@@ -38,6 +39,7 @@ in
     "java/openjdk11".source = pkgs.openjdk11.home;
     "java/openjdk19".source = pkgs.openjdk19.home;
     "java/openjdk21".source = pkgs.openjdk21.home;
+    "java/openjdk21-headless".source = pkgs.openjdk21headless.home;
     # "java/jetbrains".source = pkgs.jetbrains.jdk;
   };
 }

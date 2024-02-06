@@ -15,9 +15,6 @@ in
   ];
 
   boot = {
-    extraModulePackages = [
-      config.boot.kernelPackages.v4l2loopback.out
-    ];
     initrd = {
       availableKernelModules = [
         "nvme"
@@ -32,12 +29,10 @@ in
     kernelModules = [
       "kvm-amd"
     ];
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_testing;
     kernelParams = [
       "mitigations=off"
       "resume_offset=533760"
-      # https://github.com/systemd/systemd/issues/24279
-      "rtc_cmos.use_acpi_alarm=1"
     ];
     resumeDevice = "/dev/disk/by-label/pool";
   };
@@ -154,8 +149,6 @@ in
   swapDevices = [{ device = "/var/swap/swapfile"; }];
 
   system.stateVersion = "23.11";
-
-  systemd.services.systemd-resolved.serviceConfig.ExecStart = [ "" "!!${pkgs.systemd-patched}/lib/systemd/systemd-resolved" ];
 
   virtualisation.libvirtd.qemu = {
     ovmf.packages = [ pkgs.OVMFFull ];

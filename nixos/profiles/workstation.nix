@@ -75,7 +75,7 @@ mkMerge [
         connection.mdns=2
       '';
       wifi = {
-        # backend = "iwd";
+        backend = "iwd";
         powersave = true;
       };
     };
@@ -194,6 +194,8 @@ mkMerge [
           ""
           "${config.hardware.bluetooth.package}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf --experimental"
         ];
+        # BUG: https://github.com/NixOS/nixpkgs/issues/180175
+        NetworkManager-wait-online.enable = mkForce false;
       };
       sleep.extraConfig = ''
         HibernateDelaySec=1h

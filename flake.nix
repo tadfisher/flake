@@ -63,7 +63,7 @@
       url = "github:seppeljordan/nix-prefetch-github";
     };
     nixos-hardware.url = "github:tadfisher/nixos-hardware/lenovo-p14s-t14-updates";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs";
     paperwm = {
       url = "github:paperwm/PaperWM/develop";
       flake = false;

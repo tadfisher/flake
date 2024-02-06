@@ -12,7 +12,8 @@ with lib;
 
   console = {
     earlySetup = true;
-    font = "Lat2-Terminus16";
+    # BUG https://github.com/NixOS/nixpkgs/issues/257904
+    # font = "Lat2-Terminus16";
     keyMap = "emacs2";
   };
 
