@@ -63,7 +63,7 @@
       url = "github:seppeljordan/nix-prefetch-github";
     };
     nixos-hardware.url = "github:tadfisher/nixos-hardware/lenovo-p14s-t14-updates";
-    nixpkgs.url = "github:NixOS/nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     paperwm = {
       url = "github:paperwm/PaperWM/develop";
       flake = false;
@@ -86,6 +86,10 @@
     };
     sedcli = {
       url = "github:gjoyce-ibm/sedcli/kernel-keyring";
+      flake = false;
+    };
+    tree-sitter-blueprint = {
+      url = "github:huanie/tree-sitter-blueprint";
       flake = false;
     };
     vertical-overview = {

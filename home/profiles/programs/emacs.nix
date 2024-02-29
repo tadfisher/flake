@@ -21,6 +21,7 @@ let
         '';
       plugins = with pkgs.tree-sitter-grammars; [
         tree-sitter-bash
+        tree-sitter-blueprint
         tree-sitter-c
         tree-sitter-c-sharp
         tree-sitter-cmake
@@ -491,6 +492,8 @@ in
             };
           };
 
+          blueprint-ts-mode.enable = true;
+
           browse-at-remote = { command = [ "browse-at-remote" ]; };
 
           buffer-move = {
@@ -506,18 +509,16 @@ in
           cape = {
             enable = true;
             init = ''
-              (add-to-list 'completion-at-point-functions #'cape-abbrev)
               (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-              (add-to-list 'completion-at-point-functions #'cape-dict)
               (add-to-list 'completion-at-point-functions #'cape-file)
+              (add-to-list 'completion-at-point-functions #'cape-elisp-block)
               (add-to-list 'completion-at-point-functions #'cape-history)
-              (add-to-list 'completion-at-point-functions #'cape-ispell)
               (add-to-list 'completion-at-point-functions #'cape-keyword)
-              (add-to-list 'completion-at-point-functions #'cape-line)
-              (add-to-list 'completion-at-point-functions #'cape-rfc1345)
+              (add-to-list 'completion-at-point-functions #'cape-abbrev)
               (add-to-list 'completion-at-point-functions #'cape-sgml)
-              (add-to-list 'completion-at-point-functions #'cape-symbol)
-              ;; (add-to-list 'completion-at-point-functions #'cape-tex)
+              (add-to-list 'completion-at-point-functions #'cape-dict)
+              (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+              (add-to-list 'completion-at-point-functions #'cape-line)
             '';
           };
 
@@ -707,6 +708,7 @@ in
           corfu = {
             enable = true;
             init = ''
+              (setq corfu-auto t)
               (global-corfu-mode)
             '';
           };
@@ -875,6 +877,7 @@ in
           eglot = {
             enable = true;
             package = (epkgs: if versionAtLeast (getVersion cfg.package) "29" then "" else epkgs.eglot);
+            after = optional cfg.init.usePackage.cape.enable "corfu";
             hook = [
               ''
                 ((c-mode c++-mode c-ts-base-mode
@@ -923,6 +926,9 @@ in
                        . ,(eglot-alternatives
                            '(("bash-language-server" "start")
                              ("${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start"))))))
+              ${optionalString cfg.init.usePackage.cape.enable ''
+                (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
+              ''}
             '';
           };
 

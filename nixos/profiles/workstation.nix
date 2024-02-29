@@ -179,7 +179,7 @@ mkMerge [
         gdk-pixbuf.modulePackages = [ pkgs.webp-pixbuf-loader ];
         libinput.enable = true;
         videoDrivers = [ "modesetting" ];
-        xkbOptions = "ctrl:nocaps";
+        xkb.options = "ctrl:nocaps";
       };
     };
 

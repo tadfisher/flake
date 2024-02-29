@@ -39,7 +39,7 @@ in
     "java/openjdk11".source = pkgs.openjdk11.home;
     "java/openjdk19".source = pkgs.openjdk19.home;
     "java/openjdk21".source = pkgs.openjdk21.home;
-    "java/openjdk21-headless".source = pkgs.openjdk21headless.home;
+    "java/openjdk21-headless".source = pkgs.openjdk21_headless.home;
     # "java/jetbrains".source = pkgs.jetbrains.jdk;
   };
 }

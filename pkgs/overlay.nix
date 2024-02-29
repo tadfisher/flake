@@ -5,8 +5,12 @@ final: prev:
 with final;
 
 {
+  tree-sitter = prev.tree-sitter.override {
+    extraGrammars = callPackage ./tree-sitter-grammars {} inputs;
+  };
+
   emacsPackagesFor = emacs:
-    (inputs.emacs-overlay.lib.${system}.emacsPackagesFor emacs).overrideScope' (callPackage ./emacs { inherit inputs; });
+    (inputs.emacs-overlay.lib.${system}.emacsPackagesFor emacs).overrideScope (callPackage ./emacs { inherit inputs; });
 
   # jetbrains-mono = stdenv.mkDerivation rec {
   #   pname = "JetBrainsMono";

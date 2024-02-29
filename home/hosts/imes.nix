@@ -24,6 +24,7 @@ with lib;
     entr
     figma-linux
     gimp
+    gtk4.dev
     jetbrains-toolbox
   ];
 
