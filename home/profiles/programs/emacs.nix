@@ -669,6 +669,14 @@ in
             '';
           };
 
+          consult-eglot = {
+            enable = true;
+            bindLocal.eglot-mode-map = {
+              "M-s s" = "consult-eglot-symbols";
+            };
+            after = [ "consult" "eglot" ];
+          };
+
           consult-xref = {
             enable = true;
             after = [ "consult" "xref" ];
@@ -707,9 +715,15 @@ in
 
           corfu = {
             enable = true;
+            bindLocal.corfu-map = {
+              "RET" = "nil";
+            };
             init = ''
               (setq corfu-auto t)
               (global-corfu-mode)
+            '';
+            config = ''
+              (setq corfu-quit-no-match t)
             '';
           };
 
@@ -919,7 +933,8 @@ in
                             '(("typescript-language-server" "--stdio")
                               ("${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server" "--stdio"))))
                       (nix-mode
-                       . ,(eglot-alternatives '("rnix-lsp" "${pkgs.rnix-lsp}/bin/rnix-lsp")))
+                       . ("${pkgs.nil}/bin/nil" :initializationOptions
+                                                (:formatting (:command ["${pkgs.alejandra}/bin/alejandra"]))))
                       (rust-mode
                        . ,(eglot-alternatives '("rust-analyzer" "${pkgs.rust-analyzer}/bin/rust-analyzer")))
                       (sh-mode
@@ -929,6 +944,15 @@ in
               ${optionalString cfg.init.usePackage.cape.enable ''
                 (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
               ''}
+            '';
+          };
+
+          eglot-booster = {
+            enable = true;
+            after = [ "eglot" ];
+            config = ''
+              (add-to-list exec-path "${pkgs.emacs-lsp-booster}/bin")
+              (eglot-booster-mode)
             '';
           };
 
@@ -1208,6 +1232,14 @@ in
                 "M-SPC m q" = "jq-interactively";
               };
             };
+          };
+
+          kind-icon = {
+            enable = true;
+            after = [ "corfu" ];
+            config = ''
+              (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
+            '';
           };
 
           kotlin-mode = {
@@ -1880,7 +1912,14 @@ in
             mode = [ ''"\\.tt\\'"'' ];
           };
 
-          typescript-mode = { enable = true; };
+          typescript-ts-mode = {
+            enable = true;
+            package = ""; # built-in
+            mode = [
+              ''("\\.ts\\'" . typescript-ts-mode)''
+              ''("\\.tsx\\'" . tsx-ts-mode)''
+            ];
+          };
 
           undo-tree = {
             enable = true;

@@ -13,6 +13,8 @@ with final;
 
   base16-plata-theme = callPackage ./base16-plata-theme { };
 
+  eglot-booster = callPackage ./eglot-booster { src = inputs.eglot-booster; };
+
   ligature = callPackage ./ligature { src = inputs.ligature-el; };
 
   org-cv = callPackage ./org-cv { };

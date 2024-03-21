@@ -23,6 +23,5 @@
     celestia
     gamescope
     transmission-remote-gtk
-    yuzu
   ];
 }

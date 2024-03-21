@@ -10,6 +10,10 @@
       url = "github:kvalo/ath11k-firmware";
       flake = false;
     };
+    eglot-booster = {
+      url = "github:jdtsmith/eglot-booster";
+      flake = false;
+    };
     emacs-overlay = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/emacs-overlay";
