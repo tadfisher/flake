@@ -162,7 +162,6 @@
               nix = {
                 extraOptions = "experimental-features = nix-command flakes";
                 nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
-                package = self.packages.${system}.nixUnstable;
                 registry = {
                   self.flake = self;
                   nixpkgs = {
@@ -323,10 +322,7 @@
         {
           nix-prefetch-github = inputs.nix-prefetch-github.packages.${system}.default;
           nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
-          nixUnstable = inputs.nixpkgs.legacyPackages.${system}.nixUnstable;
-          nixos-rebuild = inputs.nixpkgs.legacyPackages.${system}.nixos-rebuild.override {
-            nix = self.packages.${system}.nixUnstable;
-          };
+          nixos-rebuild = inputs.nixpkgs.legacyPackages.${system}.nixos-rebuild;
         }
       );
     };

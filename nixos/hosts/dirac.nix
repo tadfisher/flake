@@ -74,6 +74,11 @@ in
       fileSystems = [ "/dev/nvme0n1p1" ];
     };
 
+    libinput.touchpad = {
+      disableWhileTyping = true;
+      naturalScrolling = true;
+    };
+
     udev.extraRules = ''
       # Runtime PM for I2C Adapter i2c-0 (SMBus I801 adapter at efa0)
       # Runtime PM for I2C Adapter i2c-1 (i915 gmbus dpc)
@@ -97,11 +102,6 @@ in
       ENV{adb_user}=="yes", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="add", TAG+="systemd", SYMLINK="android adb/%s{serial}", ENV{SYSTEMD_USER_WANTS}+="adb@%s{serial}.target"
       ENV{adb_user}=="yes", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="remove", TAG+="systemd"
     '';
-
-    xserver.libinput.touchpad = {
-      disableWhileTyping = true;
-      naturalScrolling = true;
-    };
   };
 
   swapDevices = [{ label = "swap"; }];

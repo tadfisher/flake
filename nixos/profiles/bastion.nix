@@ -23,6 +23,7 @@ in
 
     pam = {
       sshAgentAuth.enable = true;
+
       services.ssh.sshAgentAuth = true;
     };
   };
@@ -119,10 +120,13 @@ in
 
       keyFile = "/root/nixos/secrets/oauth2-proxy.env";
 
-      nginx.virtualHosts = [
-        "orion.tad.codes"
-        "plex.orion.tad.codes"
-      ];
+      nginx = {
+        domain = "orion.tad.codes";
+        virtualHosts = {
+          "orion.tad.codes" = {};
+          "plex.orion.tad.codes" = {};
+        };
+      };
     };
 
     sshguard = {
@@ -132,10 +136,8 @@ in
   };
 
   users = {
-    groups.oauth2_proxy = { };
     users = {
       nginx.extraGroups = [ "acme" ];
-      oauth2_proxy.group = "oauth2_proxy";
     };
   };
 }
