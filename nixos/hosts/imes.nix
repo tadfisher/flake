@@ -1,9 +1,5 @@
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 with lib;
-let
-  secrets = import ../../secrets;
-
-in
 {
   imports = [
     ../profiles/core.nix
@@ -39,8 +35,8 @@ in
 
   hardware.firmware = mkBefore [ pkgs.ath11k-firmware ];
 
-  environment = {
-    etc."NetworkManager/system-connections/mercury.nmconnection" = {
+  environment.etc = {
+    "NetworkManager/system-connections/mercury.nmconnection" = {
       mode = "0600";
       source = pkgs.substituteAll {
         src = ../../secrets/mercury/vpn/mercury.nmconnection.in;
@@ -49,6 +45,10 @@ in
         key = ../../secrets/mercury/vpn/mercury-key.pem;
         ta = ../../secrets/mercury/vpn/mercury-tls-auth.pem;
       };
+    };
+    "kolide-k2/secret" = {
+      mode = "0600";
+      source = ../../secrets/mercury/kolide;
     };
   };
 
@@ -104,6 +104,13 @@ in
 
     homed.enable = true;
 
+    kolide-launcher.enable = true;
+
+    libinput.touchpad = {
+      disableWhileTyping = true;
+      naturalScrolling = true;
+    };
+
     openssh.settings.PasswordAuthentication = true;
 
     postgresql =
@@ -139,11 +146,6 @@ in
       ENV{adb_user}=="yes", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="add", TAG+="systemd", SYMLINK="android adb/%s{serial}", ENV{SYSTEMD_USER_WANTS}+="adb@%s{serial}.target"
       ENV{adb_user}=="yes", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="remove", TAG+="systemd"
     '';
-
-    xserver.libinput.touchpad = {
-      disableWhileTyping = true;
-      naturalScrolling = true;
-    };
   };
 
   swapDevices = [{ device = "/var/swap/swapfile"; }];

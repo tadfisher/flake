@@ -38,6 +38,10 @@
       url = "github:openjdk/jextract";
       flake = false;
     };
+    kolide = {
+      url = "github:kolide/nix-agent";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     libhidx = {
       url = "github:ondrejbudai/libhidx";
       flake = false;
@@ -267,6 +271,7 @@
           system = "x86_64-linux";
           config = ./nixos/hosts/imes.nix;
           modules = [
+            inputs.kolide.nixosModules.kolide-launcher
             inputs.nixos-hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen4
           ];
         };

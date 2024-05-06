@@ -21,7 +21,7 @@ let
         '';
       plugins = with pkgs.tree-sitter-grammars; [
         tree-sitter-bash
-        tree-sitter-blueprint
+        # tree-sitter-blueprint
         tree-sitter-c
         tree-sitter-c-sharp
         tree-sitter-cmake
@@ -951,7 +951,7 @@ in
             enable = true;
             after = [ "eglot" ];
             config = ''
-              (add-to-list exec-path "${pkgs.emacs-lsp-booster}/bin")
+              (add-to-list 'exec-path "${pkgs.emacs-lsp-booster}/bin")
               (eglot-booster-mode)
             '';
           };

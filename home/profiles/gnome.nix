@@ -109,7 +109,8 @@ with lib;
       enabled-extensions = with pkgs; [
         gnomeExtensions.bluetooth-quick-connect.extensionUuid
         gnomeExtensions.dash-to-panel.extensionUuid
-        gnomeExtensions.valent.extensionUuid
+        # BUG https://github.com/NixOS/nixpkgs/issues/301380
+        # gnomeExtensions.valent.extensionUuid
         gnomeExtensions.vertical-workspaces.extensionUuid
         # instant-workspace-switcher.uuid
         paperwm.extensionUuid
@@ -179,7 +180,8 @@ with lib;
     # instant-workspace-switcher
     paperwm
     roboto
-    valent
+    # BUG https://github.com/NixOS/nixpkgs/issues/301380
+    # valent
     virt-manager
   ];
 

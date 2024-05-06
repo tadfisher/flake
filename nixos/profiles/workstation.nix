@@ -70,10 +70,7 @@ mkMerge [
 
     networking.networkmanager = {
       enable = true;
-      extraConfig = ''
-        [connection]
-        connection.mdns=2
-      '';
+      settings.connection."connection.mdns" = 2;
       wifi = {
         backend = "iwd";
         powersave = true;
@@ -120,9 +117,9 @@ mkMerge [
 
       fwupd.enable = true;
 
-      gnome = {
-        gnome-browser-connector.enable = true;
-      };
+      gnome.gnome-browser-connector.enable = true;
+
+      libinput.enable = true;
 
       logind = {
         killUserProcesses = true;
@@ -177,7 +174,6 @@ mkMerge [
         displayManager.gdm.enable = true;
         enableCtrlAltBackspace = true;
         gdk-pixbuf.modulePackages = [ pkgs.webp-pixbuf-loader ];
-        libinput.enable = true;
         videoDrivers = [ "modesetting" ];
         xkb.options = "ctrl:nocaps";
       };

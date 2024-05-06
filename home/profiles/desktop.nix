@@ -109,6 +109,8 @@ with lib;
           "--enable-gpu-rasterization"
           "--enable-oop-rasterization"
           "--ignore-gpu-blacklist"
+          "--oauth2-client-id=77185425430.apps.googleusercontent.com"
+          "--oauth2-client-secret=OTJgUOQcT7lO7GsGZq2G4IlT"
         ];
         pulseSupport = true;
       };
@@ -155,7 +157,7 @@ with lib;
 
   qt = {
     enable = true;
-    platformTheme = "gnome";
+    platformTheme.name = "adwaita";
     style = {
       name = "adwaita-dark";
       package = pkgs.adwaita-qt;
