@@ -88,7 +88,7 @@ with lib;
         Address = ''${peerip}/32
         DNS = 8.8.4.4
         DNS = 8.8.8.8
-        IPForward = ipv4
+        IPv4Forwarding=yes
 
         [RoutingPolicyRule]
         From = ''${peerip}
