@@ -196,7 +196,7 @@ with lib;
 
         echo Fetching regions...
         serverlist='https://serverlist.piaservers.net/vpninfo/servers/v4'
-        allregions=$(curl -s "$serverlist" | head -1)
+        allregions=$((curl --no-progress-meter "$serverlist" || true) | head -1)
 
         region="$(echo $allregions |
                     jq --arg REGION_ID "${cfg.region}" -r '.regions[] | select(.id==$REGION_ID)')"
@@ -223,10 +223,10 @@ with lib;
         echo "$region" > $STATE_DIRECTORY/region.json
 
         echo Generating token...
-        tokenResponse="$(curl -s -u "$PIA_USER:$PIA_PASS" \
+        tokenResponse="$(curl --no-progress-meter -u "$PIA_USER:$PIA_PASS" \
           --connect-to "$meta_hostname::$meta_ip" \
           --cacert "${cfg.certificateFile}" \
-          "https://$meta_hostname/authv3/generateToken")"
+          "https://$meta_hostname/authv3/generateToken" || true)"
         if [ "$(echo "$tokenResponse" | jq -r '.status')" != "OK" ]; then
           >&2 echo "Failed to generate token. Stopping."
           exit 1
@@ -237,12 +237,12 @@ with lib;
         echo Connecting to the PIA WireGuard API on $wg_ip...
         privateKey="$(wg genkey)"
         publicKey="$(echo "$privateKey" | wg pubkey)"
-        json="$(curl -s -G \
+        json="$(curl --no-progress-meter -G \
           --connect-to "$wg_hostname::$wg_ip:" \
           --cacert "${cfg.certificateFile}" \
           --data-urlencode "pt=''${token}" \
           --data-urlencode "pubkey=$publicKey" \
-          "https://''${wg_hostname}:1337/addKey")"
+          "https://''${wg_hostname}:1337/addKey" || true)"
         status="$(echo "$json" | jq -r '.status')"
         if [ "$status" != "OK" ]; then
           >&2 echo "Server did not return OK. Stopping."
@@ -347,12 +347,12 @@ with lib;
 
         if [ -z "$pfconfig" ]; then
           echo "Fetching port forwarding configuration..."
-          pfconfig="$(curl -s -m 5 \
+          pfconfig="$(curl --no-progress-meter -m 5 \
             --interface ${cfg.interface} \
             --connect-to "$wg_hostname::$gateway:" \
             --cacert "${cfg.certificateFile}" \
             -G --data-urlencode "token=''${token}" \
-            "https://''${wg_hostname}:19999/getSignature")"
+            "https://''${wg_hostname}:19999/getSignature" || true)"
           if [ "$(echo "$pfconfig" | jq -r '.status')" != "OK" ]; then
             echo "Port forwarding configuration does not contain an OK status. Stopping." >&2
             exit 1
@@ -376,13 +376,13 @@ with lib;
         sleep 10
 
         while true; do
-          response="$(curl -s -G -m 5 \
+          response="$(curl --no-progress-meter -G -m 5 \
             --interface ${cfg.interface} \
             --connect-to "$wg_hostname::$gateway:" \
             --cacert "${cfg.certificateFile}" \
             --data-urlencode "payload=''${payload}" \
             --data-urlencode "signature=''${signature}" \
-            "https://''${wg_hostname}:19999/bindPort")"
+            "https://''${wg_hostname}:19999/bindPort" || true)"
           if [ "$(echo "$response" | jq -r '.status')" != "OK" ]; then
             echo "Failed to bind port. Stopping." >&2
             exit 1
