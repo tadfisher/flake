@@ -317,19 +317,19 @@ with lib;
 
       script = ''
         if [ ! -f $STATE_DIRECTORY/region.json ]; then
-          >&2 echo "Region information not found; is pia-vpn.service running?"
+          echo "Region information not found; is pia-vpn.service running?" >&2
           exit 1
         fi
         wg_hostname="$(cat $STATE_DIRECTORY/region.json | jq -r '.servers.wg[0].cn')"
 
         if [ ! -f $STATE_DIRECTORY/wireguard.json ]; then
-          >&2 echo "Connection information not found; is pia-vpn.service running?"
+          echo "Connection information not found; is pia-vpn.service running?" >&2
           exit 1
         fi
         gateway="$(cat $STATE_DIRECTORY/wireguard.json | jq -r '.server_ip')"
 
         if [ ! -f $STATE_DIRECTORY/token.json ]; then
-          >&2 echo "Token not found; is pia-vpn.esrvice running?"
+          echo "Token not found; is pia-vpn.esrvice running?" >&2
         fi
         token="$(cat $STATE_DIRECTORY/token.json | jq -r '.token')"
 
@@ -354,14 +354,14 @@ with lib;
             -G --data-urlencode "token=''${token}" \
             "https://''${wg_hostname}:19999/getSignature")"
           if [ "$(echo "$pfconfig" | jq -r '.status')" != "OK" ]; then
-            >&2 echo "Port forwarding configuration does not contain an OK status. Stopping."
+            echo "Port forwarding configuration does not contain an OK status. Stopping." >&2
             exit 1
           fi
           echo "$pfconfig" > "$cacheFile"
         fi
 
         if [ -z "$pfconfig" ]; then
-          >&2 echo "Did not obtain port forwarding configuration. Stopping."
+          echo "Did not obtain port forwarding configuration. Stopping." >&2
           exit 1
         fi
 
@@ -384,7 +384,7 @@ with lib;
             --data-urlencode "signature=''${signature}" \
             "https://''${wg_hostname}:19999/bindPort")"
           if [ "$(echo "$response" | jq -r '.status')" != "OK" ]; then
-            >&2 echo "Failed to bind port. Stopping."
+            echo "Failed to bind port. Stopping." >&2
             exit 1
           fi
           echo "Bound port $port. Forwarding will expire at $(date --date="$expires")."
