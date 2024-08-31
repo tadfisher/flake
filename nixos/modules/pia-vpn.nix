@@ -46,6 +46,50 @@ with lib;
       '';
     };
 
+    netdevConfig = mkOption {
+      type = types.str;
+      default = ''
+        [NetDev]
+        Description = WireGuard PIA network device
+        Name = ''${interface}
+        Kind = wireguard
+
+        [WireGuard]
+        PrivateKey = $privateKey
+
+        [WireGuardPeer]
+        PublicKey = $(echo "$json" | jq -r '.server_key')
+        AllowedIPs = 0.0.0.0/0, ::/0
+        Endpoint = ''${wg_ip}:$(echo "$json" | jq -r '.server_port')
+        PersistentKeepalive = 25
+      '';
+      description = ''
+        Configuration of 60-''${cfg.interface}.netdev
+      '';
+    };
+
+    networkConfig = mkOption {
+      type = types.str;
+      default = ''
+        [Match]
+        Name = ''${interface}
+
+        [Network]
+        Description = WireGuard PIA network interface
+        Address = ''${peerip}/32
+        DNS = 8.8.4.4
+        DNS = 8.8.8.8
+        IPForward = ipv4
+
+        [RoutingPolicyRule]
+        From = ''${peerip}
+        Table = 42
+      '';
+      description = ''
+        Configuration of 60-''${cfg.interface}.network
+      '';
+    };
+
     preUp = mkOption {
       type = types.lines;
       default = "";
@@ -56,7 +100,9 @@ with lib;
 
     postUp = mkOption {
       type = types.lines;
-      default = "";
+      default = ''
+        ${pkgs.iproute}/bin/ip route add default dev ''${interface} table 42
+      '';
       description = ''
         Commands called at the end of the interface setup.
       '';
@@ -64,7 +110,9 @@ with lib;
 
     preDown = mkOption {
       type = types.lines;
-      default = "";
+      default = ''
+        ${pkgs.iproute}/bin/ip route del default dev ''${interface} table 42
+      '';
       description = ''
         Commands called before the interface is taken down.
       '';
@@ -197,36 +245,14 @@ with lib;
         chown root:systemd-network /run/systemd/network/60-${cfg.interface}.{netdev,network}
         chmod 640 /run/systemd/network/60-${cfg.interface}.{netdev,network}
 
+        interface="${cfg.interface}"
+
         cat > /run/systemd/network/60-${cfg.interface}.netdev <<EOF
-        [NetDev]
-        Description = WireGuard PIA network device
-        Name = ${cfg.interface}
-        Kind = wireguard
-
-        [WireGuard]
-        PrivateKey = $privateKey
-
-        [WireGuardPeer]
-        PublicKey = $(echo "$json" | jq -r '.server_key')
-        AllowedIPs = 0.0.0.0/0, ::/0
-        Endpoint = ''${wg_ip}:$(echo "$json" | jq -r '.server_port')
-        PersistentKeepalive = 25
+        ${cfg.netdevConfig}
         EOF
 
         cat > /run/systemd/network/60-${cfg.interface}.network <<EOF
-        [Match]
-        Name = ${cfg.interface}
-
-        [Network]
-        Description = WireGuard PIA network interface
-        Address = ''${peerip}/32
-        DNS = 8.8.4.4
-        DNS = 8.8.8.8
-        IPForward = ipv4
-
-        [RoutingPolicyRule]
-        From = ''${peerip}
-        Table = 42
+        ${cfg.networkConfig}
         EOF
 
         echo Bringing up network interface ${cfg.interface}.
@@ -238,13 +264,13 @@ with lib;
 
         ${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online -i ${cfg.interface}
 
-        ${pkgs.iproute}/bin/ip route add default dev ${cfg.interface} table 42
-
         ${cfg.postUp}
       '';
 
       preStop = ''
         echo Removing network interface ${cfg.interface}.
+
+        interface="${cfg.interface}"
 
         ${cfg.preDown}
 
