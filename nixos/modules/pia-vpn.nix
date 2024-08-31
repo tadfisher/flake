@@ -313,6 +313,9 @@ with lib;
         Restart = "always";
         CacheDirectory = "pia-vpn";
         StateDirectory = "pia-vpn";
+        RestartSec = "10s";
+        RestartSteps = "10";
+        RestartMaxDelaySec = "15min";
       };
 
       script = ''
@@ -330,6 +333,7 @@ with lib;
 
         if [ ! -f $STATE_DIRECTORY/token.json ]; then
           echo "Token not found; is pia-vpn.esrvice running?" >&2
+          exit 1
         fi
         token="$(cat $STATE_DIRECTORY/token.json | jq -r '.token')"
 
