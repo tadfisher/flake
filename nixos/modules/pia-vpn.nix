@@ -224,7 +224,7 @@ with lib;
           --connect-to "$meta_hostname::$meta_ip" \
           --cacert "${cfg.certificateFile}" \
           "https://$meta_hostname/authv3/generateToken" || true)"
-        if [ "$(echo "$tokenResponse" | jq -r '.status')" != "OK" ]; then
+        if [ "$(echo "$tokenResponse" | jq -r '.status' || true)" != "OK" ]; then
           >&2 echo "Failed to generate token. Stopping."
           exit 1
         fi
@@ -240,7 +240,7 @@ with lib;
           --data-urlencode "pt=''${token}" \
           --data-urlencode "pubkey=$publicKey" \
           "https://''${wg_hostname}:1337/addKey" || true)"
-        status="$(echo "$json" | jq -r '.status')"
+        status="$(echo "$json" | jq -r '.status' || true)"
         if [ "$status" != "OK" ]; then
           >&2 echo "Server did not return OK. Stopping."
           >&2 echo "$json"
@@ -341,7 +341,7 @@ with lib;
 
         if [ -f "$cacheFile" ]; then
           pfconfig=$(cat "$cacheFile")
-          if [ "$(echo "$pfconfig" | jq -r '.status')" != "OK" ]; then
+          if [ "$(echo "$pfconfig" | jq -r '.status' || true)" != "OK" ]; then
             echo "Invalid cached port-forwarding configuration. Fetching new configuration."
             pfconfig=
           fi
@@ -355,7 +355,7 @@ with lib;
             --cacert "${cfg.certificateFile}" \
             -G --data-urlencode "token=''${token}" \
             "https://''${wg_hostname}:19999/getSignature" || true)"
-          if [ "$(echo "$pfconfig" | jq -r '.status')" != "OK" ]; then
+          if [ "$(echo "$pfconfig" | jq -r '.status' || true)" != "OK" ]; then
             echo "Port forwarding configuration does not contain an OK status. Stopping." >&2
             exit 1
           fi
@@ -385,7 +385,7 @@ with lib;
             --data-urlencode "payload=''${payload}" \
             --data-urlencode "signature=''${signature}" \
             "https://''${wg_hostname}:19999/bindPort" || true)"
-          if [ "$(echo "$response" | jq -r '.status')" != "OK" ]; then
+          if [ "$(echo "$response" | jq -r '.status' || true)" != "OK" ]; then
             echo "Failed to bind port. Stopping." >&2
             exit 1
           fi
