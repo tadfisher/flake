@@ -86,13 +86,14 @@ with lib;
         [Network]
         Description = WireGuard PIA network interface
         Address = ''${peerip}/32
-        DNS = 8.8.4.4
-        DNS = 8.8.8.8
-        IPv4Forwarding=yes
 
         [RoutingPolicyRule]
         From = ''${peerip}
         Table = 42
+
+        [Route]
+        Table = 42
+        Destination = 0.0.0.0/0
       '';
       description = ''
         Configuration of 60-''${cfg.interface}.network
@@ -109,9 +110,7 @@ with lib;
 
     postUp = mkOption {
       type = types.lines;
-      default = ''
-        ${pkgs.iproute}/bin/ip route add default dev ''${interface} table 42
-      '';
+      default = "";
       description = ''
         Commands called at the end of the interface setup.
       '';
@@ -119,9 +118,7 @@ with lib;
 
     preDown = mkOption {
       type = types.lines;
-      default = ''
-        ${pkgs.iproute}/bin/ip route del default dev ''${interface} table 42
-      '';
+      default = "";
       description = ''
         Commands called before the interface is taken down.
       '';
