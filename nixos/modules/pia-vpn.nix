@@ -335,31 +335,16 @@ with lib;
         fi
         token="$(cat $STATE_DIRECTORY/token.json | jq -r '.token')"
 
-        echo Enabling port forwarding...
-        pfconfig=
-        cacheFile=$STATE_DIRECTORY/portforward.json
-
-        if [ -f "$cacheFile" ]; then
-          pfconfig=$(cat "$cacheFile")
-          if [ "$(echo "$pfconfig" | jq -r '.status' || true)" != "OK" ]; then
-            echo "Invalid cached port-forwarding configuration. Fetching new configuration."
-            pfconfig=
-          fi
-        fi
-
-        if [ -z "$pfconfig" ]; then
-          echo "Fetching port forwarding configuration..."
-          pfconfig="$(curl --no-progress-meter -m 5 \
-            --interface ${cfg.interface} \
-            --connect-to "$wg_hostname::$gateway:" \
-            --cacert "${cfg.certificateFile}" \
-            -G --data-urlencode "token=''${token}" \
-            "https://''${wg_hostname}:19999/getSignature" || true)"
-          if [ "$(echo "$pfconfig" | jq -r '.status' || true)" != "OK" ]; then
-            echo "Port forwarding configuration does not contain an OK status. Stopping." >&2
-            exit 1
-          fi
-          echo "$pfconfig" > "$cacheFile"
+        echo "Fetching port forwarding configuration..."
+        pfconfig="$(curl --no-progress-meter -m 5 \
+          --interface ${cfg.interface} \
+          --connect-to "$wg_hostname::$gateway:" \
+          --cacert "${cfg.certificateFile}" \
+          -G --data-urlencode "token=''${token}" \
+          "https://''${wg_hostname}:19999/getSignature" || true)"
+        if [ "$(echo "$pfconfig" | jq -r '.status' || true)" != "OK" ]; then
+          echo "Port forwarding configuration does not contain an OK status. Stopping." >&2
+          exit 1
         fi
 
         if [ -z "$pfconfig" ]; then
