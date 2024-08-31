@@ -37,12 +37,21 @@ with lib;
       '';
     };
 
+    region = mkOption {
+      type = types.str;
+      default = "";
+      description = ''
+        Name of the region to connect to.
+        See https://serverlist.piaservers.net/vpninfo/servers/v4
+      '';
+    };
+
     maxLatency = mkOption {
       type = types.float;
       default = 0.1;
       description = ''
         Maximum latency to allow for auto-selection of VPN server,
-        in seconds.
+        in seconds. Does nothing if region is specified.
       '';
     };
 
@@ -185,20 +194,28 @@ with lib;
         }
         export -f printServerLatency
 
-        echo Determining region...
+        echo Fetching regions...
         serverlist='https://serverlist.piaservers.net/vpninfo/servers/v4'
         allregions=$(curl -s "$serverlist" | head -1)
-        filtered="$(echo $allregions | jq -r '.regions[]
-                   ${optionalString cfg.portForward.enable "| select(.port_forward==true)"}
-                   | .servers.meta[0].ip+" "+.id+" "+.name+" "+(.geo|tostring)')"
-        best="$(echo "$filtered" | xargs -I{} bash -c 'printServerLatency {}' |
-                sort | head -1 | awk '{ print $2 }')"
-        if [ -z "$best" ]; then
-          >&2 echo "No region found with latency under ${toString cfg.maxLatency} s. Stopping."
-          exit 1
-        fi
+
         region="$(echo $allregions |
-                  jq --arg REGION_ID "$best" -r '.regions[] | select(.id==$REGION_ID)')"
+                    jq --arg REGION_ID "${cfg.region}" -r '.regions[] | select(.id==$REGION_ID)')"
+        if [ -z "''${region}" ]; then
+          echo Determining region...
+          filtered="$(echo $allregions | jq -r '.regions[]
+                    ${optionalString cfg.portForward.enable "| select(.port_forward==true)"}
+                    | .servers.meta[0].ip+" "+.id+" "+.name+" "+(.geo|tostring)')"
+          best="$(echo "$filtered" | xargs -I{} bash -c 'printServerLatency {}' |
+                  sort | head -1 | awk '{ print $2 }')"
+          if [ -z "$best" ]; then
+            >&2 echo "No region found with latency under ${toString cfg.maxLatency} s. Stopping."
+            exit 1
+          fi
+          region="$(echo $allregions |
+                    jq --arg REGION_ID "$best" -r '.regions[] | select(.id==$REGION_ID)')"
+        fi
+        echo Using region $(echo $region | jq -r '.id')
+
         meta_ip="$(echo $region | jq -r '.servers.meta[0].ip')"
         meta_hostname="$(echo $region | jq -r '.servers.meta[0].cn')"
         wg_ip="$(echo $region | jq -r '.servers.wg[0].ip')"
