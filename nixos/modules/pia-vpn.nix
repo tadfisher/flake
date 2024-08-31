@@ -295,6 +295,7 @@ with lib;
 
         echo Bringing down network interface ${cfg.interface}.
         networkctl down ${cfg.interface}
+        networkctl delete ${cfg.interface}
         networkctl reload
 
         ${cfg.postDown}
