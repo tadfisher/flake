@@ -339,7 +339,7 @@ with lib;
 
         if [ -f "$cacheFile" ]; then
           pfconfig=$(cat "$cacheFile")
-          if [ "$(echo "pfconfig" | jq -r '.status')" != "OK" ]; then
+          if [ "$(echo "$pfconfig" | jq -r '.status')" != "OK" ]; then
             echo "Invalid cached port-forwarding configuration. Fetching new configuration."
             pfconfig=
           fi
