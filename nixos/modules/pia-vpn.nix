@@ -327,7 +327,7 @@ with lib;
           echo "Connection information not found; is pia-vpn.service running?" >&2
           exit 1
         fi
-        gateway="$(cat $STATE_DIRECTORY/wireguard.json | jq -r '.server_ip')"
+        gateway="$(cat $STATE_DIRECTORY/wireguard.json | jq -r '.server_vip')"
 
         if [ ! -f $STATE_DIRECTORY/token.json ]; then
           echo "Token not found; is pia-vpn.esrvice running?" >&2
