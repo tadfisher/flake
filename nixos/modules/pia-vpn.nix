@@ -219,7 +219,7 @@ with lib;
         wg_hostname="$(echo $region | jq -r '.servers.wg[0].cn')"
         echo "$region" > $STATE_DIRECTORY/region.json
 
-        echo Generating token...
+        echo Fetching token...
         tokenResponse="$(curl --no-progress-meter -u "$PIA_USER:$PIA_PASS" \
           --connect-to "$meta_hostname::$meta_ip" \
           --cacert "${cfg.certificateFile}" \
@@ -228,7 +228,6 @@ with lib;
           >&2 echo "Failed to generate token. Stopping."
           exit 1
         fi
-        echo "$tokenResponse" > $STATE_DIRECTORY/token.json
         token="$(echo "$tokenResponse" | jq -r '.token')"
 
         echo Connecting to the PIA WireGuard API on $wg_ip...
@@ -306,6 +305,13 @@ with lib;
       bindsTo = [ "pia-vpn.service" ];
       wantedBy = [ "pia-vpn.service" ];
 
+      unitConfig = {
+        ConditionFileNotEmpty = [
+          cfg.certificateFile
+          cfg.environmentFile
+        ];
+      };
+
       serviceConfig = {
         Type = "notify";
         Restart = "always";
@@ -314,6 +320,7 @@ with lib;
         RestartSec = "10s";
         RestartSteps = "10";
         RestartMaxDelaySec = "15min";
+        EnvironmentFile = cfg.environmentFile;
       };
 
       script = ''
@@ -321,19 +328,30 @@ with lib;
           echo "Region information not found; is pia-vpn.service running?" >&2
           exit 1
         fi
-        wg_hostname="$(cat $STATE_DIRECTORY/region.json | jq -r '.servers.wg[0].cn')"
+        region="$(cat $STATE_DIRECTORY/region.json)"
 
         if [ ! -f $STATE_DIRECTORY/wireguard.json ]; then
           echo "Connection information not found; is pia-vpn.service running?" >&2
           exit 1
         fi
-        gateway="$(cat $STATE_DIRECTORY/wireguard.json | jq -r '.server_vip')"
+        wg="$(cat $STATE_DIRECTORY/wireguard.json)"
 
-        if [ ! -f $STATE_DIRECTORY/token.json ]; then
-          echo "Token not found; is pia-vpn.esrvice running?" >&2
+        meta_ip="$(echo $region | jq -r '.servers.meta[0].ip')"
+        meta_hostname="$(echo $region | jq -r '.servers.meta[0].cn')"
+        wg_ip="$(echo $region | jq -r '.servers.wg[0].ip')"
+        wg_hostname="$(echo $region | jq -r '.servers.wg[0].cn')"
+        gateway="$(echo $wg | jq -r '.server_vip')"
+
+        echo Fetching token...
+        tokenResponse="$(curl --no-progress-meter -u "$PIA_USER:$PIA_PASS" \
+          --connect-to "$meta_hostname::$meta_ip" \
+          --cacert "${cfg.certificateFile}" \
+          "https://$meta_hostname/authv3/generateToken" || true)"
+        if [ "$(echo "$tokenResponse" | jq -r '.status' || true)" != "OK" ]; then
+          >&2 echo "Failed to generate token. Stopping."
           exit 1
         fi
-        token="$(cat $STATE_DIRECTORY/token.json | jq -r '.token')"
+        token="$(echo "$tokenResponse" | jq -r '.token')"
 
         echo "Fetching port forwarding configuration..."
         pfconfig="$(curl --no-progress-meter -m 5 \
