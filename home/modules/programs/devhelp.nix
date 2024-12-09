@@ -17,7 +17,7 @@ let
     } ''
     mkdir -p $out/bin $out/share/applications
 
-    makeWrapper ${pkgs.gnome.devhelp}/bin/devhelp $out/bin/devhelp \
+    makeWrapper ${pkgs.devhelp}/bin/devhelp $out/bin/devhelp \
       --prefix XDG_DATA_DIRS : ${devdocPath}
 
     cat <<EOF >$out/share/applications/org.gnome.Devhelp.desktop

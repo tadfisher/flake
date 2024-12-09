@@ -71,7 +71,7 @@ in
         Type = "oneshot";
         RemainAfterExit = true;
         ExecStart =
-          "${pkgs.coreutils}/bin/timeout 30 ${pkgs.androidenv.androidPkgs_9_0.platform-tools}/bin/adb -s %I wait-for-device";
+          "${pkgs.coreutils}/bin/timeout 30 ${pkgs.androidenv.androidPkgs.platform-tools}/bin/adb -s %I wait-for-device";
       };
     };
 
@@ -99,7 +99,7 @@ in
         Type = "oneshot";
         RemainAfterExit = true;
         ExecStartPre =
-          "${pkgs.coreutils}/bin/timeout 20 ${pkgs.androidenv.androidPkgs_9_0.platform-tools}/bin/adb -s %I wait-for-device";
+          "${pkgs.coreutils}/bin/timeout 20 ${pkgs.androidenv.androidPkgs.platform-tools}/bin/adb -s %I wait-for-device";
         ExecStart = "${pkgs.gnirehtet}/bin/gnirehtet start %I ${args}";
         ExecStop = "${pkgs.gnirehtet}/bin/gnirehtet stop %I";
         ExecReload = "${pkgs.gnirehtet}/bin/gnirehtet restart %I ${args}";

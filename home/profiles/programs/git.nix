@@ -31,6 +31,7 @@ in
         init.defaultBranch = "main";
       };
       passGitHelper.enable = true;
+      lfs.enable = true;
     };
   };
 

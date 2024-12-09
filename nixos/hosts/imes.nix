@@ -15,7 +15,7 @@ with lib;
       availableKernelModules = [
         "nvme"
         "xhci_pci"
-	      "thunderbolt"
+        "thunderbolt"
         "usbhid"
         "sd_mod"
         "usb_storage"
@@ -92,6 +92,17 @@ with lib;
     trusted-public-keys = mkAfter [ "cache.mercury.com:yhfFlgvqtv0cAxzflJ0aZW3mbulx4+5EOZm6k3oML+I=" ];
   };
 
+  powerManagement = {
+    powerDownCommands = ''
+      rmmod ath11k_pci
+    '';
+
+    powerUpCommands = ''
+      modprobe ath11k_pci
+    '';
+  };
+
+
   security.pki.certificateFiles = [ ../../secrets/mercury/mercury.ca.crt ];
 
   services = {
@@ -126,7 +137,7 @@ with lib;
           host all all 127.0.0.1/32 trust
           host all all ::1/128 trust
         '';
-        extraPlugins = [ package.pkgs.postgis ];
+        extensions = [ package.pkgs.postgis ];
         settings = {
           timezone = "UTC";
           shared_buffers = 128;

@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ lib, pkgs, ... }:
 
 {
   imports = [
@@ -170,9 +168,9 @@ with lib;
   };
 
   home.packages = with pkgs; [
-    gnome.dconf-editor
-    gnome.gnome-shell-extensions
-    gnome.gnome-tweaks
+    dconf-editor
+    gnome-shell-extensions
+    gnome-tweaks
     gnomeExtensions.bluetooth-quick-connect
     gnomeExtensions.dash-to-panel
     gnomeExtensions.valent
@@ -220,7 +218,7 @@ with lib;
   xdg.configFile = {
     "autostart/gnome-keyring-ssh.desktop".text = ''
       ${lib.fileContents
-      "${pkgs.gnome.gnome-keyring}/etc/xdg/autostart/gnome-keyring-ssh.desktop"}
+      "${pkgs.gnome-keyring}/etc/xdg/autostart/gnome-keyring-ssh.desktop"}
       Hidden=true
     '';
   };

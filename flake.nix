@@ -6,10 +6,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/android-nixpkgs";
     };
-    ath11k-firmware = {
-      url = "github:kvalo/ath11k-firmware";
-      flake = false;
-    };
     eglot-booster = {
       url = "github:jdtsmith/eglot-booster";
       flake = false;
@@ -70,8 +66,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:seppeljordan/nix-prefetch-github";
     };
-    nixos-hardware.url = "github:tadfisher/nixos-hardware/lenovo-p14s-t14-updates";
+    nixos-hardware.url = "github:nixos/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    openjdk-wakefield = {
+      url = "github:openjdk/wakefield/jdk21.0.1-wayland";
+      flake = false;
+    };
     paperwm = {
       url = "github:paperwm/PaperWM/develop";
       flake = false;
@@ -126,10 +126,17 @@
               allowAliases = true;
               allowUnfree = true;
               android_sdk.accept_license = true;
-              permittedInsecurePackages = [ "figma-linux-0.10.0" ];
+              permittedInsecurePackages = [
+                "figma-linux-0.10.0"
+                # For sonarr.
+                # BUG: https://github.com/NixOS/nixpkgs/issues/360592
+                "aspnetcore-runtime-6.0.36"
+                "aspnetcore-runtime-wrapped-6.0.36"
+                "dotnet-sdk-6.0.428"
+                "dotnet-sdk-wrapped-6.0.428"
+              ];
             }
             // profiles.games;
-
 
           overlays = [
             (inputs.android-nixpkgs.overlays.default)
@@ -145,16 +152,9 @@
           inherit system;
 
           modules = modules ++ [
-            {
-              disabledModules = [
-                "programs/steam.nix"
-              ];
-            }
-
             self.nixosModules.boot.opal-unlock
             self.nixosModules.hardware.pulseaudio
             self.nixosModules.services.pia-vpn
-            self.nixosModules.programs.steam
 
             ({ pkgs, ... }: {
               environment.etc.nixpkgs.source = inputs.nixpkgs;
@@ -212,10 +212,6 @@
     in
     {
       hmConfigurations = mapAttrs' mkHomeConfiguration {
-        dirac = {
-          system = "x86_64-linux";
-          config = ./home/hosts/dirac.nix;
-        };
         euler = {
           system = "x86_64-linux";
           config = ./home/hosts/euler.nix;
@@ -251,14 +247,6 @@
       };
 
       nixosConfigurations = mapAttrs' mkNixosConfiguration {
-        dirac = {
-          system = "x86_64-linux";
-          config = ./nixos/hosts/dirac.nix;
-          modules = [
-            inputs.nixos-hardware.nixosModules.common-cpu-intel-kaby-lake
-            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
-          ];
-        };
         euler = {
           system = "x86_64-linux";
           config = ./nixos/hosts/euler.nix;
@@ -320,6 +308,7 @@
         import ./pkgs { inherit inputs; pkgs = pkgsBySystem.${system}; } //
         inputs.nix-dart.packages.${system} //
         {
+          inherit (pkgsBySystem.${system}) ccid;
           nix-prefetch-github = inputs.nix-prefetch-github.packages.${system}.default;
           nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
           nixos-rebuild = inputs.nixpkgs.legacyPackages.${system}.nixos-rebuild;

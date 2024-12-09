@@ -1,13 +1,10 @@
-{ inputs
-, lib
-, fetchgit
-, rustPlatform
-}:
+{ inputs }:
 
 final: prev:
 
-with final;
-
+let
+  inherit (final) callPackage;
+in
 {
   adw-themes = callPackage ./adw-themes { };
 

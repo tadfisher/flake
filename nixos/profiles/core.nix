@@ -19,6 +19,11 @@ with lib;
 
   documentation.nixos.enable = false;
 
+  # BUG https://github.com/NixOS/nixpkgs/pull/308884
+  environment.sessionVariables.LD_LIBRARY_PATH = [
+    (makeLibraryPath [ pkgs.pcscliteWithPolkit ])
+  ];
+
   environment.systemPackages = with pkgs; [
     btrfs-progs
     cacert
@@ -66,9 +71,9 @@ with lib;
   };
 
   programs = {
-    bash.enableCompletion = true;
+    bash.completion.enable = true;
     command-not-found.enable = false;
-    nix-ld.enable = true;
+    # nix-ld.enable = true;
   };
 
   security = {

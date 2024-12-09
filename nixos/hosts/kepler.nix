@@ -129,8 +129,9 @@ with lib;
 
     unifi = {
       enable = true;
+      mongodbPackage = pkgs.mongodb-6_0;
       openFirewall = true;
-      unifiPackage = pkgs.unifi7;
+      unifiPackage = pkgs.unifi8;
     };
   };
 

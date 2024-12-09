@@ -35,9 +35,7 @@ with lib;
 
   services.adb = {
     enable = true;
-    mdnsBackend = null;
     logLevel = "verbose";
-    # Android Studio doesn't allow setting the standard port (5037).
-    port = 5038;
+    mdnsBackend = "openscreen";
   };
 }

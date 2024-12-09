@@ -22,20 +22,21 @@ mkMerge [
     environment = {
       systemPackages = with pkgs; [
         adw-gtk3
-        gnome.adwaita-icon-theme
-        gnome.gnome-themes-extra
+        adwaita-icon-theme
+        gnome-themes-extra
         gst_all_1.gst-libav
         gst_all_1.gst-vaapi
         paper-icon-theme
-        # BUG https://github.com/NixOS/nixpkgs/issues/280826
         pcscliteWithPolkit.out
       ];
     };
 
     fonts.packages = with pkgs; [
+      inter
       jetbrains-mono
+      nerd-fonts.symbols-only
       noto-fonts
-      noto-fonts-cjk
+      noto-fonts-cjk-sans
       noto-fonts-emoji
       roboto
       roboto-mono
@@ -47,7 +48,9 @@ mkMerge [
         package = pkgs.bluez;
       };
 
-      opengl.enable = true;
+      gpgSmartcards.enable = true;
+
+      graphics.enable = true;
 
       pulseaudio.enable = false;
 
@@ -64,7 +67,8 @@ mkMerge [
     };
 
     i18n.inputMethod = {
-      enabled = "ibus";
+      enable = true;
+      type = "ibus";
       ibus.engines = with pkgs.ibus-engines; [ typing-booster ];
     };
 
@@ -89,7 +93,8 @@ mkMerge [
 
     programs = {
       dconf.enable = true;
-      evolution.enable = true;
+      evolution.enable = false;
+      gdk-pixbuf.modulePackages = [ pkgs.webp-pixbuf-loader ];
       seahorse.enable = false;
     };
 
@@ -173,7 +178,6 @@ mkMerge [
         };
         displayManager.gdm.enable = true;
         enableCtrlAltBackspace = true;
-        gdk-pixbuf.modulePackages = [ pkgs.webp-pixbuf-loader ];
         videoDrivers = [ "modesetting" ];
         xkb.options = "ctrl:nocaps";
       };
@@ -205,7 +209,7 @@ mkMerge [
 
   (mkIf config.virtualisation.libvirtd.enable {
     environment.systemPackages = with pkgs; [
-      gnome.gnome-boxes
+      gnome-boxes
     ];
   })
 ]

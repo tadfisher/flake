@@ -54,7 +54,7 @@ in
     graphviz
     (hunspellWithDicts [ hunspellDicts.en-us ])
     jre
-    nerdfonts
+    # nerdfonts
     plantuml
     silver-searcher
     sqlite
@@ -242,94 +242,94 @@ in
           (setq treesit-extra-load-path '("${tree-sitter-grammars}/lib"))
         '';
 
-        lsp = {
-          enable = false;
-          clients = {
-            bash = {
-              enable = true;
-              modes = [ "sh-mode" ];
-              executables.bash-language-server =
-                "${pkgs.nodePackages.bash-language-server}/bin/bash-language-server";
-            };
-            clangd = {
-              enable = true;
-              modes = [ "c-mode" "c++mode" "objc-mode" ];
-              config = ''
-                (setq lsp-clients-clangd-executable "${pkgs.clang-tools}/bin/clangd")
-              '';
-            };
-            clojure = {
-              enable = false;
-              modes = [ "clojure-mode" "clojurec-mode" "clojurescript-mode" ];
-              # config = ''
-              #   (setq lsp-clojure-server-command '("${pkgs.clojure-lsp}/bin/clojure-lsp"))
-              # '';
-            };
-            css = {
-              enable = true;
-              modes = [ "css-mode" "less-css-mode" "sass-mode" "scss-mode" ];
-              executables.css-languageserver =
-                "${pkgs.nodePackages.vscode-css-languageserver-bin}/bin/css-languageserver";
-            };
-            # "dhall" = {
-            #   modes = [ "dhall-mode" ];
-            #   packages = [ pkgs.haskellPackages.dhall-lsp-server ];
-            # };
-            go = {
-              enable = true;
-              modes = [ "go-mode" ];
-              config = ''
-                (setq lsp-gopls-server-path "${pkgs.gotools}/bin/gopls")
-              '';
-            };
-            haskell = {
-              enable = true;
-              modes = [ "haskell-mode" "haskell-literate-mode" ];
-              config = ''
-                (setq lsp-haskell-server-path "${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper")
-              '';
-            };
-            html = {
-              enable = true;
-              modes = [ "html-mode" "sgml-mode" "mhtml-mode" "web-mode" ];
-              executables.html-language-server =
-                "${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver";
-            };
-            javascript-typescript = {
-              enable = true;
-              require = "lsp-javascript";
-              modes = [ "typescript-mode" ];
-              executables.typescript-language-server =
-                "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
-            };
-            metals = {
-              enable = false;
-              modes = [ "scala-mode" ];
-              config = ''
-                (setq lsp-metals-server-command "${pkgs.metals}/bin/metals-emacs"
-                      lsp-metals-java-home "${pkgs.jdk.home}"
-                      lsp-metals-sbt-script "${pkgs.sbt}/bin/sbt"
-                      lsp-metals-gradle-script "${pkgs.gradle}/bin/gradle"
-                      lsp-metals-maven-script "${pkgs.maven}/bin/mvn"
-                      lsp-metals-mill-script "${pkgs.mill}/bin/mill")
-              '';
-            };
-            rust = {
-              enable = true;
-              modes = [ "rust-mode" ];
-              config = ''
-                (setq lsp-rust-analyzer-server-command '("${pkgs.rust-analyzer}/bin/rust-analyzer"))
-                (setf (lsp--client-environment-fn (gethash 'rust-analyzer lsp-clients))
-                      (lambda () `(("PATH" . ,(concat "${pkgs.cargo}/bin:${pkgs.rustfmt}/bin:" (getenv "PATH"))))))
-              '';
-            };
-          };
-          config = ''
-            (setq lsp-eldoc-render-all nil
-                  lsp-lens-enable nil
-                  lsp-keymap-prefix "M-SPC l")
-          '';
-        };
+        # lsp = {
+        #   enable = false;
+        #   clients = {
+        #     bash = {
+        #       enable = true;
+        #       modes = [ "sh-mode" ];
+        #       executables.bash-language-server =
+        #         "${pkgs.bash-language-server}/bin/bash-language-server";
+        #     };
+        #     clangd = {
+        #       enable = true;
+        #       modes = [ "c-mode" "c++mode" "objc-mode" ];
+        #       config = ''
+        #         (setq lsp-clients-clangd-executable "${pkgs.clang-tools}/bin/clangd")
+        #       '';
+        #     };
+        #     clojure = {
+        #       enable = false;
+        #       modes = [ "clojure-mode" "clojurec-mode" "clojurescript-mode" ];
+        #       # config = ''
+        #       #   (setq lsp-clojure-server-command '("${pkgs.clojure-lsp}/bin/clojure-lsp"))
+        #       # '';
+        #     };
+        #     css = {
+        #       enable = true;
+        #       modes = [ "css-mode" "less-css-mode" "sass-mode" "scss-mode" ];
+        #       executables.css-languageserver =
+        #         "${pkgs.nodePackages.vscode-css-languageserver-bin}/bin/css-languageserver";
+        #     };
+        #     # "dhall" = {
+        #     #   modes = [ "dhall-mode" ];
+        #     #   packages = [ pkgs.haskellPackages.dhall-lsp-server ];
+        #     # };
+        #     go = {
+        #       enable = true;
+        #       modes = [ "go-mode" ];
+        #       config = ''
+        #         (setq lsp-gopls-server-path "${pkgs.gotools}/bin/gopls")
+        #       '';
+        #     };
+        #     haskell = {
+        #       enable = true;
+        #       modes = [ "haskell-mode" "haskell-literate-mode" ];
+        #       config = ''
+        #         (setq lsp-haskell-server-path "${pkgs.haskell-language-server}/bin/haskell-language-server-wrapper")
+        #       '';
+        #     };
+        #     html = {
+        #       enable = true;
+        #       modes = [ "html-mode" "sgml-mode" "mhtml-mode" "web-mode" ];
+        #       executables.html-language-server =
+        #         "${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver";
+        #     };
+        #     javascript-typescript = {
+        #       enable = true;
+        #       require = "lsp-javascript";
+        #       modes = [ "typescript-mode" ];
+        #       executables.typescript-language-server =
+        #         "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
+        #     };
+        #     metals = {
+        #       enable = false;
+        #       modes = [ "scala-mode" ];
+        #       config = ''
+        #         (setq lsp-metals-server-command "${pkgs.metals}/bin/metals-emacs"
+        #               lsp-metals-java-home "${pkgs.jdk.home}"
+        #               lsp-metals-sbt-script "${pkgs.sbt}/bin/sbt"
+        #               lsp-metals-gradle-script "${pkgs.gradle}/bin/gradle"
+        #               lsp-metals-maven-script "${pkgs.maven}/bin/mvn"
+        #               lsp-metals-mill-script "${pkgs.mill}/bin/mill")
+        #       '';
+        #     };
+        #     rust = {
+        #       enable = true;
+        #       modes = [ "rust-mode" ];
+        #       config = ''
+        #         (setq lsp-rust-analyzer-server-command '("${pkgs.rust-analyzer}/bin/rust-analyzer"))
+        #         (setf (lsp--client-environment-fn (gethash 'rust-analyzer lsp-clients))
+        #               (lambda () `(("PATH" . ,(concat "${pkgs.cargo}/bin:${pkgs.rustfmt}/bin:" (getenv "PATH"))))))
+        #       '';
+        #     };
+        #   };
+        #   config = ''
+        #     (setq lsp-eldoc-render-all nil
+        #           lsp-lens-enable nil
+        #           lsp-keymap-prefix "M-SPC l")
+        #   '';
+        # };
 
         usePackage = {
           abbrev = {
@@ -719,12 +719,18 @@ in
               "RET" = "nil";
             };
             init = ''
-              (setq corfu-auto t)
-              (global-corfu-mode)
+              (setq corfu-auto-prefix 2
+                    corfu-auto t
+                    corfu-cycle t)
+              (global-corfu-mode t)
+              (corfu-popupinfo-mode t)
             '';
-            config = ''
-              (setq corfu-quit-no-match t)
-            '';
+          };
+
+          corfu-popupinfo = {
+            enable = true;
+            package = "";
+            after = [ "corfu" ];
           };
 
           css-mode = {
@@ -748,6 +754,10 @@ in
             ];
           };
 
+          dape = {
+            enable = true;
+          };
+
           dap-lldb = {
             # FIXME fails with (void-function "dap-ui-mode")
             enable = false;
@@ -764,7 +774,7 @@ in
 
           dired = {
             enable = true;
-            package = "";       # built-in
+            package = ""; # built-in
             command = [ "dired" "dired-jump" ];
             config = ''
               (put 'dired-find-alternate-file 'disabled nil)
@@ -776,7 +786,7 @@ in
 
           dired-aux = {
             enable = true;
-            package = "";       # built-in
+            package = ""; # built-in
             config = ''
               (setq dired-compress-files-alist
                     '(("\\.tar\\.gz\\'" . "${pkgs.gnutar}/bin/tar -cf - %i | ${pkgs.gzip}/bin/gzip -c9 > %o")
@@ -792,7 +802,7 @@ in
 
           dired-x = {
             enable = true;
-            package = "";       # built-in
+            package = ""; # built-in
             hook = [ "(dired-mode . dired-omit-mode)" ];
             bindLocal.dired-mode-map = { "." = "dired-omit-mode"; };
             config = ''
@@ -915,7 +925,7 @@ in
                       ((css-mode less-css-mode sass-mode scss-mode)
                         . ,(eglot-alternatives
                             '(("css-languageserver" "--stdio")
-                              ("${pkgs.nodePackages.vscode-css-languageserver-bin}/bin/css-languageserver" "--stdio"))))
+                              ("${pkgs.vscode-langservers-extracted}/bin/css-languageserver" "--stdio"))))
                       (go-mode
                        . ,(eglot-alternatives '("gopls" "${pkgs.gotools}/bin/gopls")))
                       (kotlin-mode
@@ -927,32 +937,26 @@ in
                       ((html-mode sgml-mode mhtml-mode web-mode)
                         . ,(eglot-alternatives
                             '(("html-languageserver" "--stdio")
-                              ("${pkgs.nodePackages.vscode-html-languageserver-bin}/bin/html-languageserver" "--stdio"))))
+                              ("${pkgs.vscode-langservers-extracted}/bin/html-languageserver" "--stdio"))))
                       ((js-mode js-ts-mode typescript-mode typescript-ts-mode tsx-ts-mode)
                         . ,(eglot-alternatives
                             '(("typescript-language-server" "--stdio")
                               ("${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server" "--stdio"))))
                       (nix-mode
-                       . ("${pkgs.nil}/bin/nil" :initializationOptions
+                       . ("${pkgs.nixd}/bin/nixd" :initializationOptions
                                                 (:formatting (:command ["${pkgs.alejandra}/bin/alejandra"]))))
                       (rust-mode
                        . ,(eglot-alternatives '("rust-analyzer" "${pkgs.rust-analyzer}/bin/rust-analyzer")))
                       (sh-mode
                        . ,(eglot-alternatives
                            '(("bash-language-server" "start")
-                             ("${pkgs.nodePackages.bash-language-server}/bin/bash-language-server" "start"))))))
+                             ("${pkgs.bash-language-server}/bin/bash-language-server" "start"))))
+                      (swift-mode
+                        . ,(eglot-alternatives
+                          '("sourcekit-lsp" "${pkgs.sourcekit-lsp}/bin/sourcekit-lsp")))))
               ${optionalString cfg.init.usePackage.cape.enable ''
                 (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
               ''}
-            '';
-          };
-
-          eglot-booster = {
-            enable = true;
-            after = [ "eglot" ];
-            config = ''
-              (add-to-list 'exec-path "${pkgs.emacs-lsp-booster}/bin")
-              (eglot-booster-mode)
             '';
           };
 
@@ -1059,7 +1063,7 @@ in
           };
 
           forge = {
-            enable = true;
+            enable = false;
             after = [ "magit" ];
             config = ''
               (transient-append-suffix 'forge-dispatch '(0)
@@ -1661,7 +1665,7 @@ in
             enable = true;
             config = ''
               (setq password-store-otp-qrencode-executable "${pkgs.qrencode}/bin/qrencode"
-                    password-store-otp-screenshot-command "${pkgs.gnome.gnome-screenshot}/bin/gnome-screenshot -a -f"
+                    password-store-otp-screenshot-command "${pkgs.gnome-screenshot}/bin/gnome-screenshot -a -f"
                     password-store-otp-zbarimg-executable "${pkgs.zbar}/bin/zbarimg")
             '';
           };

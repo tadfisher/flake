@@ -55,7 +55,7 @@ with lib;
   };
 
   hardware = {
-    opengl.extraPackages = with pkgs; [
+    graphics.extraPackages = with pkgs; [
       libvdpau-va-gl
       vaapiVdpau
     ];

@@ -38,7 +38,7 @@ with final;
   #   inherit (prev.jetbrains-mono) meta;
   # };
 
-  paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: rec {
+  paper-icon-theme = prev.paper-icon-theme.overrideAttrs (attrs: {
     pname = "paper-icon-theme-unstable";
     version = "2020-03-12";
     src = fetchFromGitHub {

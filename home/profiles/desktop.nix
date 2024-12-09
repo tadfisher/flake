@@ -1,6 +1,4 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ pkgs, ... }:
 
 {
   imports = [
@@ -13,7 +11,8 @@ with lib;
   gtk = {
     enable = true;
     font = {
-      name = "Roboto 9.75";
+      name = "Roboto";
+      size = 9.75;
       package = pkgs.roboto;
     };
     theme = {
@@ -72,11 +71,10 @@ with lib;
     keyboard.options = [ "ctrl:nocaps" "compose:prsc" ];
 
     packages = with pkgs; [
-      blackbox-terminal
       d-spy
       emacs-all-the-icons-fonts
       gparted
-      gnome.gnome-themes-extra
+      gnome-themes-extra
       keybase
       material-icons
       qt5.qtwayland
@@ -124,7 +122,7 @@ with lib;
     };
 
     emacs = {
-      package = pkgs.emacs-unstable-pgtk;
+      package = pkgs.emacs-pgtk;
       extraPackages = (epkgs: with epkgs; [
         treesit-grammars.with-all-grammars
       ]);
@@ -152,7 +150,11 @@ with lib;
       package = pkgs.inkscape-with-extensions;
     };
 
-    password-store.package = pkgs.pass-wayland.withExtensions (e: with e; [ pass-audit pass-otp ]);
+    password-store.package = pkgs.pass-wayland.withExtensions (e: with e; [
+      # BUG https://github.com/NixOS/nixpkgs/pull/335757
+      # pass-audit
+      pass-otp
+    ]);
   };
 
   qt = {
@@ -165,7 +167,12 @@ with lib;
   };
 
   services = {
-    gpg-agent.pinentryPackage = pkgs.pinentry-gnome3;
+    gpg-agent = {
+      pinentryPackage = pkgs.pinentry-gnome3;
+      extraConfig = ''
+        allow-emacs-pinentry
+      '';
+    };
   };
 
   xdg.configFile."gtk-4.0/settings.ini".source = (pkgs.formats.ini { }).generate "settings.ini" {

@@ -3,8 +3,8 @@
 {
   home = {
     packages = with pkgs; [
-      gnome.gnome-chess
       enyo-doom
+      gnome-chess
       gzdoom
       openmw
       portmod

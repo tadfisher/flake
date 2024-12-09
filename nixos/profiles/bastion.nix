@@ -83,7 +83,7 @@ in
       };
     };
 
-    oauth2_proxy = {
+    oauth2-proxy = {
       enable = true;
       provider = "google";
       redirectURL = "https://orion.tad.codes/oauth2/callback";

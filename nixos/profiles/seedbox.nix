@@ -18,7 +18,7 @@ let
   startTransmission = pkgs.writeScript "start-transmission" ''
     #!${pkgs.stdenv.shell}
     IP=$(${pkgs.iproute2}/bin/ip -j addr show dev ${piaInterface} | ${pkgs.jq}/bin/jq -r '.[0].addr_info | map(select(.family == "inet"))[0].local')
-    ${pkgs.transmission}/bin/transmission-daemon -f \
+    ${pkgs.transmission_3}/bin/transmission-daemon -f \
       -g "${config.services.transmission.home}/.config/transmission-daemon" \
       --bind-address-ipv4 $IP
   '';
@@ -33,7 +33,7 @@ in
       portForward = {
         enable = true;
         script = ''
-          ${pkgs.transmission}/bin/transmission-remote --port $port || true
+          ${pkgs.transmission_3}/bin/transmission-remote --port $port || true
         '';
       };
     };
@@ -62,6 +62,11 @@ in
         rename-partial-files = true;
         rpc-bind-address = "0.0.0.0";
         rpc-enabled = true;
+        # SECURITY RESEARCHERS: PLEASE READ!
+        # This configuration is for a personal server.
+        # This is a local service that is not exposed to the Internet.
+        # The setting below is a password hash, not the password itself.
+        # Please do not report vulnerabilities to my employer.
         rpc-password = "{dfed8b5975f9e826885a1bc03d4116b89f4499c3JmkXT62G";
         rpc-port = 9091;
         rpc-url = "/transmission/";

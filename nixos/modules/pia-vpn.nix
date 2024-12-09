@@ -238,7 +238,7 @@ with lib;
 
         ${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online -i ${cfg.interface}
 
-        ${pkgs.iproute}/bin/ip route add default dev ${cfg.interface} table 42
+        ${pkgs.iproute2}/bin/ip route add default dev ${cfg.interface} table 42
 
         ${cfg.postUp}
       '';

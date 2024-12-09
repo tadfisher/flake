@@ -47,7 +47,12 @@ with lib;
     };
     gpg = {
       enable = true;
-      scdaemonSettings.disable-ccid = true;
+      scdaemonSettings = {
+        disable-ccid = true;
+        pcsc-shared = true;
+        reader-port = "Yubico YubiKey OTP+FIDO+CCID 00 00";
+        disable-application = "piv";
+      };
     };
     home-manager.enable = true;
     mercurial = {
@@ -58,7 +63,11 @@ with lib;
     nix-index.enable = true;
     password-store = {
       enable = true;
-      package = mkDefault (pkgs.pass.withExtensions (e: with e; [ pass-audit pass-otp ]));
+      package = mkDefault (pkgs.pass.withExtensions (e: with e; [
+        # BUG https://github.com/NixOS/nixpkgs/pull/335757
+        # pass-audit
+        pass-otp
+      ]));
     };
     ssh = {
       enable = true;
