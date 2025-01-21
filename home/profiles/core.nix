@@ -47,12 +47,10 @@ with lib;
     };
     gpg = {
       enable = true;
-      scdaemonSettings = {
-        disable-ccid = true;
-        pcsc-shared = true;
-        reader-port = "Yubico YubiKey OTP+FIDO+CCID 00 00";
-        disable-application = "piv";
-      };
+      # scdaemonSettings = {
+      #   reader-port = "Yubico YubiKey OTP+FIDO+CCID 00 00";
+      #   disable-application = "piv";
+      # };
     };
     home-manager.enable = true;
     mercurial = {

@@ -153,7 +153,6 @@
 
           modules = modules ++ [
             self.nixosModules.boot.opal-unlock
-            self.nixosModules.hardware.pulseaudio
             self.nixosModules.services.pia-vpn
 
             ({ pkgs, ... }: {
@@ -287,12 +286,11 @@
 
       nixosModules = {
         boot.opal-unlock = ./nixos/modules/opal-unlock.nix;
-        hardware.pulseaudio = ./nixos/modules/pulseaudio.nix;
         programs.steam = ./nixos/modules/steam.nix;
         services.pia-vpn = ./nixos/modules/pia-vpn.nix;
       };
 
-      overlays = rec {
+      overlays = {
         overlay = final: prev: import ./pkgs/overlay.nix inputs final prev;
 
         pkgs = final: prev: import ./pkgs { inherit inputs; pkgs = final; };

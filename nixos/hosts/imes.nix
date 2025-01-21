@@ -25,7 +25,7 @@ with lib;
     kernelModules = [
       "kvm-amd"
     ];
-    kernelPackages = pkgs.linuxPackages_testing;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
       "mitigations=off"
       "resume_offset=533760"

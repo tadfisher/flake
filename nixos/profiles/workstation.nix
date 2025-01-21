@@ -52,8 +52,6 @@ mkMerge [
 
       graphics.enable = true;
 
-      pulseaudio.enable = false;
-
       sane = {
         enable = true;
         brscan4 = {

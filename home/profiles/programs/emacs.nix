@@ -1187,11 +1187,11 @@ in
             enable = true;
             package = "";
             defer = true;
+            # image-dired-cmd-pngnq-program "${pkgs.pngnq}/bin/pngnq"
             config = ''
               (setq image-dired-thumbnail-storage 'standard-large
                     image-dired-cmd-create-thumbnail-program "${pkgs.imagemagick}/bin/convert"
                     image-dired-cmd-create-temp-image-program "${pkgs.imagemagick}/bin/convert"
-                    image-dired-cmd-pngnq-program "${pkgs.pngnq}/bin/pngnq"
                     image-dired-cmd-pngcrush-program "${pkgs.pngcrush}/bin/pngcrush"
                     image-dired-cmd-optipng-program "${pkgs.optipng}/bin/optipng"
                     image-dired-cmd-rotate-thumbnail-program "${pkgs.imagemagick}/bin/mogrify"
