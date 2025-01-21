@@ -29,6 +29,11 @@ in
   };
 
   services = {
+    ddclient = {
+      enable = true;
+      configFile = "/root/nixos/secrets/ddclient.conf";
+    };
+
     nginx = {
       enable = true;
       recommendedGzipSettings = true;
@@ -123,8 +128,8 @@ in
       nginx = {
         domain = "orion.tad.codes";
         virtualHosts = {
-          "orion.tad.codes" = {};
-          "plex.orion.tad.codes" = {};
+          "orion.tad.codes" = { };
+          "plex.orion.tad.codes" = { };
         };
       };
     };

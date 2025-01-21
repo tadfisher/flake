@@ -145,6 +145,7 @@ with lib;
           EmitLLDP = "nearest-bridge";
           MulticastDNS = true;
         };
+        linkConfig.Multicast = true;
         dhcpConfig.UseDomains = true;
       };
       "40-enp4s0" = {
@@ -155,6 +156,7 @@ with lib;
           EmitLLDP = "nearest-bridge";
           MulticastDNS = true;
         };
+        linkConfig.Multicast = true;
         dhcpConfig.UseDomains = true;
       };
     };
