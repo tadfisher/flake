@@ -12,14 +12,14 @@ in
         bind.address = "${socketDir}/S.gpg-agent";
         host.address = "${socketDir}/S.gpg-agent.extra";
       }
-      # {
-      #   bind.address = "${socketDir}/S.gpg-agent.ssh";
-      #   host.address = "${socketDir}/S.gpg-agent.ssh";
-      # }
+      {
+        bind.address = "${socketDir}/S.gpg-agent.ssh";
+        host.address = "${socketDir}/S.gpg-agent.ssh";
+      }
     ];
-    # sendEnv = [
-    #   "SSH_AUTH_SOCK"
-    # ];
+    sendEnv = [
+      "SSH_AUTH_SOCK=${socketDir}/S.gpg-agent.ssh"
+    ];
   };
 
   services.gpg-agent = {
