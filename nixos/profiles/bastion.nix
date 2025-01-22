@@ -31,7 +31,14 @@ in
   services = {
     ddclient = {
       enable = true;
-      configFile = "/root/nixos/secrets/ddclient.conf";
+      domains = [
+        "orion.tad.codes"
+        "*.orion.tad.codes"
+      ];
+      username = "tadfisher@gmail.com";
+      passwordFile = "/root/nixos/secrets/ddclient";
+      protocol = "cloudflare";
+      zone = "tad.codes";
     };
 
     nginx = {
