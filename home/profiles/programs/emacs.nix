@@ -39,6 +39,7 @@ let
         tree-sitter-toml
         tree-sitter-tsx
         tree-sitter-typescript
+        tree-sitter-typespec
         tree-sitter-yaml
       ];
     in
@@ -756,6 +757,9 @@ in
 
           dape = {
             enable = true;
+            config = ''
+
+            '';
           };
 
           dap-lldb = {
@@ -904,16 +908,16 @@ in
             after = optional cfg.init.usePackage.cape.enable "corfu";
             hook = [
               ''
-                ((c-mode c++-mode c-ts-base-mode
-                  css-mode less-css-mode sass-mode scss-mode
-                  go-mode
-                  kotlin-mode
-                  haskell-mode
-                  html-mode sgml-mode mhtml-mode web-mode
-                  js-mode js-ts-mode typescript-mode typescript-ts-mode tsx-ts-mode
-                  nix-mode
-                  rust-mode
-                  sh-mode) . eglot-ensure)
+                (((c-mode c++-mode c-ts-base-mode
+                   css-mode less-css-mode sass-mode scss-mode
+                   go-mode
+                   kotlin-mode
+                   haskell-mode
+                   html-mode sgml-mode mhtml-mode web-mode
+                   js-mode js-ts-mode typescript-mode typescript-ts-mode tsx-ts-mode
+                   nix-mode
+                   rust-mode
+                   sh-mode) . eglot-ensure))
               ''
             ];
             config = ''
@@ -964,6 +968,12 @@ in
             enable = true;
             diminish = [ "eldoc-mode" ];
             command = [ "eldoc-mode" ];
+          };
+
+          eldoc-box = {
+            enable = true;
+            after = optional cfg.init.usePackage.eglot.enable "eglot";
+            hook = optional cfg.init.usePackage.eglot.enable "(eglot-managed-mode . eldoc-box-hover-at-point-mode)";
           };
 
           # Enable Electric Indent mode to do automatic indentation on RET.
@@ -1108,6 +1118,8 @@ in
           };
 
           go-mode.enable = true;
+
+          gptel = { };
 
           groovy-mode = {
             enable = true;
@@ -1923,6 +1935,10 @@ in
               ''("\\.ts\\'" . typescript-ts-mode)''
               ''("\\.tsx\\'" . tsx-ts-mode)''
             ];
+          };
+
+          typespec-ts-mode = {
+            enable = true;
           };
 
           undo-tree = {

@@ -12,8 +12,6 @@ in
 
   dart-sass = callPackage ./dart-sass { };
 
-  inherit (inputs.emacs-overlay.packages.${system}) emacs-pgtk emacs-unstable-pgtk;
-
   firefox-gnome-theme = callPackage ./firefox-gnome-theme { src = inputs.firefox-gnome-theme; };
 
   fleet = callPackage ./fleet { };

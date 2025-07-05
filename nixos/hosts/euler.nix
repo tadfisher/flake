@@ -45,8 +45,7 @@ in
   environment = {
     etc."NetworkManager/system-connections/mercury.nmconnection" = {
       mode = "0600";
-      source = pkgs.substituteAll {
-        src = ../../secrets/mercury/vpn/mercury.nmconnection.in;
+      source = pkgs.replaceVars ../../secrets/mercury/vpn/mercury.nmconnection.in {
         ca = ../../secrets/mercury/vpn/mercury-ca.pem;
         cert = ../../secrets/mercury/vpn/mercury-cert.pem;
         key = ../../secrets/mercury/vpn/mercury-key.pem;

@@ -8,6 +8,7 @@ with lib;
     ../profiles/gnome.nix
     ../profiles/development/android.nix
     ../profiles/development/go.nix
+    ../profiles/development/js.nix
     ../profiles/development/jvm.nix
     ../profiles/development/nix.nix
     ../profiles/development/python.nix

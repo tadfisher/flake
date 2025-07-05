@@ -7,12 +7,12 @@
 let
   ath11k-fw-repo = fetchurl {
     url = "https://raw.githubusercontent.com/qca/qca-swiss-army-knife/master/tools/scripts/ath11k/ath11k-fw-repo";
-    hash = "sha256-NOoN3uF4Fxq7qsV8cbSB6uVRwKmtNquAM68JDfXNq6Y=";
+    hash = "sha256-0xotKi72XhVRrokeerqivqHdU3pPRKjB4qtSMu9VsVQ=";
   };
 in
 stdenv.mkDerivation {
   pname = "ath11k-firmware";
-  version = "unstable-20240813";
+  version = "unstable-20250630";
 
   dontUnpack = true;
 

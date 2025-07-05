@@ -77,6 +77,7 @@
       gnome-themes-extra
       keybase
       material-icons
+      monophony
       qt5.qtwayland
       signal-desktop
       simple-scan
@@ -168,7 +169,7 @@
 
   services = {
     gpg-agent = {
-      pinentryPackage = pkgs.pinentry-gnome3;
+      pinentry.package = pkgs.pinentry-gnome3;
       extraConfig = ''
         allow-emacs-pinentry
       '';

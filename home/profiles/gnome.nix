@@ -179,7 +179,7 @@
     paperwm
     roboto
     # BUG https://github.com/NixOS/nixpkgs/issues/301380
-    # valent
+    valent
     virt-manager
   ];
 
@@ -216,10 +216,10 @@
 
   # Disable gnome-keyring ssh-agent
   xdg.configFile = {
-    "autostart/gnome-keyring-ssh.desktop".text = ''
-      ${lib.fileContents
-      "${pkgs.gnome-keyring}/etc/xdg/autostart/gnome-keyring-ssh.desktop"}
-      Hidden=true
-    '';
+    # "autostart/gnome-keyring-ssh.desktop".text = ''
+    #   ${lib.fileContents
+    #   "${pkgs.gnome-keyring}/etc/xdg/autostart/gnome-keyring-ssh.desktop"}
+    #   Hidden=true
+    # '';
   };
 }

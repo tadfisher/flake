@@ -18,7 +18,8 @@ in
       }
     ];
     sendEnv = [
-      "SSH_AUTH_SOCK=${socketDir}/S.gpg-agent.ssh"
+      # TODO This isn't a good way to do this, but you can't just "set" a variable on the remote.
+      "SSH_AUTH_SOCK"
     ];
   };
 

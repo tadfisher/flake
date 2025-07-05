@@ -116,6 +116,13 @@ mkMerge [
 
       dbus.packages = [ pkgs.gcr ];
 
+      desktopManager.gnome = {
+        enable = true;
+        sessionPath = [ pkgs.argyllcms ];
+      };
+
+      displayManager.gdm.enable = true;
+
       flatpak.enable = true;
 
       fwupd.enable = true;
@@ -170,11 +177,6 @@ mkMerge [
 
       xserver = {
         enable = true;
-        desktopManager.gnome = {
-          enable = true;
-          sessionPath = [ pkgs.argyllcms ];
-        };
-        displayManager.gdm.enable = true;
         enableCtrlAltBackspace = true;
         videoDrivers = [ "modesetting" ];
         xkb.options = "ctrl:nocaps";
@@ -202,6 +204,8 @@ mkMerge [
 
     xdg.portal = {
       enable = true;
+      extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
+      xdgOpenUsePortal = true;
     };
   }
 
