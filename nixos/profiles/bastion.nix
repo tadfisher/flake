@@ -168,4 +168,5 @@ with lib;
         nginx.extraGroups = [ "acme" ];
       };
     };
-  }
+  };
+}
