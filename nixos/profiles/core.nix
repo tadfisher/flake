@@ -73,7 +73,7 @@ with lib;
   programs = {
     bash.completion.enable = true;
     command-not-found.enable = false;
-    # nix-ld.enable = true;
+    nix-ld.enable = true;
   };
 
   security = {

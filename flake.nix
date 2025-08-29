@@ -11,8 +11,7 @@
       flake = false;
     };
     emacs-overlay = {
-      # BUG https://github.com/NixOS/nixpkgs/pull/388912
-      inputs.nixpkgs.follows = "nixpkgs-nixos-unstable-small";
+      inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/emacs-overlay";
     };
     firefox-gnome-theme = {
@@ -69,7 +68,6 @@
     };
     nixos-hardware.url = "github:nixos/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-nixos-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     openjdk-wakefield = {
       url = "github:openjdk/wakefield/jdk21.0.1-wayland";
       flake = false;
@@ -165,7 +163,7 @@
               environment.etc.nixpkgs.source = inputs.nixpkgs;
               networking.hostName = name;
               nix = {
-                extraOptions = "experimental-features = nix-command flakes";
+                extraOptions = "experimental-features = nix-command flakes auto-allocate-uids";
                 nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
                 registry = {
                   self.flake = self;

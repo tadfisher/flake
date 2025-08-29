@@ -105,10 +105,7 @@ with lib;
   security.pki.certificateFiles = [ ../../secrets/mercury/mercury.ca.crt ];
 
   services = {
-    btrfs.autoScrub = {
-      enable = true;
-      fileSystems = [ "/dev/nvme0n1" ];
-    };
+    btrfs.autoScrub.enable = true;
 
     fwupd.extraRemotes = [ "lvfs-testing" ];
 

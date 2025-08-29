@@ -22,6 +22,7 @@ with lib;
   home.packages = with pkgs; [
     # TODO https://github.com/NixOS/nixpkgs/issues/268737
     # awscli2
+    code-cursor
     entr
     figma-linux
     gimp
@@ -30,6 +31,7 @@ with lib;
   ];
 
   programs = {
+    claude-code.enable = true;
     lieer = {
       enable = true;
       package = pkgs.lieer;
@@ -47,6 +49,7 @@ with lib;
     ssh.matchBlocks."10.0.99.2" = {
       user = "tad";
     };
+    zed-editor.enable = true;
   };
 
   services = {

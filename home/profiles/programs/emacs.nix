@@ -53,7 +53,7 @@ in
     emacs-all-the-icons-fonts
     freefont_ttf
     graphviz
-    (hunspellWithDicts [ hunspellDicts.en-us ])
+    (hunspell.withDicts (dicts: [ dicts.en-us ]))
     jre
     # nerdfonts
     plantuml
@@ -241,6 +241,9 @@ in
 
           ;; Add tree-sitter grammars.
           (setq treesit-extra-load-path '("${tree-sitter-grammars}/lib"))
+
+          ;; Trash files instead of hard-deleting.
+          (setq delete-by-moving-to-trash t)
         '';
 
         # lsp = {
@@ -405,7 +408,7 @@ in
           };
 
           all-the-icons-dired = {
-            enable = true;
+            enable = false;
             hook = [ "(dired-mode . all-the-icons-dired-mode)" ];
           };
 
@@ -782,9 +785,9 @@ in
             command = [ "dired" "dired-jump" ];
             config = ''
               (put 'dired-find-alternate-file 'disabled nil)
-              (setq delete-by-moving-to-trash t
-                    dired-dwim-target t
-                    dired-listing-switches "-alvh --group-directories-first")
+              (setopt ;; dired-dwim-target t
+                      ;; dired-listing-switches "-alvh --group-directories-first"
+                      dired-mouse-drag-files t)
             '';
           };
 
@@ -805,7 +808,7 @@ in
           };
 
           dired-x = {
-            enable = true;
+            enable = false;
             package = ""; # built-in
             hook = [ "(dired-mode . dired-omit-mode)" ];
             bindLocal.dired-mode-map = { "." = "dired-omit-mode"; };
@@ -813,6 +816,39 @@ in
               (setq dired-omit-verbose nil
                     dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
             '';
+          };
+
+          dirvish = {
+            enable = true;
+            init = ''
+              (dirvish-override-dired-mode)
+            '';
+            config = ''
+              (setopt dirvish-attributes '(vc-state subtree-state all-the-icons collapse git-msg file-time file-size))
+            '';
+            bindLocal.dirvish-mode-map = {
+              "<mouse-1>" = "dirvish-subtree-toggle-or-open";
+              "<mouse-2>" = "dired-mouse-find-file-other-window";
+              "[remap dired-sort-toggle-or-edit]" = "dirvish-quicksort";
+              "[remap dired-do-redisplay]" = "dirvish-ls-switches-menu";
+              "[remap dired-do-copy]" = "dirvish-yank-menu";
+              "?" = "dirvish-dispatch";
+              "q" = "dirvish-quit";
+              "a" = "dirvish-quick-access";
+              "f" = "dirvish-file-info-menu";
+              "x" = "dired-do-delete";
+              "X" = "dired-do-flagged-delete";
+              "y" = "dirvish-yank-menu";
+              "s" = "dirvish-quicksort";
+              "TAB" = "dirvish-subtree-toggle";
+              "M-t" = "dirvish-layout-toggle";
+              "M-," = "dirvish-history-go-backward";
+              "M-." = "dirvish-history-go-forward";
+              "M-n" = "dirvish-narrow";
+              "M-m" = "dirvish-mark-menu";
+              "M-s" = "dirvish-setup-menu";
+              "M-e" = "dirvish-emerge-menu";
+            };
           };
 
           display-fill-column-indicator = {
@@ -1119,7 +1155,13 @@ in
 
           go-mode.enable = true;
 
-          gptel = { };
+          gptel = {
+            enable = true;
+            config = ''
+              (require 'gptel-integrations)
+              (gptel-make-anthropic "claude" :stream t)
+            '';
+          };
 
           groovy-mode = {
             enable = true;
@@ -1378,6 +1420,8 @@ in
               (setq markdown-command "${pkgs.pandoc}/bin/pandoc")
             '';
           };
+
+          mcp.enable = true;
 
           meson-mode = {
             enable = true;
@@ -1719,6 +1763,9 @@ in
             package = "";
             bindKeyMap = {
               "M-SPC p" = "project-prefix-map";
+            };
+            bindLocal.project-prefix-map = optionalAttrs cfg.init.usePackage.dirvish.enable {
+              "s" = "dirvish-side";
             };
           };
 

@@ -3,6 +3,7 @@
 {
   imports = [
     ./misc/gnome-paths.nix
+    ./programs/zed-editor.nix
     ./services/emacs.nix
   ];
 
@@ -123,7 +124,7 @@
     };
 
     emacs = {
-      package = pkgs.emacs-pgtk;
+      package = pkgs.emacs30-pgtk;
       extraPackages = (epkgs: with epkgs; [
         treesit-grammars.with-all-grammars
       ]);

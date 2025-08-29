@@ -8,6 +8,7 @@ with lib;
     ../profiles/seedbox.nix
     ../profiles/bastion.nix
     ../profiles/services/sshd.nix
+    ../profiles/services/vaultwarden.nix
     ../profiles/users/tad.nix
     ../profiles/uefi.nix
   ];

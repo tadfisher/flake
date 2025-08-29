@@ -2,9 +2,6 @@
 
 with lib;
 
-let
-  acmeCerts = config.security.acme.certs."orion.tad.codes".directory;
-in
 {
   networking = {
     firewall.allowedTCPPorts = [ 22 80 443 ];
@@ -47,11 +44,9 @@ in
       recommendedOptimisation = true;
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
+      clientMaxBodySize = "500m";
       virtualHosts = {
         "orion.tad.codes" = {
-          sslCertificate = "${acmeCerts}/fullchain.pem";
-          sslCertificateKey = "${acmeCerts}/key.pem";
-          sslTrustedCertificate = "${acmeCerts}/chain.pem";
           forceSSL = true;
           default = true;
           extraConfig = ''
@@ -63,93 +58,114 @@ in
               tryFiles = "$uri $uri/ =404";
             };
           };
+          useACMEHost = "orion.tad.codes";
         };
-        "plex.orion.tad.codes" = {
-          sslCertificate = "${acmeCerts}/fullchain.pem";
-          sslCertificateKey = "${acmeCerts}/key.pem";
-          sslTrustedCertificate = "${acmeCerts}/chain.pem";
+        "id.orion.tad.codes" = {
           forceSSL = true;
-          extraConfig = ''
-            client_max_body_size 0;
-            proxy_redirect off;
-            proxy_buffering off;
-          '';
+          useACMEHost = "orion.tad.codes";
           locations."/" = {
-            proxyPass = "http://localhost:32400/";
+            proxyPass = "http://[::1]:1411";
+            proxyWebsockets = true;
+            recommendedProxySettings = true;
             extraConfig = ''
-              proxy_set_header X-Plex-Client-Identifier $http_x_plex_client_identifier;
-              proxy_set_header X-Plex-Device $http_x_plex_device;
-              proxy_set_header X-Plex-Device-Name $http_x_plex_device_name;
-              proxy_set_header X-Plex-Platform $http_x_plex_platform;
-              proxy_set_header X-Plex-Platform-Version $http_x_plex_platform_version;
-              proxy_set_header X-Plex-Product $http_x_plex_product;
-              proxy_set_header X-Plex-Token $http_x_plex_token;
-              proxy_set_header X-Plex-Version $http_x_plex_version;
-              proxy_set_header X-Plex-Nocache $http_x_plex_nocache;
-              proxy_set_header X-Plex-Provides $http_x_plex_provides;
-              proxy_set_header X-Plex-Device-Vendor $http_x_plex_device_vendor;
-              proxy_set_header X-Plex-Model $http_x_plex_model;
+              client_max_body_size 50000M;
+              proxy_read_timeout   600s;
+              proxy_send_timeout   600s;
+              send_timeout         600s;
             '';
+          };
+          "plex.orion.tad.codes" = {
+            forceSSL = true;
+            extraConfig = ''
+              client_max_body_size 0;
+              proxy_redirect off;
+              proxy_buffering off;
+            '';
+            locations."/" = {
+              proxyPass = "http://localhost:32400/";
+              extraConfig = ''
+                proxy_set_header X-Plex-Client-Identifier $http_x_plex_client_identifier;
+                proxy_set_header X-Plex-Device $http_x_plex_device;
+                proxy_set_header X-Plex-Device-Name $http_x_plex_device_name;
+                proxy_set_header X-Plex-Platform $http_x_plex_platform;
+                proxy_set_header X-Plex-Platform-Version $http_x_plex_platform_version;
+                proxy_set_header X-Plex-Product $http_x_plex_product;
+                proxy_set_header X-Plex-Token $http_x_plex_token;
+                proxy_set_header X-Plex-Version $http_x_plex_version;
+                proxy_set_header X-Plex-Nocache $http_x_plex_nocache;
+                proxy_set_header X-Plex-Provides $http_x_plex_provides;
+                proxy_set_header X-Plex-Device-Vendor $http_x_plex_device_vendor;
+                proxy_set_header X-Plex-Model $http_x_plex_model;
+              '';
+              useACMEHost = "orion.tad.codes";
+            };
           };
         };
       };
-    };
 
-    oauth2-proxy = {
-      enable = true;
-      provider = "google";
-      redirectURL = "https://orion.tad.codes/oauth2/callback";
+      oauth2-proxy = {
+        enable = true;
+        provider = "google";
+        redirectURL = "https://orion.tad.codes/oauth2/callback";
 
-      cookie = {
-        domain = ".orion.tad.codes";
-        refresh = "24h";
-      };
+        cookie = {
+          domain = ".orion.tad.codes";
+          refresh = "24h";
+        };
 
-      email.addresses = ''
-        tadfisher@gmail.com
-        nyoungsma@gmail.com
-      '';
+        email.addresses = ''
+          tadfisher@gmail.com
+          nyoungsma@gmail.com
+        '';
 
-      google = {
-        adminEmail = "tadfisher@gmail.com";
-        serviceAccountJSON = "/root/nixos/secrets/oauth2-proxy-service-account.json";
-      };
+        google = {
+          adminEmail = "tadfisher@gmail.com";
+          serviceAccountJSON = "/root/nixos/secrets/oauth2-proxy-service-account.json";
+        };
 
-      upstream = [
-        "http://127.0.0.1:8080/"
-      ];
+        upstream = [
+          "http://127.0.0.1:8080/"
+        ];
 
-      passAccessToken = true;
+        passAccessToken = true;
 
-      reverseProxy = true;
+        reverseProxy = true;
 
-      setXauthrequest = true;
+        setXauthrequest = true;
 
-      extraConfig = {
-        pass-authorization-header = true;
-        whitelist-domain = ".orion.tad.codes";
-      };
+        extraConfig = {
+          pass-authorization-header = true;
+          whitelist-domain = ".orion.tad.codes";
+        };
 
-      keyFile = "/root/nixos/secrets/oauth2-proxy.env";
+        keyFile = "/root/nixos/secrets/oauth2-proxy.env";
 
-      nginx = {
-        domain = "orion.tad.codes";
-        virtualHosts = {
-          "orion.tad.codes" = { };
-          "plex.orion.tad.codes" = { };
+        nginx = {
+          domain = "orion.tad.codes";
+          virtualHosts = {
+            "orion.tad.codes" = { };
+            "plex.orion.tad.codes" = { };
+          };
         };
       };
+
+      pocket-id = {
+        enable = true;
+        settings = {
+          TRUST_PROXY = true;
+          APP_URL = "https://id.orion.tad.codes";
+        };
+      };
+
+      sshguard = {
+        enable = true;
+        blacklist_threshold = 120;
+      };
     };
 
-    sshguard = {
-      enable = true;
-      blacklist_threshold = 120;
-    };
-  };
-
-  users = {
     users = {
-      nginx.extraGroups = [ "acme" ];
+      users = {
+        nginx.extraGroups = [ "acme" ];
+      };
     };
-  };
-}
+  }
