@@ -5,7 +5,6 @@
     acpica-tools
     binutils
     dmidecode
-    eagle
     fwts
     horizon-eda
   ];

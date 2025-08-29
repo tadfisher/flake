@@ -150,24 +150,6 @@
         "type": "github"
       }
     },
-    "flake-utils_3": {
-      "inputs": {
-        "systems": "systems_2"
-      },
-      "locked": {
-        "lastModified": 1731533236,
-        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "hidviz": {
       "flake": false,
       "locked": {
@@ -350,28 +332,6 @@
         "type": "github"
       }
     },
-    "nix-prefetch-github": {
-      "inputs": {
-        "flake-utils": "flake-utils_3",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "nixpkgs-stable": "nixpkgs-stable_2"
-      },
-      "locked": {
-        "lastModified": 1738370354,
-        "narHash": "sha256-dqjpdYzBx4pk7st575hYe5HrHtZURWdf7TwDwBsYAG4=",
-        "owner": "seppeljordan",
-        "repo": "nix-prefetch-github",
-        "rev": "8a4d3cac69a0fc8aaa6ec9f310067bdc82ace788",
-        "type": "github"
-      },
-      "original": {
-        "owner": "seppeljordan",
-        "repo": "nix-prefetch-github",
-        "type": "github"
-      }
-    },
     "nixos-hardware": {
       "locked": {
         "lastModified": 1756245047,
@@ -410,22 +370,6 @@
         "owner": "NixOS",
         "repo": "nixpkgs",
         "rev": "50ab793786d9de88ee30ec4e4c24fb4236fc2674",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-24.11",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs-stable_2": {
-      "locked": {
-        "lastModified": 1738023785,
-        "narHash": "sha256-BPHmb3fUwdHkonHyHi1+x89eXB3kA1jffIpwPVJIVys=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "2b4230bf03deb33103947e2528cac2ed516c5c89",
         "type": "github"
       },
       "original": {
@@ -568,7 +512,6 @@
         "mutter": "mutter",
         "nix-dart": "nix-dart",
         "nix-direnv": "nix-direnv",
-        "nix-prefetch-github": "nix-prefetch-github",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "notmuch-notify": "notmuch-notify",
@@ -618,21 +561,6 @@
       }
     },
     "systems": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
-    "systems_2": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",

@@ -62,10 +62,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/nix-direnv";
     };
-    nix-prefetch-github = {
-      inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:seppeljordan/nix-prefetch-github";
-    };
     nixos-hardware.url = "github:nixos/nixos-hardware";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     openjdk-wakefield = {
@@ -311,7 +307,6 @@
         inputs.nix-dart.packages.${system} //
         {
           inherit (pkgsBySystem.${system}) ccid;
-          nix-prefetch-github = inputs.nix-prefetch-github.packages.${system}.default;
           nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
           nixos-rebuild = inputs.nixpkgs.legacyPackages.${system}.nixos-rebuild;
         }

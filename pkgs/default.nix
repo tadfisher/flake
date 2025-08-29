@@ -48,10 +48,6 @@ in
   plex-plexpass = callPackage ./plex-plexpass { };
   plexRaw-plexpass = callPackage ./plex-plexpass/raw.nix { };
 
-  portmod = callPackage ./portmod { src = inputs.portmod; };
-
-  python-ips = python3.pkgs.callPackage ./python-ips { };
-
   sed-opal-unlocker = callPackage ./sed-opal-unlocker { };
 
   sedcli = callPackage ./sedcli { src = inputs.sedcli; };

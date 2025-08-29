@@ -48,6 +48,7 @@ with lib;
       virtualHosts = {
         "orion.tad.codes" = {
           forceSSL = true;
+          useACMEHost = "orion.tad.codes";
           default = true;
           extraConfig = ''
             add_header Strict-Transport-Security max-age=2592000;
@@ -58,7 +59,6 @@ with lib;
               tryFiles = "$uri $uri/ =404";
             };
           };
-          useACMEHost = "orion.tad.codes";
         };
         "id.orion.tad.codes" = {
           forceSSL = true;
@@ -74,31 +74,31 @@ with lib;
               send_timeout         600s;
             '';
           };
-          "plex.orion.tad.codes" = {
-            forceSSL = true;
+        };
+        "plex.orion.tad.codes" = {
+          forceSSL = true;
+          useACMEHost = "orion.tad.codes";
+          extraConfig = ''
+            client_max_body_size 0;
+            proxy_redirect off;
+            proxy_buffering off;
+          '';
+          locations."/" = {
+            proxyPass = "http://localhost:32400/";
             extraConfig = ''
-              client_max_body_size 0;
-              proxy_redirect off;
-              proxy_buffering off;
+              proxy_set_header X-Plex-Client-Identifier $http_x_plex_client_identifier;
+              proxy_set_header X-Plex-Device $http_x_plex_device;
+              proxy_set_header X-Plex-Device-Name $http_x_plex_device_name;
+              proxy_set_header X-Plex-Platform $http_x_plex_platform;
+              proxy_set_header X-Plex-Platform-Version $http_x_plex_platform_version;
+              proxy_set_header X-Plex-Product $http_x_plex_product;
+              proxy_set_header X-Plex-Token $http_x_plex_token;
+              proxy_set_header X-Plex-Version $http_x_plex_version;
+              proxy_set_header X-Plex-Nocache $http_x_plex_nocache;
+              proxy_set_header X-Plex-Provides $http_x_plex_provides;
+              proxy_set_header X-Plex-Device-Vendor $http_x_plex_device_vendor;
+              proxy_set_header X-Plex-Model $http_x_plex_model;
             '';
-            locations."/" = {
-              proxyPass = "http://localhost:32400/";
-              extraConfig = ''
-                proxy_set_header X-Plex-Client-Identifier $http_x_plex_client_identifier;
-                proxy_set_header X-Plex-Device $http_x_plex_device;
-                proxy_set_header X-Plex-Device-Name $http_x_plex_device_name;
-                proxy_set_header X-Plex-Platform $http_x_plex_platform;
-                proxy_set_header X-Plex-Platform-Version $http_x_plex_platform_version;
-                proxy_set_header X-Plex-Product $http_x_plex_product;
-                proxy_set_header X-Plex-Token $http_x_plex_token;
-                proxy_set_header X-Plex-Version $http_x_plex_version;
-                proxy_set_header X-Plex-Nocache $http_x_plex_nocache;
-                proxy_set_header X-Plex-Provides $http_x_plex_provides;
-                proxy_set_header X-Plex-Device-Vendor $http_x_plex_device_vendor;
-                proxy_set_header X-Plex-Model $http_x_plex_model;
-              '';
-              useACMEHost = "orion.tad.codes";
-            };
           };
         };
       };

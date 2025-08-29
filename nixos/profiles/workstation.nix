@@ -132,10 +132,12 @@ mkMerge [
       libinput.enable = true;
 
       logind = {
-        killUserProcesses = true;
-        lidSwitch = "suspend-then-hibernate";
-        lidSwitchDocked = "ignore";
-        lidSwitchExternalPower = "lock";
+        settings.Login = {
+          HandleLidSwitch = "suspend-then-hibernate";
+          HandleLidSwitchDocked = "ignore";
+          HandleLidSwitchExternalPower = "lock";
+          KillUserProcesses = true;
+        };
       };
 
       pcscd.enable = true;

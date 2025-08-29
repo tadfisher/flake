@@ -69,9 +69,15 @@ with lib;
     };
     ssh = {
       enable = true;
-      compression = true;
-      controlMaster = "auto";
-      controlPersist = "10m";
+      enableDefaultConfig = false;
+
+      matchBlocks."*" = {
+        compression = true;
+        controlMaster = "auto";
+        controlPath = "~/.ssh/master-%r@%n:%p";
+        controlPersist = "10m";
+        userKnownHostsFile = "~/.ssh/known_hosts";
+      };
     };
   };
 

@@ -87,14 +87,18 @@ with lib;
     sudo.wheelNeedsPassword = false;
   };
 
-  services.resolved = {
-    enable = true;
-    extraConfig = ''
-      MulticastDNS=true
-      DNSOverTLS=opportunistic
-      ResolveUnicastSingleLabel=true
-    '';
-    llmnr = "false";
+  services = {
+    resolved = {
+      enable = true;
+      extraConfig = ''
+        MulticastDNS=true
+        DNSOverTLS=opportunistic
+        ResolveUnicastSingleLabel=true
+      '';
+      llmnr = "false";
+    };
+
+    userdbd.silenceHighSystemUsers = true;
   };
 
   systemd.network.enable = true;
