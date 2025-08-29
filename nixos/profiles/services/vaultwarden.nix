@@ -16,7 +16,7 @@ with lib;
         DOMAIN = "https://vault.orion.tad.codes";
         SIGNUPS_ALLOWED = true;
         ADMIN_TOKEN = "$argon2id$v=19$m=65540,t=3,p=4$lD5xiGMasc1vMpixn7jV1GeTAprCxRkwA2nlLpKE6lQ$6lQFJrIB4C89TLX9H3u5uurDaEH33QsqRsh54UTabBg";
-        LOG_FILE = "/var/log/vaultwarden/access.log";
+        LOG_FILE = "/var/lib/bitwarden_rs/access.log";
       };
     };
 
