@@ -102,71 +102,71 @@ with lib;
           };
         };
       };
+    };
 
-      oauth2-proxy = {
-        enable = true;
-        provider = "google";
-        redirectURL = "https://orion.tad.codes/oauth2/callback";
+    oauth2-proxy = {
+      enable = true;
+      provider = "google";
+      redirectURL = "https://orion.tad.codes/oauth2/callback";
 
-        cookie = {
-          domain = ".orion.tad.codes";
-          refresh = "24h";
-        };
-
-        email.addresses = ''
-          tadfisher@gmail.com
-          nyoungsma@gmail.com
-        '';
-
-        google = {
-          adminEmail = "tadfisher@gmail.com";
-          serviceAccountJSON = "/root/nixos/secrets/oauth2-proxy-service-account.json";
-        };
-
-        upstream = [
-          "http://127.0.0.1:8080/"
-        ];
-
-        passAccessToken = true;
-
-        reverseProxy = true;
-
-        setXauthrequest = true;
-
-        extraConfig = {
-          pass-authorization-header = true;
-          whitelist-domain = ".orion.tad.codes";
-        };
-
-        keyFile = "/root/nixos/secrets/oauth2-proxy.env";
-
-        nginx = {
-          domain = "orion.tad.codes";
-          virtualHosts = {
-            "orion.tad.codes" = { };
-            "plex.orion.tad.codes" = { };
-          };
-        };
+      cookie = {
+        domain = ".orion.tad.codes";
+        refresh = "24h";
       };
 
-      pocket-id = {
-        enable = true;
-        settings = {
-          TRUST_PROXY = true;
-          APP_URL = "https://id.orion.tad.codes";
-        };
+      email.addresses = ''
+        tadfisher@gmail.com
+        nyoungsma@gmail.com
+      '';
+
+      google = {
+        adminEmail = "tadfisher@gmail.com";
+        serviceAccountJSON = "/root/nixos/secrets/oauth2-proxy-service-account.json";
       };
 
-      sshguard = {
-        enable = true;
-        blacklist_threshold = 120;
+      upstream = [
+        "http://127.0.0.1:8080/"
+      ];
+
+      passAccessToken = true;
+
+      reverseProxy = true;
+
+      setXauthrequest = true;
+
+      extraConfig = {
+        pass-authorization-header = true;
+        whitelist-domain = ".orion.tad.codes";
+      };
+
+      keyFile = "/root/nixos/secrets/oauth2-proxy.env";
+
+      nginx = {
+        domain = "orion.tad.codes";
+        virtualHosts = {
+          "orion.tad.codes" = { };
+          "plex.orion.tad.codes" = { };
+        };
       };
     };
 
-    users = {
-      users = {
-        nginx.extraGroups = [ "acme" ];
+    pocket-id = {
+      enable = true;
+      settings = {
+        TRUST_PROXY = true;
+        APP_URL = "https://id.orion.tad.codes";
       };
+    };
+
+    sshguard = {
+      enable = true;
+      blacklist_threshold = 120;
+    };
+  };
+
+  users = {
+    users = {
+      nginx.extraGroups = [ "acme" ];
     };
   };
 }
