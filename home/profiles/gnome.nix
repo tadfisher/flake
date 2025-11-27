@@ -208,6 +208,15 @@
 
       userChrome = ''
         @import "${pkgs.firefox-gnome-theme}/share/firefox-gnome-theme/gnome-theme.css";
+
+        /* Hide tab close button entirely for collapsed vertical tabs. */
+        #tabbrowser-tabs[orient="vertical"] {
+          &:not([expanded]) {
+            & .tab-close-button {
+              margin-left: -1000px;
+            }
+          }
+        }
       '';
     };
 

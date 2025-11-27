@@ -7,10 +7,9 @@
     ./services/emacs.nix
   ];
 
-  fonts.fontconfig.enable = true;
-
   gtk = {
     enable = true;
+    colorScheme = "dark";
     font = {
       name = "Roboto";
       size = 9.75;
@@ -48,7 +47,6 @@
 
   dconf.settings."org/gnu/emacs/defaults-by-name/emacs" = {
     fullscreen = "fullheight";
-
   };
 
   home = {
@@ -77,8 +75,6 @@
       gparted
       gnome-themes-extra
       keybase
-      material-icons
-      monophony
       qt5.qtwayland
       signal-desktop
       simple-scan
@@ -157,15 +153,25 @@
       # pass-audit
       pass-otp
     ]);
+
+    rbw = {
+      enable = true;
+      settings = {
+        email = "tadfisher@gmail.com";
+        base_url = "https://vault.orion.tad.codes";
+        lock_timeout = 86400;
+        pinentry = pkgs.pinentry-gnome3;
+      };
+    };
   };
 
   qt = {
     enable = true;
-    platformTheme.name = "adwaita";
-    style = {
-      name = "adwaita-dark";
-      package = pkgs.adwaita-qt;
-    };
+    # platformTheme.name = "adwaita";
+    # style = {
+    #   name = "adwaita-dark";
+    #   package = pkgs.adwaita-qt;
+    # };
   };
 
   services = {

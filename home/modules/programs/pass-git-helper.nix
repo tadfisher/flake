@@ -20,8 +20,8 @@ in
 
       package = mkOption {
         type = types.package;
-        default = pkgs.gitAndTools.pass-git-helper;
-        defaultText = literalExpression "pkgs.gitAndTools.pass-git-helper";
+        default = pkgs.pass-git-helper;
+        defaultText = literalExpression "pkgs.pass-git-helper";
         description = ''
           pass-git-helper package to install.
         '';

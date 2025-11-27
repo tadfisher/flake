@@ -8,6 +8,8 @@ in
 {
   adw-themes = callPackage ./adw-themes { };
 
+  agent-shell = callPackage ./agent-shell { src = inputs.agent-shell; };
+
   base16-plata-theme = callPackage ./base16-plata-theme { };
 
   eglot-booster = callPackage ./eglot-booster { src = inputs.eglot-booster; };

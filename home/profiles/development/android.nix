@@ -6,7 +6,7 @@ with lib;
   android-sdk = {
     enable = true;
     packages = mkDefault (sdk: with sdk; [
-      build-tools-35-0-0
+      build-tools-36-0-0
       cmake-3-22-1
       cmdline-tools-latest
       emulator
@@ -37,5 +37,6 @@ with lib;
     enable = true;
     logLevel = "verbose";
     mdnsBackend = "openscreen";
+    port = 5038; # Try not to interfere with the built-in server in Studio
   };
 }

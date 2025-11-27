@@ -6,32 +6,35 @@ let secrets = import ../../../secrets;
 in
 {
   programs = {
+    delta = {
+      enable = true;
+      enableGitIntegration = true;
+      options = { features = "decorations"; };
+    };
     git = {
       enable = true;
-      package = pkgs.gitAndTools.gitFull;
-      userName = "Tad Fisher";
-      userEmail = "tadfisher@gmail.com";
+      package = pkgs.gitFull;
       ignores = [ "*~" "#*#" ];
       signing = {
         key = "tadfisher@gmail.com";
         signByDefault = true;
       };
-      delta = {
-        enable = true;
-        options = { features = "decorations"; };
-      };
-      extraConfig = {
+      passGitHelper.enable = true;
+      lfs.enable = true;
+      settings = {
         branch = {
           autoSetupMerge = "true";
           autoSetupRebase = "remote";
         };
-        pull.rebase = "true";
         github.user = "tadfisher";
         http.cookiefile = "${config.xdg.configHome}/git/cookies";
         init.defaultBranch = "main";
+        pull.rebase = "true";
+        user = {
+          name = "Tad Fisher";
+          email = "tadfisher@gmail.com";
+        };
       };
-      passGitHelper.enable = true;
-      lfs.enable = true;
     };
   };
 

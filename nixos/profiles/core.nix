@@ -31,8 +31,8 @@ with lib;
     dnsutils
     efibootmgr
     emacs
-    gitAndTools.gitFull
-    gitAndTools.git-crypt
+    git-crypt
+    gitFull
     gnupg
     htop
     nvme-cli

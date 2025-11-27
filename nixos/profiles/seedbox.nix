@@ -40,6 +40,7 @@ in
 
     transmission = {
       enable = true;
+      credentialsFile = "/root/nixos/secrets/transmission.json";
       settings = {
         download-queue-enabled = true;
         download-queue-size = 3;
@@ -62,12 +63,6 @@ in
         rename-partial-files = true;
         rpc-bind-address = "0.0.0.0";
         rpc-enabled = true;
-        # SECURITY RESEARCHERS: PLEASE READ!
-        # This configuration is for a personal server.
-        # This is a local service that is not exposed to the Internet.
-        # The setting below is a password hash, not the password itself.
-        # Please do not report vulnerabilities to my employer.
-        rpc-password = "{dfed8b5975f9e826885a1bc03d4116b89f4499c3JmkXT62G";
         rpc-port = 9091;
         rpc-url = "/transmission/";
         rpc-username = "";
@@ -95,9 +90,18 @@ in
     bindsTo = [ "pia-vpn.service" ];
     requires = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
-    serviceConfig.ExecStart = mkForce ''
-      ${startTransmission}
-    '';
+
+    serviceConfig = {
+      ExecStart = mkForce ''
+        ${startTransmission}
+      '';
+      RestrictAddressFamilies = [
+        "AF_UNIX"
+        "AF_INET"
+        "AF_INET6"
+        "AF_NETLINK" # our start script needs this to find the wg0 IP
+      ];
+    };
   };
 
   users.users.transmission.extraGroups = [ "media" ];

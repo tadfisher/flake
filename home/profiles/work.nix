@@ -39,6 +39,7 @@ with lib;
   ];
 
   home.packages = with pkgs; [
+    devenv
     gnomeExtensions.tailscale-status
     zoom-us
   ];

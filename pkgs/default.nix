@@ -6,7 +6,11 @@ let
   inherit (pkgs) callPackage pkgsi686Linux python3 system;
 in
 {
+  adw-gtk3 = callPackage ./adw-gtk3 { };
+
   ath11k-firmware = callPackage ./ath11k-firmware { };
+
+  claude-code-acp = callPackage ./claude-code-acp { };
 
   cleaner-overview = callPackage ./cleaner-overview { };
 

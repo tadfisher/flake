@@ -6,7 +6,7 @@ with final;
 
 {
   tree-sitter = prev.tree-sitter.override {
-    extraGrammars = callPackage ./tree-sitter-grammars {} inputs;
+    extraGrammars = callPackage ./tree-sitter-grammars { } inputs;
   };
 
   emacsPackagesFor = emacs:
@@ -65,4 +65,15 @@ with final;
       maintainers = with lib.maintainers; [ tadfisher ];
     };
   });
+
+  vaultwarden = prev.callPackage (inputs.nixpkgs + /pkgs/by-name/va/vaultwarden/package.nix) {
+    rustPlatform = prev.rustPlatform // {
+      buildRustPackage = args:
+        prev.rustPlatform.buildRustPackage (args // {
+          version = "unstable";
+          src = inputs.vaultwarden;
+          cargoHash = "sha256-F7we9rurJ7srz54lsuSrdoIZpkGE+4ncW3+wjEwaD7M=";
+        });
+    };
+  };
 }

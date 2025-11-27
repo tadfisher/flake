@@ -160,7 +160,6 @@ with lib;
   system.stateVersion = "23.11";
 
   virtualisation.libvirtd.qemu = {
-    ovmf.packages = [ pkgs.OVMFFull ];
     swtpm.enable = true;
   };
 }

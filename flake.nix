@@ -2,6 +2,10 @@
   description = "Tad's Nix configurations";
 
   inputs = {
+    agent-shell = {
+      url = "github:xenodium/agent-shell";
+      flake = false;
+    };
     android-nixpkgs = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/android-nixpkgs";
@@ -98,6 +102,12 @@
     };
     tree-sitter-typespec = {
       url = "github:happenslol/tree-sitter-typespec";
+      flake = false;
+    };
+    # TODO Remove from overlay when SSO PR is included in nixpkgs
+    # https://github.com/dani-garcia/vaultwarden/pull/3899
+    vaultwarden = {
+      url = "github:dani-garcia/vaultwarden";
       flake = false;
     };
     vertical-overview = {
@@ -306,7 +316,7 @@
         import ./pkgs { inherit inputs; pkgs = pkgsBySystem.${system}; } //
         inputs.nix-dart.packages.${system} //
         {
-          inherit (pkgsBySystem.${system}) ccid;
+          inherit (pkgsBySystem.${system}) ccid vaultwarden;
           nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
           nixos-rebuild = inputs.nixpkgs.legacyPackages.${system}.nixos-rebuild;
         }

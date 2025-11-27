@@ -350,6 +350,13 @@ in
             '';
           };
 
+          # Agent-client protocol. Used by agent-shell.
+          # https://github.com/xenodium/acp.el
+          acp = {
+            enable = cfg.init.usePackage.agent-shell.enable;
+            defer = true;
+          };
+
           adaptive-wrap = {
             enable = true;
             command = [ "adaptive-wrap-prefix-mode" ];
@@ -383,6 +390,15 @@ in
                                     (enable-theme 'adw-dark)
                                   (load-theme 'adw-dark t)))))
                 (load-theme 'adw-dark t))
+            '';
+          };
+
+          agent-shell = {
+            enable = true;
+            config = ''
+              (setopt agent-shell-anthropic-authentication (agent-shell-anthropic-make-authentication
+                                                            :api-key #'(auth-source-pass-get "secret" "api.anthropic.com/apikey"))
+                      agent-shell-anthropic-claude-command '("${lib.getExe pkgs.claude-code-acp}"))
             '';
           };
 
@@ -956,6 +972,10 @@ in
                    sh-mode) . eglot-ensure))
               ''
             ];
+
+            #          (swift-mode
+            #            . ,(eglot-alternatives
+            #              '("sourcekit-lsp" "${pkgs.sourcekit-lsp}/bin/sourcekit-lsp")))
             config = ''
               (setq eglot-autoshutdown t
                     eglot-confirm-server-initiated-edits nil
@@ -990,10 +1010,7 @@ in
                       (sh-mode
                        . ,(eglot-alternatives
                            '(("bash-language-server" "start")
-                             ("${pkgs.bash-language-server}/bin/bash-language-server" "start"))))
-                      (swift-mode
-                        . ,(eglot-alternatives
-                          '("sourcekit-lsp" "${pkgs.sourcekit-lsp}/bin/sourcekit-lsp")))))
+                             ("${pkgs.bash-language-server}/bin/bash-language-server" "start"))))))
               ${optionalString cfg.init.usePackage.cape.enable ''
                 (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
               ''}
@@ -1242,6 +1259,7 @@ in
             package = "";
             defer = true;
             # image-dired-cmd-pngnq-program "${pkgs.pngnq}/bin/pngnq"
+            # image-dired-cmd-rotate-original-program "${pkgs.mozjpeg}/bin/jpegtran"
             config = ''
               (setq image-dired-thumbnail-storage 'standard-large
                     image-dired-cmd-create-thumbnail-program "${pkgs.imagemagick}/bin/convert"
@@ -1249,7 +1267,6 @@ in
                     image-dired-cmd-pngcrush-program "${pkgs.pngcrush}/bin/pngcrush"
                     image-dired-cmd-optipng-program "${pkgs.optipng}/bin/optipng"
                     image-dired-cmd-rotate-thumbnail-program "${pkgs.imagemagick}/bin/mogrify"
-                    image-dired-cmd-rotate-original-program "${pkgs.mozjpeg}/bin/jpegtran"
                     image-dired-cmd-write-exif-data-program "${pkgs.exiftool}/bin/exiftool"
                     image-dired-cmd-read-exif-data-program "${pkgs.exiftool}/bin/exiftool"
                     image-dired-thumb-relief 0
@@ -1843,6 +1860,14 @@ in
           };
 
           scala-mode.enable = true;
+
+          # Create Emacs shells backed by either local or cloud services.
+          # Used by: agent-shell
+          # https://github.com/xenodium/shell-maker
+          shell-maker = {
+            enable = cfg.init.usePackage.agent-shell.enable;
+            defer = true;
+          };
 
           shr = {
             enable = true;

@@ -31,16 +31,15 @@ mkMerge [
       ];
     };
 
-    fonts.packages = with pkgs; [
-      inter
-      jetbrains-mono
-      nerd-fonts.symbols-only
-      noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
-      roboto
-      roboto-mono
-    ];
+    fonts = {
+      packages = with pkgs; [
+        inter
+        jetbrains-mono
+        roboto
+      ];
+
+      enableDefaultPackages = true;
+    };
 
     hardware = {
       bluetooth = {
@@ -172,7 +171,6 @@ mkMerge [
           ${builtins.readFile ../../data/udev/spyderx.rules}
         '';
         packages = with pkgs; [
-          android-udev-rules
           yubikey-personalization
         ];
       };

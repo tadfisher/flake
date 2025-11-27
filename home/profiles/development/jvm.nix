@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  gradleWithToolchains = with pkgs; callPackage gradle-packages.gradle_8 {
+  gradleWithToolchains = with pkgs; gradle-packages.gradle_8.override {
     javaToolchains = [
       openjdk8
       jdk11
@@ -19,14 +19,15 @@ in
     '';
 
     packages = with pkgs; [
-      gradle-completion
+      # gradle-completion
       gradleWithToolchains
       jdk
-      jetbrains.idea-community
+      # TODO https://github.com/NixOS/nixpkgs/pull/449637
+      # jetbrains.idea-community
     ];
 
     sessionVariables = {
-      JAVA_HOME = "${pkgs.jetbrains.jdk.home}";
+      JAVA_HOME = "${pkgs.jdk.home}";
     };
   };
 
@@ -35,6 +36,6 @@ in
     "java/openjdk8".source = pkgs.openjdk8.home;
     "java/openjdk11".source = pkgs.openjdk11.home;
     "java/openjdk21".source = pkgs.openjdk21.home;
-    "java/jbr21".source = pkgs.jetbrains.jdk.home;
+    # "java/jbr21".source = pkgs.jetbrains.jdk-no-jcef.home;
   };
 }
