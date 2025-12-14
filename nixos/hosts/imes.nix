@@ -122,7 +122,7 @@ with lib;
 
     postgresql =
       let
-        package = pkgs.postgresql_13;
+        package = pkgs.postgresql_18;
       in
       {
         enable = true;

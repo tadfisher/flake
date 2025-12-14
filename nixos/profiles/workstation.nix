@@ -93,6 +93,11 @@ mkMerge [
       evolution.enable = false;
       gdk-pixbuf.modulePackages = [ pkgs.webp-pixbuf-loader ];
       seahorse.enable = false;
+      # for swift/swiftly support
+      nix-ld.libraries = with pkgs; [
+        ncurses
+        sqlite.out
+      ];
     };
 
     security = {
