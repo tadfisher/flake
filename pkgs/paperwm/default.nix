@@ -4,7 +4,7 @@
 }:
 
 let
-   uuid = "paperwm@paperwm.github.com";
+  uuid = "paperwm@paperwm.github.com";
 in
 stdenv.mkDerivation {
   pname = "gnome-shell-extension-paperwm";

@@ -3,11 +3,11 @@
 {
   home = {
     packages = with pkgs; [
-      enyo-doom
+      enyo-launcher
       gnome-chess
       gzdoom
       openmw
-      portmod
+      # portmod
       protontricks
       retroarch
       steam-run

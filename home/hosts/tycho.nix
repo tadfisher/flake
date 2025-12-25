@@ -22,6 +22,8 @@
     brasero
     celestia
     gamescope
+    godot
+    ryubing
     transmission-remote-gtk
   ];
 }
