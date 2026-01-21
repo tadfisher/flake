@@ -5,6 +5,7 @@ with lib;
   imports = [
     ../profiles/core.nix
     ../profiles/games.nix
+    ../profiles/services/minecraft.nix
     ../profiles/users/tad.nix
     ../profiles/uefi.nix
     ../profiles/workstation.nix
