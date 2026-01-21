@@ -104,12 +104,6 @@
       url = "github:happenslol/tree-sitter-typespec";
       flake = false;
     };
-    # TODO Remove from overlay when SSO PR is included in nixpkgs
-    # https://github.com/dani-garcia/vaultwarden/pull/3899
-    vaultwarden = {
-      url = "github:dani-garcia/vaultwarden";
-      flake = false;
-    };
     vertical-overview = {
       url = "github:RensAlthuis/vertical-overview";
       flake = false;

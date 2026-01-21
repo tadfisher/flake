@@ -5,7 +5,7 @@ with lib;
 {
   environment.systemPackages = with pkgs; [
     ffmpeg
-    vaapiIntel
+    intel-vaapi-driver
     zlib
   ];
 

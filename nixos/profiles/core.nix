@@ -90,12 +90,12 @@ with lib;
   services = {
     resolved = {
       enable = true;
-      extraConfig = ''
-        MulticastDNS=true
-        DNSOverTLS=opportunistic
-        ResolveUnicastSingleLabel=true
-      '';
-      llmnr = "false";
+      settings.Resolve = {
+        DNSOverTLS = "opportunistic";
+        LLMNR = true;
+        MulticastDNS = true;
+        ResolveUnicastSingleLabel = true;
+      };
     };
 
     userdbd.silenceHighSystemUsers = true;

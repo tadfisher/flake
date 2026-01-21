@@ -7,7 +7,7 @@
 let
   ath11k-fw-repo = fetchurl {
     url = "https://raw.githubusercontent.com/qca/qca-swiss-army-knife/master/tools/scripts/ath11k/ath11k-fw-repo";
-    hash = "sha256-0xotKi72XhVRrokeerqivqHdU3pPRKjB4qtSMu9VsVQ=";
+    hash = "sha256-A+QzNOYiDQbFnHAw2e2WZ/aKU7s39MOFox/8dJmkap0=";
   };
 in
 stdenv.mkDerivation {

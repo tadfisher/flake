@@ -18,7 +18,7 @@ let
   startTransmission = pkgs.writeScript "start-transmission" ''
     #!${pkgs.stdenv.shell}
     IP=$(${pkgs.iproute2}/bin/ip -j addr show dev ${piaInterface} | ${pkgs.jq}/bin/jq -r '.[0].addr_info | map(select(.family == "inet"))[0].local')
-    ${pkgs.transmission_3}/bin/transmission-daemon -f \
+    ${pkgs.transmission_4}/bin/transmission-daemon -f \
       -g "${config.services.transmission.home}/.config/transmission-daemon" \
       --bind-address-ipv4 $IP
   '';
@@ -33,7 +33,7 @@ in
       portForward = {
         enable = true;
         script = ''
-          ${pkgs.transmission_3}/bin/transmission-remote --port $port || true
+          ${pkgs.transmission_4}/bin/transmission-remote --port $port || true
         '';
       };
     };
@@ -41,6 +41,7 @@ in
     transmission = {
       enable = true;
       credentialsFile = "/root/nixos/secrets/transmission.json";
+      package = pkgs.transmission_4;
       settings = {
         download-queue-enabled = true;
         download-queue-size = 3;

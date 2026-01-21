@@ -20,6 +20,7 @@ in
         LOG_FILE = "/var/lib/bitwarden_rs/access.log";
         SSO_ENABLED = true;
         SSO_AUTHORITY = "https://id.orion.tad.codes";
+        WEB_VAULT_ENABLED = false;
       };
     };
 

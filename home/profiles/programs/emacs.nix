@@ -39,7 +39,7 @@ let
         tree-sitter-toml
         tree-sitter-tsx
         tree-sitter-typescript
-        tree-sitter-typespec
+        # tree-sitter-typespec
         tree-sitter-yaml
       ];
     in
@@ -781,14 +781,14 @@ in
             '';
           };
 
-          dap-lldb = {
-            # FIXME fails with (void-function "dap-ui-mode")
-            enable = false;
-            package = "dap-mode";
-            config = ''
-              (setq dap-lldb-debug-program "${pkgs.vscode-extensions.llvm-org.lldb-vscode}/bin/lldb-vscode")
-            '';
-          };
+          # dap-lldb = {
+          #   # FIXME fails with (void-function "dap-ui-mode")
+          #   enable = false;
+          #   package = "dap-mode";
+          #   config = ''
+          #     (setq dap-lldb-debug-program "${pkgs.vscode-extensions.llvm-org.lldb-vscode}/bin/lldb-vscode")
+          #   '';
+          # };
 
           dhall-mode = {
             enable = true;
@@ -1075,12 +1075,12 @@ in
             '';
           };
 
-          etags = {
-            enable = true;
-            defer = true;
-            # Avoid spamming reload requests of TAGS files.
-            config = "(setq tags-revert-without-query t)";
-          };
+          # etags = {
+          #   enable = true;
+          #   defer = true;
+          #   # Avoid spamming reload requests of TAGS files.
+          #   config = "(setq tags-revert-without-query t)";
+          # };
 
           fish-mode.enable = true;
 
@@ -1146,19 +1146,19 @@ in
             '';
           };
 
-          ggtags = {
-            enable = true;
-            diminish = [ "ggtags-mode" ];
-            command = [ "ggtags-mode" ];
-            hook = [
-              ''
-                (c-mode-common-hook
-                 . (lambda ()
-                     (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-                       (ggtags-mode 1))))
-              ''
-            ];
-          };
+          # ggtags = {
+          #   enable = true;
+          #   diminish = [ "ggtags-mode" ];
+          #   command = [ "ggtags-mode" ];
+          #   hook = [
+          #     ''
+          #       (c-mode-common-hook
+          #        . (lambda ()
+          #            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+          #              (ggtags-mode 1))))
+          #     ''
+          #   ];
+          # };
 
           git-messenger = {
             enable = true;
@@ -1794,7 +1794,7 @@ in
           python = {
             enable = true;
             mode = [ ''("\\.py\\'" . python-mode)'' ];
-            hook = [ "ggtags-mode" ];
+            # hook = [ "ggtags-mode" ];
           };
 
           rainbow-mode = {

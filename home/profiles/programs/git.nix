@@ -19,7 +19,7 @@ in
         key = "tadfisher@gmail.com";
         signByDefault = true;
       };
-      passGitHelper.enable = true;
+      # passGitHelper.enable = true;
       lfs.enable = true;
       settings = {
         branch = {
