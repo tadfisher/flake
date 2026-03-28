@@ -16,6 +16,7 @@ in
       package = pkgs.gitFull;
       ignores = [ "*~" "#*#" ];
       signing = {
+        format = "openpgp";
         key = "tadfisher@gmail.com";
         signByDefault = true;
       };

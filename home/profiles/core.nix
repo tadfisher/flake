@@ -66,6 +66,7 @@ with lib;
         # pass-audit
         pass-otp
       ]));
+      settings.PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
     };
     ssh = {
       enable = true;
@@ -85,6 +86,7 @@ with lib;
 
   xdg.userDirs = {
     enable = true;
+    setSessionVariables = true;
     desktop = "${config.home.homeDirectory}";
     documents = "${config.home.homeDirectory}/doc";
     download = "${config.home.homeDirectory}/download";

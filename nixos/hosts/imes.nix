@@ -91,15 +91,15 @@ with lib;
     trusted-public-keys = mkAfter [ "cache.mercury.com:yhfFlgvqtv0cAxzflJ0aZW3mbulx4+5EOZm6k3oML+I=" ];
   };
 
-  powerManagement = {
-    powerDownCommands = ''
-      rmmod ath11k_pci
-    '';
+  # powerManagement = {
+  #   powerDownCommands = ''
+  #     rmmod ath11k_pci
+  #   '';
 
-    powerUpCommands = ''
-      modprobe ath11k_pci
-    '';
-  };
+  #   powerUpCommands = ''
+  #     modprobe ath11k_pci
+  #   '';
+  # };
 
 
   security.pki.certificateFiles = [ ../../secrets/mercury/mercury.ca.crt ];
@@ -142,6 +142,17 @@ with lib;
           full_page_writes = false;
         };
       };
+
+    sentinelone = {
+      enable = true;
+      sentinelOneManagementTokenPath = ../../secrets/mercury/sentinelone.token;
+      customerId = "tad@mercury.com-imes";
+      package = pkgs.sentinelone.overrideAttrs (old: {
+        pname = "sentinelagent";
+        version = "25.4.1.24";
+        src = ../../data/SentinelAgent_linux_x86_64_v25_4_1_24.deb;
+      });
+    };
 
     tailscale = {
       enable = true;

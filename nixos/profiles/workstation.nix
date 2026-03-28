@@ -202,9 +202,7 @@ mkMerge [
         # BUG: https://github.com/NixOS/nixpkgs/issues/180175
         NetworkManager-wait-online.enable = mkForce false;
       };
-      sleep.extraConfig = ''
-        HibernateDelaySec=1h
-      '';
+      sleep.settings.Sleep.HibernateDelaySec = "1h";
     };
 
     xdg.portal = {

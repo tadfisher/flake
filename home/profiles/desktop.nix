@@ -38,11 +38,14 @@
         gtk-key-theme-name = "Emacs";
       };
     };
-    gtk4.extraCss = ''
-      window.csd {
-        border-radius: 0;
-      }
-    '';
+    gtk4 = {
+      extraCss = ''
+        window.csd {
+          border-radius: 0;
+        }
+      '';
+      theme = null;
+    };
   };
 
   dconf.settings."org/gnu/emacs/defaults-by-name/emacs" = {

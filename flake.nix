@@ -96,6 +96,13 @@
       url = "github:gjoyce-ibm/sedcli/kernel-keyring";
       flake = false;
     };
+    sentinelone = {
+      url = "github:devusb/sentinelone-nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        treefmt-nix.follows = "";
+      };
+    };
     tree-sitter-blueprint = {
       url = "github:huanie/tree-sitter-blueprint";
       flake = false;
@@ -146,6 +153,7 @@
             (inputs.android-nixpkgs.overlays.default)
             (inputs.nix-dart.overlay)
             (inputs.nix-direnv.overlays.default)
+            (inputs.sentinelone.overlays.default)
             (self.overlays.default)
           ];
         }
@@ -263,6 +271,7 @@
           modules = [
             inputs.kolide.nixosModules.kolide-launcher
             inputs.nixos-hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen4
+            inputs.sentinelone.nixosModules.sentinelone
           ];
         };
         installer = {
