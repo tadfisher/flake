@@ -29,6 +29,12 @@ with lib;
     ];
   };
 
+  environment.systemPackages = with pkgs; [
+    cdrdao
+    cdrtools
+    dvdplusrwtools
+  ];
+
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-uuid/4584fda1-e195-414e-9557-12a749848132";
@@ -63,6 +69,23 @@ with lib;
   };
 
   nix.settings.max-jobs = 16;
+
+  security.wrappers = {
+    cdrdao = {
+      setuid = true;
+      owner = "root";
+      group = "cdrom";
+      permissions = "u+wrx,g+x";
+      source = "${pkgs.cdrdao}/bin/cdrdao";
+    };
+    cdrecord = {
+      setuid = true;
+      owner = "root";
+      group = "cdrom";
+      permissions = "u+wrx,g+x";
+      source = "${pkgs.cdrtools}/bin/cdrecord";
+    };
+  };
 
   services = {
     openssh.enable = true;
