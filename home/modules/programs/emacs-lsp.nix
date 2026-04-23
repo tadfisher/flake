@@ -38,8 +38,8 @@ let
         type = types.attrsOf types.str;
         default = { };
         example = literalExpression ''
-          { typescript-language-server = "''${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
-            typescript = "''${pkgs.nodePackages.typescript}/bin/tsserver";
+          { typescript-language-server = "''${pkgs.typescript-language-server}/bin/typescript-language-server";
+            typescript = "''${pkgs.typescript}/bin/tsserver";
           }
         '';
         description = ''
@@ -70,7 +70,7 @@ let
         type = types.listOf types.package;
         default = [ ];
         example = literalExpression ''
-          [ pkgs.nodePackages.bash-language-server ];
+          [ pkgs.bash-language-server ];
         '';
         description = ''
           Packages to make available in the home profile.

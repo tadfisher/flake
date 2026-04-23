@@ -1001,7 +1001,7 @@ in
                       ((js-mode js-ts-mode typescript-mode typescript-ts-mode tsx-ts-mode)
                         . ,(eglot-alternatives
                             '(("typescript-language-server" "--stdio")
-                              ("${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server" "--stdio"))))
+                              ("${pkgs.typescript-language-server}/bin/typescript-language-server" "--stdio"))))
                       (nix-mode
                        . ("${pkgs.nixd}/bin/nixd" :initializationOptions
                                                 (:formatting (:command ["${pkgs.alejandra}/bin/alejandra"]))))

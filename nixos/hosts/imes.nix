@@ -68,6 +68,7 @@ with lib;
     };
     "/var/swap" = {
       device = "/dev/disk/by-label/pool";
+      fsType = "btrfs";
       options = [ "subvol=swap" ];
     };
 

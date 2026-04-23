@@ -58,10 +58,6 @@
       url = "git+https://git.celti.name/Celti/notmuch-notify?ref=trunk";
       flake = false;
     };
-    nix-dart = {
-      inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:tadfisher/nix-dart";
-    };
     nix-direnv = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/nix-direnv";
@@ -151,7 +147,6 @@
 
           overlays = [
             (inputs.android-nixpkgs.overlays.default)
-            (inputs.nix-dart.overlay)
             (inputs.nix-direnv.overlays.default)
             (inputs.sentinelone.overlays.default)
             (self.overlays.default)
@@ -317,7 +312,6 @@
 
       packages = eachSystem (system:
         import ./pkgs { inherit inputs; pkgs = pkgsBySystem.${system}; } //
-        inputs.nix-dart.packages.${system} //
         {
           inherit (pkgsBySystem.${system}) ccid vaultwarden;
           nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
