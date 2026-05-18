@@ -9,6 +9,8 @@ with lib;
     ./programs/git.nix
   ];
 
+
+
   home = {
     homeDirectory = "/home/tad";
 
@@ -29,6 +31,8 @@ with lib;
       unrar
       unzip
     ];
+
+    sessionVariables.DO_NOT_TRACK = "true";
 
     stateVersion = "21.03";
   };

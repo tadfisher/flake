@@ -85,11 +85,14 @@ with lib;
     # };
   };
 
-  nix.settings = {
-    cores = 8;
-    max-jobs = 4;
-    substituters = mkAfter [ "https://cache.mercury.com/" ];
-    trusted-public-keys = mkAfter [ "cache.mercury.com:yhfFlgvqtv0cAxzflJ0aZW3mbulx4+5EOZm6k3oML+I=" ];
+  nix = {
+    package = pkgs.lixPackageSets.latest.lix;
+    settings = {
+      cores = 8;
+      max-jobs = 4;
+      substituters = mkAfter [ "https://cache.mercury.com/" ];
+      trusted-public-keys = mkAfter [ "cache.mercury.com:yhfFlgvqtv0cAxzflJ0aZW3mbulx4+5EOZm6k3oML+I=" ];
+    };
   };
 
   # powerManagement = {

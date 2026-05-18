@@ -1973,9 +1973,7 @@ in
             #   (autoload #'tramp-register-crypt-file-name-handler "tramp-crypt")
             # '';
             config = ''
-              (setq tramp-auto-save-directory "~/.cache/emacs/tramp"
-                    tramp-shell-prompt-pattern
-                    "\\(?:^\\|\\)[^]#$%>\n]*#?[]#$%>].* *\\(\\[[[:digit:];]*[[:alpha:]] *\\)*")
+              (setq tramp-auto-save-directory "~/.cache/emacs/tramp")
             '';
           };
 
