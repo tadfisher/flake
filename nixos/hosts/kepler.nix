@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
 
 {
@@ -9,6 +14,7 @@ with lib;
     ../profiles/bastion.nix
     ../profiles/services/sshd.nix
     ../profiles/services/vaultwarden.nix
+    ../profiles/users/nicki.nix
     ../profiles/users/tad.nix
     ../profiles/uefi.nix
   ];
@@ -65,31 +71,46 @@ with lib;
     "/srv/backup" = {
       device = "/dev/sda";
       fsType = "btrfs";
-      options = [ "subvol=backup" "compress-force=zstd" ];
+      options = [
+        "subvol=backup"
+        "compress-force=zstd"
+      ];
     };
 
     "/srv/mail" = {
       device = "/dev/sda";
       fsType = "btrfs";
-      options = [ "subvol=mail" "compress-force=zstd" ];
+      options = [
+        "subvol=mail"
+        "compress-force=zstd"
+      ];
     };
 
     "/srv/media" = {
       device = "/dev/sda";
       fsType = "btrfs";
-      options = [ "subvol=media" "compress-force=zstd" ];
+      options = [
+        "subvol=media"
+        "compress-force=zstd"
+      ];
     };
 
     "/srv/torrents" = {
       device = "/dev/sda";
       fsType = "btrfs";
-      options = [ "subvol=torrents" "compress-force=zstd" ];
+      options = [
+        "subvol=torrents"
+        "compress-force=zstd"
+      ];
     };
 
     "/srv/steam" = {
       device = "/dev/sda";
       fsType = "btrfs";
-      options = [ "subvol=steam" "compress-force=zstd" ];
+      options = [
+        "subvol=steam"
+        "compress-force=zstd"
+      ];
     };
   };
 
@@ -121,6 +142,42 @@ with lib;
       exports = ''
         /srv *(insecure,rw,sync,no_subtree_check,crossmnt)
       '';
+    };
+
+    samba = {
+      enable = true;
+      package = pkgs.samba4Full;
+      openFirewall = true;
+      settings = {
+        global = {
+          workgroup = "WORKGROUP";
+          "server string" = "kepler";
+          "netbios name" = "kepler";
+          "security" = "user";
+          "use sendfile" = "yes";
+          interfaces = "lo enp3s0 enp4s0";
+          "bind interfaces only" = "yes";
+          "hosts allow" = "10.0.0.0/8 127.0.0.1 localhost";
+          "hosts deny" = "0.0.0.0/0";
+          "guest account" = "nobody";
+          "server smb encrypt" = "required";
+        };
+        backup = {
+          path = "/srv/backup";
+          browseable = "yes";
+          "read only" = "no";
+          "guest ok" = "no";
+          "create mask" = "0664";
+          "directory mask" = "0775";
+          "force group" = "backup";
+          "valid users" = "tad nicki";
+        };
+      };
+    };
+
+    samba-wsdd = {
+      enable = true;
+      openFirewall = true;
     };
 
     transmission.settings = {
@@ -168,6 +225,7 @@ with lib;
       games.gid = 1001;
       # TODO Fix kepler NFS permissions
       media.gid = 2000;
+      backup.gid = 2002;
     };
   };
 

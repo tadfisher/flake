@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -8,8 +13,6 @@ with lib;
     ./programs/emacs.nix
     ./programs/git.nix
   ];
-
-
 
   home = {
     homeDirectory = "/home/tad";
@@ -65,18 +68,22 @@ with lib;
     nix-index.enable = true;
     password-store = {
       enable = true;
-      package = mkDefault (pkgs.pass.withExtensions (e: with e; [
-        # BUG https://github.com/NixOS/nixpkgs/pull/335757
-        # pass-audit
-        pass-otp
-      ]));
+      package = mkDefault (
+        pkgs.pass.withExtensions (
+          e: with e; [
+            # BUG https://github.com/NixOS/nixpkgs/pull/335757
+            # pass-audit
+            pass-otp
+          ]
+        )
+      );
       settings.PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
     };
     ssh = {
       enable = true;
       enableDefaultConfig = false;
 
-      matchBlocks."*" = {
+      settings."*" = {
         compression = true;
         controlMaster = "auto";
         controlPath = "~/.ssh/master-%r@%n:%p";

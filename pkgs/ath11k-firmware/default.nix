@@ -1,18 +1,19 @@
-{ lib
-, stdenv
-, fetchurl
-, python3
+{
+  lib,
+  stdenv,
+  fetchurl,
+  python3,
 }:
 
 let
   ath11k-fw-repo = fetchurl {
     url = "https://raw.githubusercontent.com/qca/qca-swiss-army-knife/master/tools/scripts/ath11k/ath11k-fw-repo";
-    hash = "sha256-A+QzNOYiDQbFnHAw2e2WZ/aKU7s39MOFox/8dJmkap0=";
+    hash = "sha256-e6vRasWgwdQIUrknQscjaEMQ8Rs4ths8auqaPtlVIkE=";
   };
 in
 stdenv.mkDerivation {
   pname = "ath11k-firmware";
-  version = "unstable-20250630";
+  version = "unstable-20260415";
 
   dontUnpack = true;
 

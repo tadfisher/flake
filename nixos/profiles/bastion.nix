@@ -1,10 +1,19 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
 {
   networking = {
-    firewall.allowedTCPPorts = [ 22 80 443 ];
+    firewall.allowedTCPPorts = [
+      22
+      80
+      443
+    ];
   };
 
   security = {
@@ -14,7 +23,7 @@ with lib;
         extraDomainNames = [ "*.orion.tad.codes" ];
         email = "tadfisher@gmail.com";
         dnsProvider = "cloudflare";
-        credentialsFile = "/root/nixos/secrets/cloudflare-dns.env";
+        environmentFile = "/root/nixos/secrets/cloudflare-dns.env";
       };
     };
 
@@ -131,6 +140,11 @@ with lib;
       passAccessToken = true;
 
       reverseProxy = true;
+
+      trustedProxyIP = [
+        "127.0.0.0/8"
+        "::1"
+      ];
 
       setXauthrequest = true;
 

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 let
@@ -8,17 +13,21 @@ let
     let
       libName = drv: removeSuffix "-grammar" drv.pname;
       libSuffix = if pkgs.stdenv.isDarwin then "dylib" else "so";
-      lib = drv: ''lib${libName drv}.${libSuffix}'';
-      linkCmd = drv:
-        if pkgs.stdenv.isDarwin then ''
-          cp ${drv}/parser .
-          chmod +w ./parser
-          install_name_tool -id $out/lib/${lib drv} ./parser
-          cp ./parser $out/lib/${lib drv}
-          /usr/bin/codesign -s - -f $out/lib/${lib drv}
-        '' else ''
-          ln -s ${drv}/parser $out/lib/${lib drv}
-        '';
+      lib = drv: "lib${libName drv}.${libSuffix}";
+      linkCmd =
+        drv:
+        if pkgs.stdenv.isDarwin then
+          ''
+            cp ${drv}/parser .
+            chmod +w ./parser
+            install_name_tool -id $out/lib/${lib drv} ./parser
+            cp ./parser $out/lib/${lib drv}
+            /usr/bin/codesign -s - -f $out/lib/${lib drv}
+          ''
+        else
+          ''
+            ln -s ${drv}/parser $out/lib/${lib drv}
+          '';
       plugins = with pkgs.tree-sitter-grammars; [
         tree-sitter-bash
         # tree-sitter-blueprint
@@ -43,8 +52,9 @@ let
         tree-sitter-yaml
       ];
     in
-    pkgs.runCommandCC "tree-sitter-grammars" { }
-      (concatStringsSep "\n" ([ "mkdir -p $out/lib" ] ++ (map linkCmd plugins)));
+    pkgs.runCommandCC "tree-sitter-grammars" { } (
+      concatStringsSep "\n" ([ "mkdir -p $out/lib" ] ++ (map linkCmd plugins))
+    );
 
 in
 {
@@ -57,7 +67,6 @@ in
     jre
     # nerdfonts
     plantuml
-    silver-searcher
     sqlite
     zbar
   ];
@@ -66,7 +75,8 @@ in
 
     # TODO enable only for bash-in-emacs.
     bash.initExtra =
-      let vterm = (pkgs.emacsPackagesFor cfg.package).vterm;
+      let
+        vterm = (pkgs.emacsPackagesFor cfg.package).vterm;
       in
       ''
         . ${vterm}/share/emacs/site-lisp/elpa/${vterm.ename}-${vterm.version}/etc/emacs-vterm-bash.sh
@@ -81,12 +91,10 @@ in
       overrides = self: super: rec {
         seq = cfg.package;
         magit-delta = super.magit-delta.overrideAttrs (attrs: {
-          nativeBuildInputs = (attrs.nativeBuildInputs or [ ])
-            ++ [ config.programs.git.package ];
+          nativeBuildInputs = (attrs.nativeBuildInputs or [ ]) ++ [ config.programs.git.package ];
         });
         treemacs = super.treemacs.overrideAttrs (attrs: {
-          nativeBuildInputs = (attrs.nativeBuildInputs or [ ])
-            ++ [ pkgs.python3 ];
+          nativeBuildInputs = (attrs.nativeBuildInputs or [ ]) ++ [ pkgs.python3 ];
         });
       };
 
@@ -514,7 +522,9 @@ in
 
           blueprint-ts-mode.enable = true;
 
-          browse-at-remote = { command = [ "browse-at-remote" ]; };
+          browse-at-remote = {
+            command = [ "browse-at-remote" ];
+          };
 
           buffer-move = {
             enable = true;
@@ -563,7 +573,11 @@ in
 
           company = {
             enable = false;
-            command = [ "company-mode" "company-doc-buffer" "global-company-mode" ];
+            command = [
+              "company-mode"
+              "company-doc-buffer"
+              "global-company-mode"
+            ];
             defer = 1;
             extraConfig = ''
               :bind (:map company-mode-map
@@ -617,7 +631,10 @@ in
 
           company-restclient = {
             enable = cfg.init.usePackage.company.enable;
-            after = [ "company" "restclient" ];
+            after = [
+              "company"
+              "restclient"
+            ];
             command = [ "company-restclient" ];
             config = ''
               (add-to-list 'company-backends 'company-restclient)
@@ -626,8 +643,13 @@ in
 
           company-yasnippet = {
             enable = cfg.init.usePackage.company.enable;
-            after = [ "company" "yasnippet" ];
-            bind = { "M-/" = "company-yasnippet"; };
+            after = [
+              "company"
+              "yasnippet"
+            ];
+            bind = {
+              "M-/" = "company-yasnippet";
+            };
           };
 
           # From https://github.com/mlb-/emacs.d/blob/a818e80f7790dffa4f6a775987c88691c4113d11/init.el#L472-L482
@@ -694,12 +716,18 @@ in
             bindLocal.eglot-mode-map = {
               "M-s s" = "consult-eglot-symbols";
             };
-            after = [ "consult" "eglot" ];
+            after = [
+              "consult"
+              "eglot"
+            ];
           };
 
           consult-xref = {
             enable = true;
-            after = [ "consult" "xref" ];
+            after = [
+              "consult"
+              "xref"
+            ];
             command = [ "consult-xref" ];
             init = ''
               (setq xref-show-definitions-function #'consult-xref
@@ -798,7 +826,10 @@ in
           dired = {
             enable = true;
             package = ""; # built-in
-            command = [ "dired" "dired-jump" ];
+            command = [
+              "dired"
+              "dired-jump"
+            ];
             config = ''
               (put 'dired-find-alternate-file 'disabled nil)
               (setopt ;; dired-dwim-target t
@@ -827,7 +858,9 @@ in
             enable = false;
             package = ""; # built-in
             hook = [ "(dired-mode . dired-omit-mode)" ];
-            bindLocal.dired-mode-map = { "." = "dired-omit-mode"; };
+            bindLocal.dired-mode-map = {
+              "." = "dired-omit-mode";
+            };
             config = ''
               (setq dired-omit-verbose nil
                     dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
@@ -1004,7 +1037,7 @@ in
                               ("${pkgs.typescript-language-server}/bin/typescript-language-server" "--stdio"))))
                       (nix-mode
                        . ("${pkgs.nixd}/bin/nixd" :initializationOptions
-                                                (:formatting (:command ["${pkgs.alejandra}/bin/alejandra"]))))
+                                                (:formatting (:command ["${pkgs.nixfmt}/bin/nixfmt"]))))
                       (rust-mode
                        . ,(eglot-alternatives '("rust-analyzer" "${pkgs.rust-analyzer}/bin/rust-analyzer")))
                       (sh-mode
@@ -1069,7 +1102,9 @@ in
           envrc = {
             enable = true;
             demand = true;
-            bindKeyMap = { "M-SPC E" = "envrc-command-map"; };
+            bindKeyMap = {
+              "M-SPC E" = "envrc-command-map";
+            };
             config = ''
               (envrc-global-mode)
             '';
@@ -1102,9 +1137,14 @@ in
           flyspell = {
             enable = true;
             diminish = [ "flyspell-mode" ];
-            command = [ "flyspell-mode" "flyspell-prog-mode" ];
+            command = [
+              "flyspell-mode"
+              "flyspell-prog-mode"
+            ];
             bindLocal = {
-              flyspell-mode-map = { "C-;" = "flyspell-auto-correct-word"; };
+              flyspell-mode-map = {
+                "C-;" = "flyspell-auto-correct-word";
+              };
             };
             hook = [
               # Spell check in text and programming mode.
@@ -1162,7 +1202,9 @@ in
 
           git-messenger = {
             enable = true;
-            bind = { "C-x v p" = "git-messenger:popup-message"; };
+            bind = {
+              "C-x v p" = "git-messenger:popup-message";
+            };
           };
 
           gnome-shell-mode = {
@@ -1182,8 +1224,11 @@ in
 
           groovy-mode = {
             enable = true;
-            mode =
-              [ ''"\\.gradle\\'"'' ''"\\.groovy\\'"'' ''"Jenkinsfile\\'"'' ];
+            mode = [
+              ''"\\.gradle\\'"''
+              ''"\\.groovy\\'"''
+              ''"Jenkinsfile\\'"''
+            ];
           };
 
           haskell-mode = {
@@ -1294,7 +1339,10 @@ in
 
           js = {
             enable = true;
-            mode = [ ''("\\.js\\'" . js-mode)'' ''("\\.json\\'" . js-mode)'' ];
+            mode = [
+              ''("\\.js\\'" . js-mode)''
+              ''("\\.json\\'" . js-mode)''
+            ];
             config = ''
               (setq js-indent-level 2)
             '';
@@ -1398,7 +1446,9 @@ in
           magit = {
             enable = true;
             command = [ "magit-project-status" ];
-            bind = { "C-c g" = "magit-status"; };
+            bind = {
+              "C-c g" = "magit-status";
+            };
             config = ''
               (setq magit-diff-highlight-indentation nil
                     magit-diff-highlight-trailing nil
@@ -1427,7 +1477,10 @@ in
 
           markdown-mode = {
             enable = true;
-            command = [ "markdown-mode" "gfm-mode" ];
+            command = [
+              "markdown-mode"
+              "gfm-mode"
+            ];
             mode = [
               ''("README\\.md\\'" . gfm-mode)''
               ''("\\.markdown\\'" . markdown-mode)''
@@ -1485,13 +1538,13 @@ in
 
           nix-mode = {
             enable = true;
-            mode = [ ''"\\.nix\\'"'' ''"\\.nix.in\\'"'' ];
-            hook = [ ''(before-save-hook . nix-format-before-save)'' ];
+            mode = [
+              ''"\\.nix\\'"''
+              ''"\\.nix.in\\'"''
+            ];
+            hook = [ "(before-save-hook . nix-format-before-save)" ];
             config = ''
-              (setq nix-nixfmt-bin "${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt")
-
-              ;; Match nixpkgs-fmt: align exprs with "in" keyword.
-              (smie-config-local '((0 :after "in" nil)))
+              (setq nix-nixfmt-bin "${pkgs.nixfmt}/bin/nixfmt")
             '';
           };
 
@@ -1505,9 +1558,13 @@ in
             mode = [ ''"\\.drv\\'"'' ];
           };
 
-          nix-repl = { enable = true; };
+          nix-repl = {
+            enable = true;
+          };
 
-          nix-shell = { enable = true; };
+          nix-shell = {
+            enable = true;
+          };
 
           notmuch = {
             enable = true;
@@ -1550,7 +1607,10 @@ in
 
           ol-notmuch = {
             enable = cfg.init.usePackage.org.enable && cfg.init.usePackage.notmuch.enable;
-            after = [ "notmuch" "org" ];
+            after = [
+              "notmuch"
+              "org"
+            ];
           };
 
           orderless = {
@@ -1569,7 +1629,9 @@ in
               "M-SPC o l" = "org-store-link";
               "M-SPC o b" = "org-switchb";
             };
-            bindKeyMap = { "M-SPC M-SPC" = "org-mode-map"; };
+            bindKeyMap = {
+              "M-SPC M-SPC" = "org-mode-map";
+            };
             hook = [
               ''
                 (org-mode
@@ -1631,7 +1693,10 @@ in
 
           org-agenda = {
             enable = true;
-            after = [ "org" "transient" ];
+            after = [
+              "org"
+              "transient"
+            ];
             defer = true;
             config = ''
               (setq org-agenda-files `(,org-directory)
@@ -1680,7 +1745,9 @@ in
             demand = true;
           };
 
-          org-ql = { enable = true; };
+          org-ql = {
+            enable = true;
+          };
 
           org-table = {
             enable = true;
@@ -1724,7 +1791,10 @@ in
 
           pass = {
             enable = true;
-            after = [ "password-store" "password-store-otp" ];
+            after = [
+              "password-store"
+              "password-store-otp"
+            ];
           };
 
           password-store = {
@@ -1755,7 +1825,10 @@ in
 
           pretty-tabs = {
             enable = true;
-            after = [ "tab-bar" "all-the-icons" ];
+            after = [
+              "tab-bar"
+              "all-the-icons"
+            ];
             extraConfig = ''
               :functions pretty-tabs-mode
             '';
@@ -1799,7 +1872,10 @@ in
 
           rainbow-mode = {
             enable = true;
-            hook = [ "css-mode" "scss-mode" ];
+            hook = [
+              "css-mode"
+              "scss-mode"
+            ];
           };
 
           recentf = {
@@ -1901,8 +1977,10 @@ in
             enable = true;
             defer = 3;
             diminish = [ "smartparens-mode" ];
-            command =
-              [ "smartparens-global-mode" "show-smartparens-global-mode" ];
+            command = [
+              "smartparens-global-mode"
+              "show-smartparens-global-mode"
+            ];
             bindLocal = {
               smartparens-mode-map = {
                 "C-M-f" = "sp-forward-sexp";
@@ -1925,7 +2003,9 @@ in
 
           string-inflection = {
             enable = true;
-            bind = { "C-c C-u" = "string-inflection-all-cycle"; };
+            bind = {
+              "C-c C-u" = "string-inflection-all-cycle";
+            };
           };
 
           # Auto-save buffers
@@ -1979,7 +2059,9 @@ in
 
           transpose-frame = {
             enable = true;
-            bind = { "C-c f t" = "transpose-frame"; };
+            bind = {
+              "C-c f t" = "transpose-frame";
+            };
           };
 
           treemacs = {
@@ -2036,7 +2118,10 @@ in
 
           vertico = {
             enable = true;
-            command = [ "vertico-mode" "vertico-next" ];
+            command = [
+              "vertico-mode"
+              "vertico-next"
+            ];
             init = "(vertico-mode)";
           };
 
@@ -2110,7 +2195,9 @@ in
           wdired = {
             enable = true;
             bindLocal = {
-              dired-mode-map = { "C-c C-w" = "wdired-change-to-wdired-mode"; };
+              dired-mode-map = {
+                "C-c C-w" = "wdired-change-to-wdired-mode";
+              };
             };
             config = ''
               ;; I use wdired quite often and this setting allows editing file
@@ -2145,13 +2232,12 @@ in
             defer = 2;
             config =
               let
-                descriptions = { "M-SPC p" = "project"; };
+                descriptions = {
+                  "M-SPC p" = "project";
+                };
                 replacements = optionalString (descriptions != { }) ''
                   (which-key-add-key-based-replacements
-                    ${
-                      concatStringsSep "\n  "
-                      (mapAttrsToList (k: d: ''"${k}" "${d}"'') descriptions)
-                    })
+                    ${concatStringsSep "\n  " (mapAttrsToList (k: d: ''"${k}" "${d}"'') descriptions)})
                 '';
 
               in
@@ -2213,7 +2299,10 @@ in
             enable = false;
             defer = 1;
             diminish = [ "yas-minor-mode" ];
-            command = [ "yas-global-mode" "yas-minor-mode" ];
+            command = [
+              "yas-global-mode"
+              "yas-minor-mode"
+            ];
             hook = [
               # Yasnippet interferes with tab completion in ansi-term.
               "(term-mode . (lambda () (yas-minor-mode -1)))"
