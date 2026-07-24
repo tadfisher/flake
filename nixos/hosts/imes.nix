@@ -29,6 +29,7 @@ with lib;
     kernelParams = [
       "mitigations=off"
       "resume_offset=533760"
+      "kvm_amd.x2avic=0" # Firmware bug, 7840U does not support this and taints the kernel
     ];
     resumeDevice = "/dev/disk/by-label/pool";
   };

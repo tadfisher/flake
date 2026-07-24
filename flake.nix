@@ -10,6 +10,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:tadfisher/android-nixpkgs";
     };
+    claude-code-ide = {
+      url = "github:manzaltu/claude-code-ide.el";
+      flake = false;
+    };
     eglot-booster = {
       url = "github:jdtsmith/eglot-booster";
       flake = false;

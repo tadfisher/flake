@@ -7,5 +7,6 @@
     # TODO broken: nix-prefetch-scripts
     nox
     patchelf
+    nixfmt
   ];
 }

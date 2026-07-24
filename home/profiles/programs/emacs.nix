@@ -65,7 +65,8 @@ in
     graphviz
     (hunspell.withDicts (dicts: [ dicts.en-us ]))
     jre
-    # nerdfonts
+    material-design-icons
+    nerd-fonts.symbols-only
     plantuml
     sqlite
     zbar
@@ -406,7 +407,7 @@ in
             config = ''
               (setopt agent-shell-anthropic-authentication (agent-shell-anthropic-make-authentication
                                                             :api-key #'(auth-source-pass-get "secret" "api.anthropic.com/apikey"))
-                      agent-shell-anthropic-claude-command '("${lib.getExe pkgs.claude-code-acp}"))
+                      agent-shell-anthropic-claude-acp-command '("${lib.getExe pkgs.claude-code-acp}"))
             '';
           };
 
@@ -564,6 +565,24 @@ in
             ];
           };
 
+          claude-code-ide = {
+            enable = true;
+            bindLocal.project-prefix-map = {
+              "C" = "claude-code-ide";
+            };
+            config = ''
+              ${optionalString cfg.init.usePackage.ghostel.enable ''
+                (setopt claude-code-ide-terminal-backend 'ghostel)
+              ''}
+              (setopt claude-code-ide-cli-path "${lib.getExe pkgs.claude-code}"
+                      claude-code-ide-no-flicker t)
+              (claude-code-ide-emacs-tools-setup)
+            '';
+            init = ''
+              (add-to-list 'project-switch-commands '(claude-code-ide "Claude Code") t)
+            '';
+          };
+
           cmake-mode = {
             enable = true;
             config = ''
@@ -702,8 +721,8 @@ in
                   :keymap tad/consult-line-map
                 consult-ripgrep consult-git-grep consult-grep
                 consult-bookmark consult-recent-file consult-xref
-                consult--source-bookmark consult--source-file-register
-                consult--source-recent-file consult--source-project-recent-file
+                consult-source-bookmark consult-source-file-register
+                consult-source-recent-file consult-source-project-recent-file
                   :preview-key '(:debounce 0.4 any)
                 consult-theme
                   :preview-key '(:debounce 0.2 any)
@@ -832,8 +851,8 @@ in
             ];
             config = ''
               (put 'dired-find-alternate-file 'disabled nil)
-              (setopt ;; dired-dwim-target t
-                      ;; dired-listing-switches "-alvh --group-directories-first"
+              (setopt dired-dwim-target t
+                      dired-listing-switches "-l --almost-all --group-directories-first --human-readable -v"
                       dired-mouse-drag-files t)
             '';
           };
@@ -873,30 +892,35 @@ in
               (dirvish-override-dired-mode)
             '';
             config = ''
-              (setopt dirvish-attributes '(vc-state subtree-state all-the-icons collapse git-msg file-time file-size))
+              (setopt dirvish-attributes '(vc-state subtree-state nerd-icons collapse git-msg file-time file-size))
             '';
-            bindLocal.dirvish-mode-map = {
-              "<mouse-1>" = "dirvish-subtree-toggle-or-open";
-              "<mouse-2>" = "dired-mouse-find-file-other-window";
-              "[remap dired-sort-toggle-or-edit]" = "dirvish-quicksort";
-              "[remap dired-do-redisplay]" = "dirvish-ls-switches-menu";
-              "[remap dired-do-copy]" = "dirvish-yank-menu";
-              "?" = "dirvish-dispatch";
-              "q" = "dirvish-quit";
-              "a" = "dirvish-quick-access";
-              "f" = "dirvish-file-info-menu";
-              "x" = "dired-do-delete";
-              "X" = "dired-do-flagged-delete";
-              "y" = "dirvish-yank-menu";
-              "s" = "dirvish-quicksort";
-              "TAB" = "dirvish-subtree-toggle";
-              "M-t" = "dirvish-layout-toggle";
-              "M-," = "dirvish-history-go-backward";
-              "M-." = "dirvish-history-go-forward";
-              "M-n" = "dirvish-narrow";
-              "M-m" = "dirvish-mark-menu";
-              "M-s" = "dirvish-setup-menu";
-              "M-e" = "dirvish-emerge-menu";
+            bindLocal = {
+              dirvish-mode-map = {
+                "<mouse-1>" = "dirvish-subtree-toggle-or-open";
+                "<mouse-2>" = "dired-mouse-find-file-other-window";
+                "[remap dired-sort-toggle-or-edit]" = "dirvish-quicksort";
+                "[remap dired-do-redisplay]" = "dirvish-ls-switches-menu";
+                "[remap dired-do-copy]" = "dirvish-yank-menu";
+                "?" = "dirvish-dispatch";
+                "q" = "dirvish-quit";
+                "a" = "dirvish-quick-access";
+                "f" = "dirvish-file-info-menu";
+                "x" = "dired-do-delete";
+                "X" = "dired-do-flagged-delete";
+                "y" = "dirvish-yank-menu";
+                "s" = "dirvish-quicksort";
+                "TAB" = "dirvish-subtree-toggle";
+                "M-t" = "dirvish-layout-toggle";
+                "M-," = "dirvish-history-go-backward";
+                "M-." = "dirvish-history-go-forward";
+                "M-n" = "dirvish-narrow";
+                "M-m" = "dirvish-mark-menu";
+                "M-s" = "dirvish-setup-menu";
+                "M-e" = "dirvish-emerge-menu";
+              };
+              project-prefix-map = {
+                "s" = "dirvish-side";
+              };
             };
           };
 
@@ -1059,7 +1083,7 @@ in
           eldoc-box = {
             enable = true;
             after = optional cfg.init.usePackage.eglot.enable "eglot";
-            hook = optional cfg.init.usePackage.eglot.enable "(eglot-managed-mode . eldoc-box-hover-at-point-mode)";
+            #hook = optional cfg.init.usePackage.eglot.enable "(eglot-managed-mode . eldoc-box-hover-at-point-mode)";
           };
 
           # Enable Electric Indent mode to do automatic indentation on RET.
@@ -1183,6 +1207,24 @@ in
             config = ''
               (setq gcmh-idle-delay 'auto)
               (gcmh-mode)
+            '';
+          };
+
+          ghostel = {
+            enable = true;
+            command = [ "ghostel" ];
+            bindLocal = {
+              ghostel-semi-char-mode-map = {
+                "C-s" = "consult-line";
+              };
+              project-prefix-map = {
+                "t" = "ghostel-project";
+                "T" = "ghostel-project-list-buffers";
+              };
+            };
+            init = ''
+              (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
+              (add-to-list 'project-switch-commands '(ghostel-project-list-buffers "Ghostel buffers") t)
             '';
           };
 
@@ -1445,9 +1487,12 @@ in
           # Configure magit, a nice mode for the git SCM.
           magit = {
             enable = true;
-            command = [ "magit-project-status" ];
+            after = [ "project" ];
             bind = {
               "C-c g" = "magit-status";
+            };
+            bindLocal.project-prefix-map = {
+              "m" = "magit-project-status";
             };
             config = ''
               (setq magit-diff-highlight-indentation nil
@@ -1460,11 +1505,17 @@ in
                            'overlong-summary-line)
               (remove-hook 'server-switch-hook 'magit-commit-diff)
             '';
+            init = ''
+              (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
+            '';
           };
 
           magit-extras = {
             enable = true;
             package = epkgs: epkgs.magit;
+            config = ''
+              (setopt magit-bind-magit-project-status nil)
+            '';
           };
 
           marginalia = {
@@ -1542,7 +1593,7 @@ in
               ''"\\.nix\\'"''
               ''"\\.nix.in\\'"''
             ];
-            hook = [ "(before-save-hook . nix-format-before-save)" ];
+            # hook = [ "(before-save-hook . nix-format-before-save)" ];
             config = ''
               (setq nix-nixfmt-bin "${pkgs.nixfmt}/bin/nixfmt")
             '';
@@ -1827,7 +1878,7 @@ in
             enable = true;
             after = [
               "tab-bar"
-              "all-the-icons"
+              "nerd-icons"
             ];
             extraConfig = ''
               :functions pretty-tabs-mode
@@ -1853,9 +1904,6 @@ in
             package = "";
             bindKeyMap = {
               "M-SPC p" = "project-prefix-map";
-            };
-            bindLocal.project-prefix-map = optionalAttrs cfg.init.usePackage.dirvish.enable {
-              "s" = "dirvish-side";
             };
           };
 
@@ -1997,7 +2045,13 @@ in
           solaire-mode = {
             enable = true;
             config = ''
-              (solaire-global-mode +1)
+              (if (daemonp)
+                  (progn
+                    (require 'server)
+                    (add-hook 'server-after-make-frame-hook
+                              (lambda () (solaire-global-mode +1))
+                              t))
+                (solaire-global-mode +1))
             '';
           };
 
@@ -2029,20 +2083,25 @@ in
 
           tab-bar = {
             enable = true;
-            after = [ "all-the-icons" ];
+            after = [ "nerd-icons" ];
             extraConfig = ''
-              :functions all-the-icons-material
+              :functions nerd-icons-mdicon
             '';
             config = ''
-              (setq tab-bar-auto-width t
-                    tab-bar-auto-width-max nil
+              ;; NOTE: tab-bar-auto-width must stay nil while pretty-tabs is
+              ;; active. pretty-tabs' tab captions begin with a shared-eq
+              ;; (space :width ...) spacer; tab-bar-auto-width copies that
+              ;; spacer onto every pad space it appends, the run collapses to
+              ;; one stretch glyph, so string-pixel-width never grows and the
+              ;; padding loop never terminates (runaway alloc -> OOM).
+              (setq tab-bar-auto-width nil
                     tab-bar-show 1
                     tab-bar-close-button
-                    (propertize (all-the-icons-material "close" :face 'tab-bar-tab)
+                    (propertize (nerd-icons-mdicon "nf-md-close" :face 'tab-bar-tab)
                                 'close-tab t
                                 :help "Close tab")
                     tab-bar-new-button
-                    (all-the-icons-material "add" :face 'tab-bar))
+                    (nerd-icons-mdicon "nf-md-plus" :face 'tab-bar))
             '';
           };
 
@@ -2131,7 +2190,7 @@ in
           };
 
           vterm = {
-            enable = true;
+            enable = false;
             command = [ "vterm" ];
             bindLocal = {
               project-prefix-map = {

@@ -25,7 +25,7 @@
 
 ;;
 
-(require 'all-the-icons)
+(require 'nerd-icons)
 (require 'seq)
 (require 'subr-x)
 (require 'tab-bar)
@@ -128,23 +128,16 @@ Ensure text properties PROPS exist on BUTTON."
                               pretty-tabs-tab-margin
                               pretty-tabs-image-margin))
 
-(defun pretty-tabs-default-tab-icon (&optional f)
-  "Return the tab icon for the active buffer.
-If F is specified, restrict to a font family."
+(defun pretty-tabs-default-tab-icon (&optional _f)
+  "Return the tab icon for the active buffer."
   (let* ((buffer (window-buffer (minibuffer-selected-window)))
-         (base-f (concat "all-the-icons-icon" (when f (format "-%s" f))))
-         (file-f (intern (concat base-f "-for-file")))
-         (mode-f (intern (concat base-f "-for-mode")))
-         (icon (if-let* ((file (buffer-file-name buffer))
-                         ((all-the-icons-auto-mode-match? file)))
-                   (funcall file-f (file-name-nondirectory file))
-                 (funcall mode-f (buffer-local-value 'major-mode buffer)))))
-     (propertize (if (symbolp icon)
-                     (all-the-icons-faicon "file-o"
-                                           :face 'all-the-icons-dsilver
-                                           :v-adjust 0.0)
-                   icon)
-                 'display '(raise -0.2))))1
+         (icon (if-let* ((file (buffer-file-name buffer)))
+                   (nerd-icons-icon-for-file (file-name-nondirectory file))
+                 (nerd-icons-icon-for-mode (buffer-local-value 'major-mode buffer)))))
+    (propertize (if (or (null icon) (symbolp icon))
+                    (nerd-icons-faicon "nf-fa-file" :face 'nerd-icons-dsilver)
+                  icon)
+                'display '(raise -0.2))))
 
 (defgroup pretty-tabs nil
   "Pretty ‘tab-bar-mode' display."
@@ -280,7 +273,7 @@ If F is specified, restrict to a font family."
           (propertize icon 'face (append iface `(:background ,bg)))
           image-space)
        "")
-     (if tab-bar-tab-hints (format "%d " pos) "")
+     (if tab-bar-tab-hints (format "%d " i) "")
      (propertize (alist-get 'name tab) 'face face)
      (or (and tab-bar-close-button-show
               (not (eq tab-bar-close-button-show

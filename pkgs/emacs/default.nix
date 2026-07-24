@@ -12,6 +12,8 @@ in
 
   base16-plata-theme = callPackage ./base16-plata-theme { };
 
+  claude-code-ide = callPackage ./claude-code-ide { src = inputs.claude-code-ide; };
+
   eglot-booster = callPackage ./eglot-booster { src = inputs.eglot-booster; };
 
   ligature = callPackage ./ligature { src = inputs.ligature-el; };

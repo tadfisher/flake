@@ -1,4 +1,4 @@
-{ lib, trivialBuild, all-the-icons }:
+{ lib, trivialBuild, nerd-icons }:
 
 trivialBuild rec {
   pname = "pretty-tabs";
@@ -6,7 +6,7 @@ trivialBuild rec {
 
   src = ./.;
 
-  packageRequires = [ all-the-icons ];
+  packageRequires = [ nerd-icons ];
 
   meta = {
     description = "Prettier tabs in tab-bar-mode";

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -22,6 +27,7 @@ with lib;
   home.packages = with pkgs; [
     # TODO https://github.com/NixOS/nixpkgs/issues/268737
     # awscli2
+    buf
     code-cursor
     entr
     figma-linux
