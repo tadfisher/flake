@@ -146,7 +146,9 @@ with lib;
 
     samba = {
       enable = true;
-      package = pkgs.samba4Full;
+      # CephFS pulls in the heavy, currently-broken ceph build (and its
+      # cython_0 metadata-check failure); we don't use CephFS here.
+      package = pkgs.samba4Full.override { enableCephFS = false; };
       openFirewall = true;
       settings = {
         global = {
