@@ -14,6 +14,12 @@
       url = "github:manzaltu/claude-code-ide.el";
       flake = false;
     };
+    claude-code-nix = {
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+      url = "github:sadjow/claude-code-nix";
+    };
     eglot-booster = {
       url = "github:jdtsmith/eglot-booster";
       flake = false;
@@ -151,6 +157,7 @@
 
           overlays = [
             (inputs.android-nixpkgs.overlays.default)
+            (inputs.claude-code-nix.overlays.default)
             (inputs.nix-direnv.overlays.default)
             (inputs.sentinelone.overlays.default)
             (self.overlays.default)
