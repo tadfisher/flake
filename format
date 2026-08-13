@@ -11,4 +11,4 @@ case $1 in
         ;;
 esac
 
-nix run nixpkgs#nixpkgs-fmt -- $CHECK_ARG .
+nix fmt -- $CHECK_ARG **/*.nix

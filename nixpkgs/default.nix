@@ -1,13 +1,15 @@
 { profiles }:
 let
-  inherit (builtins) filter listToAttrs map pathExists;
+  inherit (builtins)
+    filter
+    listToAttrs
+    map
+    pathExists
+    ;
 
   profile = name: {
     inherit name;
-    value =
-      if pathExists (./. + "/${name}.nix")
-      then import (./. + "/${name}.nix")
-      else null;
+    value = if pathExists (./. + "/${name}.nix") then import (./. + "/${name}.nix") else null;
   };
 
 in

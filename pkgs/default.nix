@@ -1,9 +1,15 @@
-{ inputs
-, pkgs
+{
+  inputs,
+  pkgs,
 }:
 
 let
-  inherit (pkgs) callPackage pkgsi686Linux python3 system;
+  inherit (pkgs)
+    callPackage
+    pkgsi686Linux
+    python3
+    system
+    ;
 in
 {
   ath11k-firmware = callPackage ./ath11k-firmware { };

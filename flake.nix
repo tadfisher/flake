@@ -123,7 +123,8 @@
     };
   };
 
-  outputs = { self, ... }@inputs:
+  outputs =
+    { self, ... }@inputs:
     with inputs.nixpkgs.lib;
 
     let
@@ -131,7 +132,8 @@
 
       eachSystem = genAttrs systems;
 
-      pkgsBySystem = eachSystem (system:
+      pkgsBySystem = eachSystem (
+        system:
         import inputs.nixpkgs {
           inherit system;
 
@@ -165,69 +167,93 @@
         }
       );
 
-      mkNixosConfiguration = name: { system, config, modules ? [ ] }:
+      mkNixosConfiguration =
+        name:
+        {
+          system,
+          config,
+          modules ? [ ],
+        }:
         nameValuePair name (nixosSystem {
           inherit system;
 
-          modules = modules ++ [
-            self.nixosModules.boot.opal-unlock
-            self.nixosModules.services.pia-vpn
+          modules =
+            modules
+            ++ [
+              self.nixosModules.boot.opal-unlock
+              self.nixosModules.services.pia-vpn
 
-            ({ pkgs, ... }: {
-              environment.etc.nixpkgs.source = inputs.nixpkgs;
-              networking.hostName = name;
-              nix = {
-                extraOptions = "experimental-features = nix-command flakes auto-allocate-uids";
-                nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
-                registry = {
-                  self.flake = self;
-                  nixpkgs = {
-                    from = { id = "nixpkgs"; type = "indirect"; };
-                    flake = inputs.nixpkgs;
+              ({ pkgs, ... }: {
+                environment.etc.nixpkgs.source = inputs.nixpkgs;
+                networking.hostName = name;
+                nix = {
+                  extraOptions = "experimental-features = nix-command flakes auto-allocate-uids";
+                  nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+                  registry = {
+                    self.flake = self;
+                    nixpkgs = {
+                      from = {
+                        id = "nixpkgs";
+                        type = "indirect";
+                      };
+                      flake = inputs.nixpkgs;
+                    };
                   };
                 };
-              };
-              nixpkgs.pkgs = pkgsBySystem.${system};
-              system.configurationRevision = mkIf (self ? rev) self.rev;
-            })
+                nixpkgs.pkgs = pkgsBySystem.${system};
+                system.configurationRevision = mkIf (self ? rev) self.rev;
+              })
 
-            config
-          ] ++ (optionals (self.hmConfigurations ? ${name}) [
-            inputs.home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.tad = self.hmConfigurations.${name};
-              };
-            }
-          ]);
+              config
+            ]
+            ++ (optionals (self.hmConfigurations ? ${name}) [
+              inputs.home-manager.nixosModules.home-manager
+              {
+                home-manager = {
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+                  users.tad = self.hmConfigurations.${name};
+                };
+              }
+            ]);
         });
 
-      mkHomeConfiguration = name: { system, config }:
+      mkHomeConfiguration =
+        name:
+        { system, config }:
         let
           homeConfig = config;
         in
-        nameValuePair name ({ config, lib, pkgs, ... }: {
-          imports = [
-            inputs.android-nixpkgs.hmModule
-            (import inputs.rycee { inherit pkgs; }).hmModules.emacs-init
-            self.hmModules.programs.devhelp
-            self.hmModules.programs.emacs-lsp
-            self.hmModules.programs.inkscape
-            self.hmModules.programs.notmuch-notify
-            self.hmModules.programs.pass-git-helper
-            self.hmModules.services.adb
-            self.hmModules.services.gnirehtet
-            homeConfig
-          ];
+        nameValuePair name (
+          {
+            config,
+            lib,
+            pkgs,
+            ...
+          }:
+          {
+            imports = [
+              inputs.android-nixpkgs.hmModule
+              (import inputs.rycee { inherit pkgs; }).hmModules.emacs-init
+              self.hmModules.programs.devhelp
+              self.hmModules.programs.emacs-lsp
+              self.hmModules.programs.inkscape
+              self.hmModules.programs.notmuch-notify
+              self.hmModules.programs.pass-git-helper
+              self.hmModules.services.adb
+              self.hmModules.services.gnirehtet
+              homeConfig
+            ];
 
-          systemd.user.sessionVariables."NIX_PATH" =
-            mkForce "nixpkgs=${config.xdg.dataHome}/nixpkgs\${NIX_PATH:+:}$NIX_PATH";
-        });
+            systemd.user.sessionVariables."NIX_PATH" =
+              mkForce "nixpkgs=${config.xdg.dataHome}/nixpkgs\${NIX_PATH:+:}$NIX_PATH";
+          }
+        );
 
     in
     {
+      formatter = eachSystem (system: pkgsBySystem.${system}.nixfmt);
+
       hmConfigurations = mapAttrs' mkHomeConfiguration {
         euler = {
           system = "x86_64-linux";
@@ -312,18 +338,25 @@
       overlays = {
         overlay = final: prev: import ./pkgs/overlay.nix inputs final prev;
 
-        pkgs = final: prev: import ./pkgs { inherit inputs; pkgs = final; };
+        pkgs =
+          final: prev:
+          import ./pkgs {
+            inherit inputs;
+            pkgs = final;
+          };
 
         # There's probably an easier way to merge attributes in `overlays' into a
         # single function.
-        default = final: prev:
-          (self.overlays.pkgs final prev) //
-          (self.overlays.overlay final prev);
+        default = final: prev: (self.overlays.pkgs final prev) // (self.overlays.overlay final prev);
       };
 
-      packages = eachSystem (system:
-        import ./pkgs { inherit inputs; pkgs = pkgsBySystem.${system}; } //
-        {
+      packages = eachSystem (
+        system:
+        import ./pkgs {
+          inherit inputs;
+          pkgs = pkgsBySystem.${system};
+        }
+        // {
           inherit (pkgsBySystem.${system}) ccid vaultwarden;
           nixos-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
           nixos-rebuild = inputs.nixpkgs.legacyPackages.${system}.nixos-rebuild;
