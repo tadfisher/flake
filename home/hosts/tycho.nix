@@ -21,6 +21,7 @@
   home.packages = with pkgs; [
     brasero
     celestia
+    claude-code
     gamescope
     godot
     ryubing
