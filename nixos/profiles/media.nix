@@ -24,11 +24,6 @@ with lib;
   };
 
   services = {
-    jackett = {
-      enable = true;
-      openFirewall = true;
-    };
-
     jellyfin = {
       enable = true;
       package = pkgs.jellyfin;
@@ -38,6 +33,11 @@ with lib;
       enable = true;
       openFirewall = true;
       package = pkgs.plex-plexpass;
+    };
+
+    prowlarr = {
+      enable = true;
+      openFirewall = true;
     };
 
     radarr = {
