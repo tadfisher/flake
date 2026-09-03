@@ -233,6 +233,8 @@ with lib;
 
         ${cfg.preUp}
 
+        ${pkgs.iproute2}/bin/ip link del ${cfg.interface} 2>/dev/null || true
+
         networkctl reload
         networkctl up ${cfg.interface}
 
@@ -251,7 +253,8 @@ with lib;
         rm /run/systemd/network/60-${cfg.interface}.{netdev,network} || true
 
         echo Bringing down network interface ${cfg.interface}.
-        networkctl down ${cfg.interface}
+        networkctl down ${cfg.interface} || true
+        ${pkgs.iproute2}/bin/ip link del ${cfg.interface} 2>/dev/null || true
         networkctl reload
 
         ${cfg.postDown}
@@ -268,6 +271,7 @@ with lib;
       serviceConfig = {
         Type = "notify";
         Restart = "always";
+        RestartSec = 30;
         CacheDirectory = "pia-vpn";
         StateDirectory = "pia-vpn";
       };
@@ -286,7 +290,8 @@ with lib;
         gateway="$(cat $STATE_DIRECTORY/wireguard.json | jq -r '.server_ip')"
 
         if [ ! -f $STATE_DIRECTORY/token.json ]; then
-          >&2 echo "Token not found; is pia-vpn.esrvice running?"
+          >&2 echo "Token not found; is pia-vpn.service running?"
+          exit 1
         fi
         token="$(cat $STATE_DIRECTORY/token.json | jq -r '.token')"
 
@@ -296,25 +301,46 @@ with lib;
 
         if [ -f "$cacheFile" ]; then
           pfconfig=$(cat "$cacheFile")
-          if [ "$(echo "pfconfig" | jq -r '.status')" != "OK" ]; then
+          cachedGateway="$(echo "$pfconfig" | jq -r '.pia_vpn_gateway // empty' 2>/dev/null)"
+          if [ "$(echo "$pfconfig" | jq -r '.status' 2>/dev/null)" != "OK" ]; then
             echo "Invalid cached port-forwarding configuration. Fetching new configuration."
             pfconfig=
+          elif [ "$cachedGateway" != "$gateway" ]; then
+            echo "Cached configuration was issued by ''${cachedGateway:-an unknown server}, but we are connected to $gateway. Fetching new configuration."
+            pfconfig=
+          else
+            cachedExpires="$(echo "$pfconfig" | jq -r '.payload' 2>/dev/null |
+                             base64 -d 2>/dev/null | jq -r '.expires_at' 2>/dev/null)"
+            if [ -z "$cachedExpires" ] ||
+               ! cachedExpiry="$(date --date="$cachedExpires" +%s 2>/dev/null)"; then
+              echo "Cached port-forwarding configuration has no readable expiry. Fetching new configuration."
+              pfconfig=
+            elif [ "$cachedExpiry" -le "$(date +%s)" ]; then
+              echo "Cached port-forwarding configuration expired at $cachedExpires. Fetching new configuration."
+              pfconfig=
+            fi
           fi
         fi
 
         if [ -z "$pfconfig" ]; then
           echo "Fetching port forwarding configuration..."
+          rc=0
           pfconfig="$(curl -s -m 5 \
             --interface ${cfg.interface} \
             --connect-to "$wg_hostname::$gateway:" \
             --cacert "${cfg.certificateFile}" \
             -G --data-urlencode "token=''${token}" \
-            "https://''${wg_hostname}:19999/getSignature")"
-          if [ "$(echo "$pfconfig" | jq -r '.status')" != "OK" ]; then
-            >&2 echo "Port forwarding configuration does not contain an OK status. Stopping."
+            "https://''${wg_hostname}:19999/getSignature")" || rc=$?
+          if [ "$rc" -ne 0 ]; then
+            >&2 echo "getSignature request to $wg_hostname ($gateway) via ${cfg.interface} failed: curl exit $rc. Stopping."
             exit 1
           fi
-          echo "$pfconfig" > "$cacheFile"
+          if [ "$(echo "$pfconfig" | jq -r '.status' 2>/dev/null)" != "OK" ]; then
+            >&2 echo "Port forwarding configuration does not contain an OK status. Stopping."
+            >&2 echo "Server returned: $pfconfig"
+            exit 1
+          fi
+          echo "$pfconfig" | jq --arg gw "$gateway" '. + {pia_vpn_gateway: $gw}' > "$cacheFile"
         fi
 
         if [ -z "$pfconfig" ]; then
@@ -332,18 +358,35 @@ with lib;
         systemd-notify --ready
         sleep 10
 
+        failures=0
         while true; do
+          rc=0
           response="$(curl -s -G -m 5 \
             --interface ${cfg.interface} \
             --connect-to "$wg_hostname::$gateway:" \
             --cacert "${cfg.certificateFile}" \
             --data-urlencode "payload=''${payload}" \
             --data-urlencode "signature=''${signature}" \
-            "https://''${wg_hostname}:19999/bindPort")"
-          if [ "$(echo "$response" | jq -r '.status')" != "OK" ]; then
-            >&2 echo "Failed to bind port. Stopping."
+            "https://''${wg_hostname}:19999/bindPort")" || rc=$?
+
+          if [ "$rc" -ne 0 ]; then
+            failures=$((failures + 1))
+            >&2 echo "bindPort request to $wg_hostname ($gateway) via ${cfg.interface} failed: curl exit $rc (consecutive failure $failures)."
+            if [ "$failures" -ge 5 ]; then
+              >&2 echo "Giving up after $failures consecutive failures. Is ${cfg.interface} passing traffic to $gateway:19999?"
+              exit 1
+            fi
+            sleep 30
+            continue
+          fi
+
+          if [ "$(echo "$response" | jq -r '.status' 2>/dev/null)" != "OK" ]; then
+            >&2 echo "Failed to bind port. Server returned: $response"
+            rm -f "$cacheFile"
             exit 1
           fi
+
+          failures=0
           echo "Bound port $port. Forwarding will expire at $(date --date="$expires")."
           ${cfg.portForward.script}
           sleep 900
