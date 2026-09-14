@@ -12,13 +12,27 @@ let
       for dir in $(find . -name '*.rar' -exec dirname {} \; | sort -u); do
         pushd $dir; ${pkgs.unrar}/bin/unrar x *.rar; popd
       done
-    in
+    fi
   '';
 
   startTransmission = pkgs.writeScript "start-transmission" ''
     #!${pkgs.stdenv.shell}
-    IP=$(${pkgs.iproute2}/bin/ip -j addr show dev ${piaInterface} | ${pkgs.jq}/bin/jq -r '.[0].addr_info | map(select(.family == "inet"))[0].local')
-    ${pkgs.transmission_4}/bin/transmission-daemon -f \
+    # pia-vpn.service deletes and recreates the interface on every connect, so
+    # the address may not be present the instant we are ordered after it.
+    for _ in $(${pkgs.coreutils}/bin/seq 30); do
+      IP=$(${pkgs.iproute2}/bin/ip -j addr show dev ${piaInterface} | ${pkgs.jq}/bin/jq -r '.[0].addr_info | map(select(.family == "inet"))[0].local')
+      if [ -n "$IP" ] && [ "$IP" != "null" ]; then break; fi
+      ${pkgs.coreutils}/bin/sleep 1
+    done
+    if [ -z "$IP" ] || [ "$IP" = "null" ]; then
+      echo "No IPv4 address on ${piaInterface} after 30s; is pia-vpn.service up?" >&2
+      exit 1
+    fi
+    # exec, so the daemon becomes the unit's main PID. The service is
+    # Type=notify-reload with the default NotifyAccess=main, which ignores
+    # READY=1 from anything but the main process -- running the daemon as a
+    # child of this script makes systemd time out and SIGTERM a healthy daemon.
+    exec ${pkgs.transmission_4}/bin/transmission-daemon -f \
       -g "${config.services.transmission.home}/.config/transmission-daemon" \
       --bind-address-ipv4 $IP
   '';
@@ -81,7 +95,7 @@ in
         umask = 2;
         upload-slots-per-torrent = 14;
         utp-enabled = true;
-        watch-dir-enabled = true;
+        watch-dir-enabled = false;
       };
     };
   };

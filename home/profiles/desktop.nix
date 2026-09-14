@@ -122,7 +122,7 @@
     };
 
     emacs = {
-      package = pkgs.emacs30-pgtk;
+      package = pkgs.emacs-pgtk;
       extraPackages = (epkgs: with epkgs; [
         treesit-grammars.with-all-grammars
       ]);

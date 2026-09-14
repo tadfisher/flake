@@ -118,7 +118,9 @@ mkMerge [
 
       colord.enable = true;
 
-      dbus.packages = [ pkgs.gcr ];
+      # This is usually handled by the gnupg NixOS module, but we set it up with home-manager
+      # currently.
+      dbus.packages = [ pkgs.gcr_3 ];
 
       desktopManager.gnome = {
         enable = true;

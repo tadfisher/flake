@@ -20,9 +20,9 @@
 
   home.packages = with pkgs; [
     brasero
-    celestia
     claude-code
     gamescope
+    gimp
     godot
     ryubing
     transmission-remote-gtk

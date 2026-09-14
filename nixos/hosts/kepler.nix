@@ -184,7 +184,6 @@ with lib;
 
     transmission.settings = {
       download-dir = "/srv/media/.incoming";
-      watch-dir = "/srv/media/.incoming/";
     };
 
     unifi = {

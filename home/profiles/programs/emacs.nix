@@ -811,7 +811,8 @@ in
 
           csv-mode.enable = true;
 
-          ct.enable = true;
+          # BUG https://github.com/neeasade/ct.el/issues/18
+          # ct.enable = true;
 
           dap-mode = {
             # FIXME fails with (void-function "dap-ui-mode")

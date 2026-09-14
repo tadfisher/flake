@@ -24,8 +24,14 @@ with lib;
   };
 
   services = {
+    flaresolverr = {
+      enable = true;
+      openFirewall = true;
+    };
+
     jellyfin = {
       enable = true;
+      openFirewall = true;
       package = pkgs.jellyfin;
     };
 
