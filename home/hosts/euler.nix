@@ -40,9 +40,10 @@ with lib;
     };
     obs-studio = {
       enable = true;
-      plugins = with pkgs.obs-studio-plugins; [
-        obs-move-transition
-      ];
+      # BUG https://github.com/NixOS/nixpkgs/issues/556310
+      # plugins = with pkgs.obs-studio-plugins; [
+      #   obs-move-transition
+      # ];
     };
     ssh.matchBlocks."10.0.99.2" = {
       user = "tad";
