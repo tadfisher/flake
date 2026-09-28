@@ -56,6 +56,4 @@ with final;
       maintainers = with lib.maintainers; [ tadfisher ];
     };
   });
-
-  vaultwarden = callPackage ./vaultwarden/package.nix { };
 }

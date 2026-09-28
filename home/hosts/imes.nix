@@ -35,6 +35,7 @@ with lib;
     gimp
     gtk4.dev
     jetbrains-toolbox
+    nodejs
   ];
 
   programs = {
