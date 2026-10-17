@@ -28,7 +28,6 @@ with lib;
     # TODO https://github.com/NixOS/nixpkgs/issues/268737
     # awscli2
     buf
-    code-cursor
     entr
     figma-linux
     gh
@@ -39,6 +38,7 @@ with lib;
   ];
 
   programs = {
+    codex.enable = true;
     claude-code.enable = true;
     lieer = {
       enable = true;
